@@ -54,7 +54,7 @@ var bundle = d3.layout.bundle();
 
 var line = d3.svg.line()
       .interpolate("bundle")
-      .tension(0.95)
+      .tension(0.98)
       .x(function(d) { return d.x; })
       .y(function(d) { return d.y; });
 
@@ -97,11 +97,11 @@ var nodes
 var time = 0;
       
 //d3.json(/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("./3676778/data/3_Signaling to GPCR_Dot.json", function(error, classes) {
-//d3.json("./3676778/data/mammalsWithRelationships.json", function(error, classes) {
+//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
+d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//d3.json("data/Mammals.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//d3.json("readme-flare-imports.json", function(error, classes) {
+//d3.json("data/readme-flare-imports.json", function(error, classes) {
 
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
@@ -161,7 +161,7 @@ if (time==0){
         }*/
         if (d.children){
           var totalRadius = 0;
-          var totalAngle = Math.PI*1.2;
+          var totalAngle = Math.PI*1;
           d.children.forEach(function(child) {
             totalRadius+=getRadius(child);
           });  
@@ -263,7 +263,7 @@ function tick(event) {
     .attr("x2", function(d) { return d.target.x; })
     .attr("y2", function(d) { return d.target.y; });
   
-   node.each(collide(0.8)); //Added 
+ //  node.each(collide(0.8)); //Added 
  
  
   var force_influence = 0.9;
@@ -321,16 +321,17 @@ svg.on("mousemove", function() {
 
 
 function color(d) {
-  var sat = 200-d.depth*15;
+  var sat = 200-d.depth*5;
   return d._children ? "#3182bd" // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#000000"; // leaf node
+    : "#0000f0"; // leaf node
 }
-/*function opacity(d) {
-  return d._children ? 0.9 // collapsed package
-    : d.children ? 0.5+ // expanded package
-    : 1; // leaf node
-}*/
+function getRadius(d) {
+return d._children ? 0.7*Math.pow(d.childCount1, 0.75)// collapsed package
+      : d.children ? 0.7*Math.pow(d.childCount1, 0.5) // expanded package
+      : d.size ? Math.pow(d.size,0.12)
+      : 1; // leaf node
+}
 
 // Toggle children on click.
 function click(d) {
@@ -420,12 +421,7 @@ function childCount2(level, n) {
 
 };
 
-function getRadius(d) {
-return d._children ? 10*Math.pow(d.childCount1, 0.6)// collapsed package
-      : d.children ? 10*Math.pow(d.childCount1, 0.6) // expanded package
-      : d.size ? Math.pow(d.size,0.15)
-      : 1; // leaf node
-}
+
 
 
 d3.select(self.frameElement).style("height", diameter + "px");
