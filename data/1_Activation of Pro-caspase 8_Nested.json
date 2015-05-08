@@ -1,0 +1,71 @@
+  {
+   "name":"flare",
+   "children": [
+    {
+     "name":"Release of apoptotic factors from the mitochondria",
+     "children": [
+      { "name":"Release of SMAC from mitochondria", "size":4.4142137},
+      { "name":"Release of Cytochrome c from mitochondria", "size":4.4142137}
+      ]
+    },
+    {
+     "name":"Permeabilization of mitochondria",
+     "children": [
+      ]
+    },
+    {
+     "name":"Apoptotic factor-mediated response",
+     "children": [
+      {
+       "name":"SMAC-mediated apoptotic response",
+       "children": [
+        {
+         "name":"SMAC-mediated dissociation of IAP:caspase complexes",
+         "children": [
+          { "name":"Dissociation of Caspase-3 from SMAC:XIAP:Caspase-3", "size":5.8284273},
+          { "name":"Dissociation of Caspase-7 from SMAC:XIAP:Caspase-7", "size":5.8284273},
+          { "name":"Dissociation of Caspase-9 from SMAC:XIAP:Caspase-9", "size":5.8284273}
+          ]
+        },
+        {
+         "name":"SMAC binds to IAPs",
+         "children": [
+          { "name":"SMAC binds XIAP:Caspase-3", "size":5.8284273},
+          { "name":"SMAC binds XIAP:Caspase-7", "size":5.8284273},
+          { "name":"SMAC binds XIAP:Caspase-9", "size":5.8284273}
+          ]
+        }
+        ]
+      },
+      {
+       "name":"Cytochrome c-mediated apoptotic response",
+       "children": [
+        {
+         "name":"Activation of caspases through apoptosome-mediated cleavage",
+         "children": [
+          { "name":"Cleavage of Procaspase-7 by the apoptosome", "size":5.236068},
+          { "name":"Cleavage of Â Procaspase-3 by the apoptosome", "size":5.236068}
+          ]
+        },
+        {
+         "name":"Formation of apoptosome",
+         "children": [
+          { "name":"Cytochrome C Binds to Apaf-1", "size":5.0},
+          { "name":"Cleavage of Procaspase-9 to Caspase-9", "size":6.0},
+          { "name":"Cytochrome C:Apaf-1 binds Procaspase-9", "size":5.8284273}
+          ]
+        }
+        ]
+      }
+      ]
+    },
+    {
+     "name":"Activation of Pro-Caspase 8",
+     "children": [
+      { "name":"FAS Mediated Activation of Pro-caspase 8", "size":6.0},
+      { "name":"TRAIL Mediated Activation of Pro-caspase 8", "size":6.0},
+      { "name":"TNF Mediated Activation of Pro-caspase 8", "size":6.3166246}
+      ]
+    }
+    ]
+  }
