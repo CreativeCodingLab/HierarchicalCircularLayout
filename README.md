@@ -4,7 +4,7 @@ Hierarchical Circular Layouts is a novel visualization technique for representin
 
 This technique supports a range of interactions on this representation, such as collapsing or expanding of node in the hierarchy to simplify or or to fully explore its structure, selecting a connection between two nodes, and highlighting relationships involving an selected item in the hierarchy.
 
-The application (PathwayMatrix_1_1.jar) is available in application.Cross-Platform folder.
+Hierarchical Circular Layouts is implemented in D3 (index.html in this folder) as well as Processing available at: https://github.com/CreativeCodingLab/PathwayViewer.
 
 [![ScreenShot](http://www.cs.uic.edu/~tdang/PathwayMatrix/TeaserVideo.png)]
 
