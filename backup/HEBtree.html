@@ -103,7 +103,7 @@ var link = g1.append("g").selectAll(".link"),
 //d3.json("./3676778/data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
 var nodes
-d3.json("readme-flare-imports.json", function(error, classes) {
+d3.json("../data/readme-flare-imports.json", function(error, classes) {
 
   nodes = cluster.nodes(packageHierarchy(classes)),
       links = packageImports(nodes);

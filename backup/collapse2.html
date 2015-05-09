@@ -47,16 +47,19 @@ var vis = d3.select("#chart").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("flare.json", function(json) {
+d3.json("../data/flare.json", function(json) {
   root = json;
   root.fixed = true;
   root.px = root.py = 0;
   update();
+  update2();
 });
 
+var nodes;
+var links;
 function update(nodes) {
-  var nodes = flatten(root);
-  var links = d3.layout.tree().links(nodes);
+   nodes = flatten(root);
+   links = d3.layout.tree().links(nodes);
 
   // make sure we set .px/.py as well as node.fixed will use those .px/.py to 'stick' the node to:
   if (!root.px) {
@@ -98,7 +101,9 @@ function update(nodes) {
   };
   count1 = childCount1(0, root); 
   console.log(" count1 = "+count1);
+}
 
+function update2(nodes) {
 
   // Update the links…
   link = vis.selectAll("line.link")

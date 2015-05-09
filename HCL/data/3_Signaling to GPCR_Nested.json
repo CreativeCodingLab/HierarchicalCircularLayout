@@ -1,0 +1,672 @@
+  {
+   "name":"flare",
+   "children": [
+    {
+     "name":"Signaling by GPCR",
+     "children": [
+      {
+       "name":"Opioid Signalling",
+       "children": [
+        { "name":"Opioid binds MOR", "size":3.7411013},
+        { "name":"Opioid dissociates from MOR", "size":3.7411013},
+        {
+         "name":"G-protein activation",
+         "children": [
+          { "name":"The high affinity receptor complex binds to G-protein", "size":4.70192},
+          { "name":"The receptor:G-protein complex releases GDP", "size":4.70192},
+          { "name":"The receptor:G-protein complex binds GTP", "size":4.70192},
+          { "name":"The receptor:G-protein complex dissociates", "size":4.70192},
+          { "name":"G-protein alpha subunit is inactivated", "size":4.0476723},
+          { "name":"G-protein beta-gamma subunits rebind the alpha-GDP subunit", "size":4.2973967}
+          ]
+        },
+        {
+         "name":"G-protein mediated events",
+         "children": [
+          {
+           "name":"Adenylate cyclase activating pathway",
+           "children": [
+            { "name":"Galpha-olf:GTP binds to adenylate cyclase and activates it", "size":4.2973967},
+            { "name":"Adenylaye cyclase increases the GTPase activity of G alpha-olf", "size":4.408225},
+            { "name":"Adenylate cyclase converts ATP into cyclic AMP", "size":3.5518456},
+            { "name":"The G alpha-olf:GDP:Adenylate cyclase complex dissociates", "size":4.2973967}
+            ]
+          },
+          {
+           "name":"PLC beta mediated events",
+           "children": [
+            { "name":"IP3 binds to the IP3 receptor, opening the endoplasmic reticulum Ca2+ channel", "size":3.5518456},
+            { "name":"IP3R tetramer:4xI(1,4,5)P3 transports Ca2+ from ER lumen to cytosol", "size":3.319508},
+            { "name":"Activation of PLC beta-1/4", "size":4.0476723},
+            { "name":"PIP2 hydrolysis", "size":3.7411013},
+            { "name":"Inactivation of PLC beta", "size":4.2973967},
+            {
+             "name":"Ca-dependent events",
+             "children": [
+              {
+               "name":"phospho-PLA2 pathway",
+               "children": [
+                { "name":"Phosphorylation of cPLA2 by ERK-2", "size":3.7411013},
+                { "name":"Phospho-cPLA2 translocates to membranes when intracellular calcium levels increase", "size":4.0476723},
+                { "name":"Hydrolysis of phosphatidylcholine", "size":3.7411013}
+                ]
+              },
+              {
+               "name":"CaM pathway",
+               "children": [
+                { "name":"Calcium binds calmodulin", "size":3.7411013},
+                {
+                 "name":"Calmodulin induced events",
+                 "children": [
+                  { "name":"PKC phosphorylates GRK2", "size":3.7411013},
+                  { "name":"Inhibition of GRK2 by calmodulin", "size":3.7411013},
+                  {
+                   "name":"Cam-PDE 1 activation",
+                   "children": [
+                    { "name":"cAMP hydrolysis by Cam-PDE 1", "size":3.5518456},
+                    { "name":"Calmodulin activates Cam-PDE 1", "size":2.0}
+                    ]
+                  },
+                  {
+                   "name":"CaMK IV-mediated phosphorylation of CREB",
+                   "children": [
+                    { "name":"Dimerisation of CREB", "size":3.319508},
+                    { "name":"CaMK IV phosphorylates CREB", "size":3.7411013},
+                    { "name":"CaMK IV autophosphorylation", "size":4.2973967},
+                    { "name":"CamKIV enters the nucleus", "size":4.0476723},
+                    { "name":"Calmodulin binds CaMK IV", "size":4.0476723}
+                    ]
+                  },
+                  {
+                   "name":"PKA-mediated phosphorylation of CREB",
+                   "children": [
+                    { "name":"Dimerisation of CREB", "size":3.319508},
+                    { "name":"PKA catalytic subunit translocates to the nucleus", "size":3.319508},
+                    { "name":"PKA phosphorylates CREB", "size":3.7411013},
+                    {
+                     "name":"PKA activation",
+                     "children": [
+                      { "name":"Adenylate cyclase produces cAMP", "size":3.5518456},
+                      { "name":"cAMP induces dissociation of inactive PKA tetramers", "size":4.0476723}
+                      ]
+                    }
+                    ]
+                  }
+                  ]
+                }
+                ]
+              }
+              ]
+            }
+            ]
+          },
+          {
+           "name":"Adenylate cyclase inhibitory pathway",
+           "children": [
+            { "name":"Dissociation of the Gi alpha:G olf complex", "size":4.70192},
+            { "name":"G alpha (i) inhibits adenylate cyclase", "size":4.2973967},
+            { "name":"G alpha-olf:GTP binds to Gi alpha1:GTP:adenylate cyclase complex", "size":4.70192},
+            { "name":"Adenylate cyclase increases the GTPase activity of Gi alpha", "size":4.7898273},
+            { "name":"Adenylate cyclase increases the GTPase activity of G alpha-olf", "size":4.7898273}
+            ]
+          }
+          ]
+        },
+        {
+         "name":"DARPP-32 events",
+         "children": [
+          { "name":"PKA phosphorylates PDE4B", "size":3.7411013},
+          { "name":"PKA phosphorylates DARPP-32 on Thr34", "size":3.7411013},
+          { "name":"cAMP hydrolysis by PDE 4", "size":3.5518456},
+          { "name":"PPP3 complex dephosphorylates DARPP-32 on Thr34", "size":3.7411013},
+          { "name":"cAMP induces dissociation of inactive PKA tetramers", "size":4.0476723},
+          { "name":"Inactive catalytic PP2B is activated by the binding of calmodulin", "size":4.5118866},
+          { "name":"DARPP-32 is dephosphorylated on Thr75 by PP2A", "size":3.7411013},
+          { "name":"DARPP-32 phosphorylated on Thr75 binds to PKA, inhibiting its function", "size":3.7411013},
+          { "name":"CDK5 phosphorylates DARPP-32 on Thr75", "size":3.319508},
+          { "name":"DARPP-32 phosphorylated on T34 binds to PP1, inhibiting its function", "size":4.0476723}
+          ]
+        }
+        ]
+      },
+      {
+       "name":"Gastrin-CREB signalling pathway via PKC and MAPK",
+       "children": [
+        { "name":"RSK1/2/3 phosphorylates CREB at Serine 133", "size":3.7411013},
+        { "name":"Gastrin binds to CCK-B receptor", "size":3.7411013},
+        { "name":"ERK1/2/5 activate RSK1/2/3", "size":3.7411013},
+        {
+         "name":"RAF/MAP kinase cascade",
+         "children": [
+          {
+           "name":"ERK activation",
+           "children": [
+            {
+             "name":"ERK1 activation",
+             "children": [
+              { "name":"Dissociation of phospho-ERK-1:MEK1", "size":3.7411013},
+              { "name":"Dimerisation of phospho-ERK-1", "size":3.319508},
+              { "name":"MEK1 binds ERK-1", "size":3.7411013},
+              { "name":"MEK1 phosphorylates ERK-1", "size":4.0476723},
+              { "name":"Inactivation of MEK1 by p34cdc2", "size":3.7411013},
+              { "name":"Nuclear translocation of phospho-ERK-1 dimer", "size":3.319508}
+              ]
+            },
+            {
+             "name":"ERK2 activation",
+             "children": [
+              { "name":"MEK2 phosphorylates ERK-2", "size":4.0476723},
+              { "name":"Dissociation of phospho-ERK-2:MEK2", "size":3.7411013},
+              { "name":"MEK2 binds ERK-2", "size":3.7411013},
+              { "name":"Dimerisation of phospho-ERK-2", "size":3.319508},
+              { "name":"Nuclear translocation of phospho-ERK-2 dimer", "size":3.319508}
+              ]
+            }
+            ]
+          },
+          {
+           "name":"MEK activation",
+           "children": [
+            { "name":"Activated RAF1 complex binds MEK", "size":4.5118866},
+            {
+             "name":"RAF phosphorylates MEK",
+             "children": [
+              { "name":"RAF1 phosphorylates MEK2", "size":4.70192},
+              { "name":"RAF1 phosphorylates MEK1", "size":4.70192}
+              ]
+            }
+            ]
+          },
+          {
+           "name":"RAF activation",
+           "children": [
+            { "name":"Stabilisation of RAF by further phosphorylation", "size":4.5118866},
+            { "name":"Stabilisation of RAS:RAF by 14-3-3", "size":4.2973967},
+            { "name":"Phosphorylated human RAF1 binds to RAS:GTP complex", "size":4.0476723},
+            { "name":"Transient dissociation of 14-3-3 upon Ras binding", "size":4.2973967},
+            { "name":"p-RAF binds 14-3-3 beta/alpha", "size":3.7411013}
+            ]
+          }
+          ]
+        },
+        {
+         "name":"EGFR Transactivation by Gastrin",
+         "children": [
+          { "name":"Mature HBEGF binds to EGFR, triggering dimerisation and autophosphorylation of the receptor", "size":3.7411013},
+          { "name":"Active MMP3 can cleave pro-HBEGF to form active HBEGF", "size":3.7411013},
+          { "name":"Diacylgycerol activates Protein kinase C, alpha type", "size":3.7411013},
+          { "name":"SOS1-mediated nucleotide exchange of RAS (HB-EFG-initiated)", "size":4.0476723},
+          { "name":"GRB2:SOS1 binds to HBEGF:p-Y-EGFR", "size":4.2973967}
+          ]
+        },
+        {
+         "name":"G alpha (q) signalling events",
+         "children": [
+          { "name":"Liganded Gq/11-activating GPCRs act as GEFs for Gq/11", "size":4.5118866},
+          { "name":"Liganded Gq-activating GPCRs bind inactive heterotrimeric Gq", "size":4.2973967},
+          { "name":"G alpha (q) auto-inactivates by hydrolysing GTP to GDP", "size":3.7411013},
+          { "name":"PLC beta-mediated PIP2 hydrolysis", "size":3.5518456},
+          { "name":"Inactive G alpha (q) reassociates with G beta:gamma", "size":4.2973967},
+          { "name":"PLC beta is activated by G alpha (q)", "size":4.0476723},
+          { "name":"G alpha (q) inhibits PI3K alpha", "size":4.2973967},
+          { "name":"GRK5 sequesters activated Gq", "size":4.0476723},
+          { "name":"G alpha (q) binds to Trio family RhoGEFs", "size":4.0476723},
+          { "name":"The Ligand:GPCR:Gq complex dissociates", "size":4.2973967},
+          { "name":"GRK2 sequesters activated Gq", "size":4.0476723},
+          {
+           "name":"Effects of PIP2 hydrolysis",
+           "children": [
+            { "name":"Activation of Protein Kinase C novel isoforms", "size":3.7411013},
+            { "name":"Calcium and Diacylglycerol activate CalDAG-GEFs (RasGRPs)", "size":4.0476723},
+            { "name":"Transport of Ca++ from platelet dense tubular system to cytoplasm", "size":3.319508},
+            { "name":"Binding of IP3 to IP3 receptor", "size":3.903654},
+            { "name":"DAG activation of TRPC channels", "size":3.7411013},
+            { "name":"DAG kinase produces phosphatidic acid from DAG", "size":3.7411013},
+            {
+             "name":"Arachidonate production from DAG",
+             "children": [
+              { "name":"DAG is metabolized by DAGL to 2-AG", "size":3.5518456},
+              { "name":"2-AG hydrolysis to arachidonate by MAGL", "size":3.903654}
+              ]
+            }
+            ]
+          }
+          ]
+        }
+        ]
+      },
+      {
+       "name":"GPCR downstream signaling",
+       "children": [
+        {
+         "name":"Olfactory Signaling Pathway",
+         "children": [
+          { "name":"Olfactory Receptor - G Protein olfactory trimer complex formation", "size":4.2973967},
+          { "name":"G Protein trimer formation (olfactory)", "size":4.0476723}
+          ]
+        },
+        {
+         "name":"G alpha (12/13) signalling events",
+         "children": [
+          { "name":"Inactive G alpha (12/13) reassociates with G beta:gamma", "size":3.319508},
+          { "name":"Liganded G12/13-activating GPCR acts as a GEF for G12/13", "size":3.319508},
+          { "name":"G alpha (12/13) auto-inactivates by hydrolysing GTP to GDP", "size":2.0},
+          { "name":"GEFs activate RhoA,B,C", "size":4.0476723},
+          { "name":"ROCK activation by Rho", "size":4.0476723},
+          { "name":"LARG activation by G alpha 12/13", "size":3.319508},
+          { "name":"Liganded G12/13-activating GPCRs bind inactive heterotrimeric G-protein G12/13", "size":2.0},
+          { "name":"LARG binds plexin B1", "size":3.7411013},
+          { "name":"The Ligand:GPCR:G12/13 complex dissociates", "size":3.319508},
+          { "name":"G alpha (13) activates Rho guanine nucleotide exchange factor 1 (p115-RhoGEF)", "size":4.0476723},
+          { "name":"p115-RhoGEF activation of Rac1", "size":4.0476723},
+          { "name":"Rac1 activation of PI3K", "size":4.2973967}
+          ]
+        },
+        {
+         "name":"G alpha (q) signalling events",
+         "children": [
+          { "name":"Liganded Gq/11-activating GPCRs act as GEFs for Gq/11", "size":4.5118866},
+          { "name":"Liganded Gq-activating GPCRs bind inactive heterotrimeric Gq", "size":4.2973967},
+          { "name":"G alpha (q) auto-inactivates by hydrolysing GTP to GDP", "size":3.7411013},
+          { "name":"PLC beta-mediated PIP2 hydrolysis", "size":3.5518456},
+          { "name":"Inactive G alpha (q) reassociates with G beta:gamma", "size":4.2973967},
+          { "name":"PLC beta is activated by G alpha (q)", "size":4.0476723},
+          { "name":"G alpha (q) inhibits PI3K alpha", "size":4.2973967},
+          { "name":"GRK5 sequesters activated Gq", "size":4.0476723},
+          { "name":"G alpha (q) binds to Trio family RhoGEFs", "size":4.0476723},
+          { "name":"The Ligand:GPCR:Gq complex dissociates", "size":4.2973967},
+          { "name":"GRK2 sequesters activated Gq", "size":4.0476723},
+          {
+           "name":"Effects of PIP2 hydrolysis",
+           "children": [
+            { "name":"Activation of Protein Kinase C novel isoforms", "size":3.7411013},
+            { "name":"Calcium and Diacylglycerol activate CalDAG-GEFs (RasGRPs)", "size":4.0476723},
+            { "name":"Transport of Ca++ from platelet dense tubular system to cytoplasm", "size":3.319508},
+            { "name":"Binding of IP3 to IP3 receptor", "size":3.903654},
+            { "name":"DAG activation of TRPC channels", "size":3.7411013},
+            { "name":"DAG kinase produces phosphatidic acid from DAG", "size":3.7411013},
+            {
+             "name":"Arachidonate production from DAG",
+             "children": [
+              { "name":"DAG is metabolized by DAGL to 2-AG", "size":3.5518456},
+              { "name":"2-AG hydrolysis to arachidonate by MAGL", "size":3.903654}
+              ]
+            }
+            ]
+          }
+          ]
+        },
+        {
+         "name":"G alpha (z) signalling events",
+         "children": [
+          { "name":"Inactive G alpha (z) reassociates with G beta:gamma", "size":4.2973967},
+          { "name":"Adenylate cyclase converts ATP to 3',5'-cyclic AMP (cAMP) and pyrophosphate", "size":3.5518456},
+          { "name":"Liganded Gz-activating GPCRs bind inactive heterotrimeric G-protein Gz", "size":4.2973967},
+          { "name":"Liganded Gz-activating GPCR acts as a GEF for Gz", "size":4.5118866},
+          { "name":"The Ligand:GPCR:Gz complex dissociates", "size":4.2973967},
+          { "name":"G alpha (z) inhibits adenylate cyclase", "size":4.2973967},
+          { "name":"Gz is a substrate for PKC", "size":3.7411013},
+          { "name":"G alpha (z) auto-inactivates by hydrolysing GTP to GDP", "size":3.7411013}
+          ]
+        },
+        {
+         "name":"G alpha (i) signalling events",
+         "children": [
+          { "name":"The Ligand:GPCR:Gi complex dissociates", "size":4.2973967},
+          { "name":"G alpha (i) inhibits adenylate cyclase", "size":4.2973967},
+          { "name":"Opsins that act as GEFs for G alpha-t", "size":4.5118866},
+          { "name":"G alpha (i) auto-inactivates by hydrolysing GTP to GDP", "size":3.7411013},
+          { "name":"Adenylate cyclase converts ATP to 3',5'-cyclic AMP (cAMP) and pyrophosphate", "size":3.5518456},
+          { "name":"Inactive G alpha (i) reassociates with G beta:gamma", "size":4.2973967},
+          { "name":"Liganded Gi-activating GPCRs bind inactive heterotrimeric G-protein Gi", "size":4.2973967},
+          { "name":"Liganded Gi-activating GPCR acts as a GEF for Gi", "size":4.5118866}
+          ]
+        },
+        {
+         "name":"G alpha (s) signalling events",
+         "children": [
+          { "name":"Adenylate cyclase converts ATP to 3',5'-cyclic AMP (cAMP) and pyrophosphate", "size":3.5518456},
+          { "name":"cAMP degradation by Phosphodiesterases", "size":3.5518456},
+          { "name":"The Ligand:GPCR:Gs complex dissociates", "size":4.2973967},
+          { "name":"G alpha (s) activates adenylate cyclase", "size":4.2973967},
+          { "name":"Liganded Gs-activating GPCRs bind inactive heterotrimeric Gs", "size":4.2973967},
+          { "name":"G alpha (s) auto-inactivates by hydrolysing GTP to GDP", "size":3.903654},
+          { "name":"Inactive G alpha (s) reassociates with G beta:gamma", "size":4.2973967},
+          { "name":"Liganded Gs-activating GPCR acts as a GEF for Gs", "size":4.5118866}
+          ]
+        },
+        {
+         "name":"G-protein beta:gamma signalling",
+         "children": [
+          {
+           "name":"G beta:gamma signalling through PLC beta",
+           "children": [
+            { "name":"PLC beta-mediated PIP2 hydrolysis", "size":3.5518456},
+            { "name":"Gbeta:gamma activation of PLC beta", "size":4.0476723}
+            ]
+          },
+          {
+           "name":"G beta:gamma signalling through PI3Kgamma",
+           "children": [
+            { "name":"Gbeta:gamma recruits PI3K gamma", "size":4.2973967},
+            { "name":"PIP3 binds to RhoA and activates it", "size":3.7411013},
+            { "name":"G beta:gamma activated PI3Kgamma converts PIP2 to PIP3", "size":3.7411013},
+            { "name":"PIP3 recruits PDK1 and AKT to the membrane", "size":4.0476723}
+            ]
+          }
+          ]
+        }
+        ]
+      },
+      {
+       "name":"GPCR ligand binding",
+       "children": [
+        {
+         "name":"Class B/2 (Secretin family receptors)",
+         "children": [
+          { "name":"CD97 binds CD55", "size":3.7411013},
+          { "name":"Corticotropin-releasing hormone receptor can bind CRH", "size":3.7411013},
+          { "name":"EGF-TM7 receptors bind chondroitin sulphate", "size":3.7411013},
+          { "name":"Frizzled receptors bind Wnts", "size":3.7411013},
+          { "name":"Patched binds Smoothened", "size":3.7411013},
+          { "name":"Parathyroid hormone receptor can bind parathyroid hormone", "size":3.7411013},
+          {
+           "name":"Glucagon-type ligand receptors",
+           "children": [
+            { "name":"Secretin receptor binds secretin", "size":3.7411013},
+            { "name":"The PACAP receptor binds PACAP", "size":3.7411013},
+            { "name":"GHRH receptor binds GHRH", "size":3.7411013},
+            { "name":"Glucagon-like receptor 2 binds GLP2", "size":3.7411013},
+            { "name":"Glucagon-like Peptide-1 Receptor (GLP1R) binds Glucagon-like peptide-1", "size":4.70192},
+            { "name":"Glucagon binds to Glucagon receptor", "size":3.7411013},
+            { "name":"GIP receptor binds gastric inhibitory peptide", "size":3.7411013}
+            ]
+          },
+          {
+           "name":"Calcitonin-like ligand receptors",
+           "children": [
+            { "name":"Calcitonin receptor binds calcitonin", "size":3.7411013},
+            { "name":"CGRP receptor can bind calcitonin gene-related peptides", "size":4.0476723},
+            { "name":"Amylin receptors can bind Amylin", "size":3.319508},
+            { "name":"The adrenomedullin receptor can bind adrenomedullin and intermedin", "size":3.319508}
+            ]
+          }
+          ]
+        },
+        {
+         "name":"Class C/3 (Metabotropic glutamate/pheromone receptors)",
+         "children": [
+          { "name":"GABAB heterodimeric receptor binds GABA", "size":4.0476723},
+          { "name":"GPRC6A can bind L-alpha amino acids and calcium", "size":3.319508},
+          { "name":"T1R2/T1R3 dimer is a sweet taste receptor", "size":4.0476723},
+          { "name":"T1R1/T1R3 dimer is the umami taste receptor", "size":4.0476723},
+          { "name":"Calcium-sensing receptor binds calcium", "size":3.7411013},
+          { "name":"Metabotropic glutamate receptors bind glutamate", "size":3.319508},
+          { "name":"T2Rs bind bitter-tasting compounds", "size":3.7411013}
+          ]
+        },
+        {
+         "name":"Class A/1 (Rhodopsin-like receptors)",
+         "children": [
+          { "name":"N-arachidonyl glycine receptor GPR18 binds N-arachidonyl glycine", "size":3.7411013},
+          { "name":"OXGR1 binds 2OG", "size":3.7411013},
+          { "name":"Zinc is an agonist of GPR39", "size":3.7411013},
+          { "name":"SUCNR1 binds SUCCA", "size":3.7411013},
+          { "name":"G-protein coupled bile acid receptor binds lithocholic acid", "size":3.7411013},
+          { "name":"GPR4, GPR65, GPR132 and OGR1 are pH sensing receptors", "size":3.7411013},
+          { "name":"Cannabinoid receptors can bind cannabinoids", "size":3.7411013},
+          { "name":"HCAR2 binds HCAR2 ligands", "size":3.7411013},
+          { "name":"PAF receptor binds platelet activating factor", "size":3.7411013},
+          { "name":"Melatonin receptors can bind melatonin", "size":3.7411013},
+          {
+           "name":"Eicosanoid ligand-binding receptors",
+           "children": [
+            { "name":"Oxoeicosanoid receptor can bind oxoeicosanoid", "size":3.7411013},
+            {
+             "name":"Prostanoid ligand receptors",
+             "children": [
+              { "name":"EP3 receptor can bind PGE2", "size":3.7411013},
+              { "name":"EP2 and EP4 receptors can bind PGE2", "size":3.7411013},
+              { "name":"EP1 receptor can bind PGE2", "size":3.7411013},
+              { "name":"DP2 receptor can bind PGD2", "size":3.7411013},
+              { "name":"DP1 receptor can bind PGD2", "size":3.7411013},
+              { "name":"TP receptor can bind thromboxane", "size":3.7411013},
+              { "name":"IP receptor can bind prostacyclin", "size":3.7411013},
+              { "name":"FP receptor can bind PGF2-alpha", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Leukotriene receptors",
+             "children": [
+              { "name":"UDP/CysLT receptor can bind cysteinyl leukotrienes", "size":3.7411013},
+              { "name":"CysLT receptors can bind cysteinyl leukotrienes", "size":3.7411013},
+              { "name":"BLT receptors can bind LTB4", "size":3.7411013}
+              ]
+            }
+            ]
+          },
+          {
+           "name":"Hormone ligand-binding receptors",
+           "children": [
+            { "name":"Thyroid-stimulating hormone receptor can bind TSH", "size":4.0476723},
+            { "name":"Luteinizing hormone receptor can bind LH", "size":4.0476723},
+            { "name":"Gonadotropin-releasing hormone receptors can bind GNRH I and II", "size":3.7411013},
+            { "name":"Follicle-stimulating hormone receptor can bind FSH", "size":4.0476723}
+            ]
+          },
+          {
+           "name":"Lysosphingolipid and LPA receptors",
+           "children": [
+            { "name":"LPA-binding receptors bind LPA", "size":3.7411013},
+            { "name":"S1P-binding receptors bind S1P", "size":3.7411013}
+            ]
+          },
+          {
+           "name":"Amine ligand-binding receptors",
+           "children": [
+            { "name":"Trace amine-associated receptors can bind trace amines", "size":3.7411013},
+            {
+             "name":"Muscarinic acetylcholine receptors",
+             "children": [
+              { "name":"M1, M3 and M5 receptors bind acetylcholine", "size":3.7411013},
+              { "name":"M2 and M4 receptors bind acetylcholine", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Serotonin receptors",
+             "children": [
+              { "name":"5-HT4, 6 and 7 receptors can bind serotonin", "size":3.7411013},
+              { "name":"5-HT2 receptor can bind serotonin", "size":3.7411013},
+              { "name":"5-HT1 and 5A receptors can bind serotonin", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Histamine receptors",
+             "children": [
+              { "name":"H1 receptor binds histamine", "size":3.7411013},
+              { "name":"H2 receptor binds histamine", "size":3.7411013},
+              { "name":"H3 and H4 receptors binds histamine", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Dopamine receptors",
+             "children": [
+              { "name":"D1-like dopamine receptors bind to dopamine", "size":3.7411013},
+              { "name":"D2-like dopamine receptors bind to dopamine", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Adrenoceptors",
+             "children": [
+              { "name":"Alpha-2 adrenoceptors bind catecholamines", "size":3.7411013},
+              { "name":"Beta adrenoceptors bind catecholamines", "size":3.7411013},
+              { "name":"Alpha-1 adrenoceptors bind catecholamines", "size":3.7411013}
+              ]
+            }
+            ]
+          },
+          {
+           "name":"Hydroxycarboxylic acid-binding receptors",
+           "children": [
+            { "name":"HCAR3 binds HCAR3 ligands", "size":3.7411013},
+            { "name":"HCAR2 binds HCAR2 ligands", "size":3.7411013},
+            { "name":"HCAR1 binds LACT", "size":3.7411013}
+            ]
+          },
+          {
+           "name":"Free fatty acid receptors",
+           "children": [
+            { "name":"Receptor FFAR1 binds free fatty acids", "size":3.7411013},
+            { "name":"GPR31 is a receptor for 12(S)-HETE", "size":3.7411013},
+            { "name":"GPR120 is a receptor for unsaturated long-chain free fatty acids", "size":3.7411013},
+            { "name":"Receptor FFAR3 binds carboxylates", "size":3.7411013},
+            { "name":"Receptor FFAR2 binds carboxylates", "size":3.7411013}
+            ]
+          },
+          {
+           "name":"Opsins",
+           "children": [
+            { "name":"Melanospin is stimulated by light", "size":3.319508},
+            { "name":"Light stimulates opsin receptors", "size":3.319508}
+            ]
+          },
+          {
+           "name":"Peptide ligand-binding receptors",
+           "children": [
+            { "name":"C5a receptor binds C5a anaphylatoxin", "size":3.7411013},
+            { "name":"MLNR (GPR38) is a receptor for motilin", "size":3.7411013},
+            { "name":"GPR77 binds anaphylatoxins and thier desArginated derivatives", "size":3.7411013},
+            { "name":"Bradykinin receptors B1 and B2 bind to bradykinin", "size":3.7411013},
+            { "name":"Bombesin-like receptors bind bombesin homologues", "size":3.7411013},
+            { "name":"G protein-coupled estrogen receptor 1 binds estrogen non-classically", "size":3.7411013},
+            { "name":"DARC is a non-specific receptor for many chemokines", "size":3.7411013},
+            { "name":"C3a receptor binds anaphylatoxin C3a", "size":3.7411013},
+            { "name":"Neuropeptide S receptor binds neuropeptide S", "size":3.7411013},
+            { "name":"Prokineticin receptors bind prokineticin", "size":3.7411013},
+            { "name":"Apelin receptor binds to apelin", "size":3.7411013},
+            { "name":"Thyrotropin-releasing hormone receptor binds thyrotropin", "size":3.7411013},
+            { "name":"Angiotensin II binds to angiotensin II receptor (types 1 and 2)", "size":3.7411013},
+            { "name":"ACTH binds MC2R", "size":3.7411013},
+            { "name":"Endothelin receptors bind endothelin", "size":3.7411013},
+            { "name":"Melanocortin receptors bind melanocortins", "size":3.7411013},
+            { "name":"Urotensin-2 receptor binds urotensin-2 and 2B", "size":3.7411013},
+            { "name":"GHSR is a receptor for ghrelin", "size":3.7411013},
+            { "name":"The Kiss receptor GPR54 binds kisspeptin", "size":3.7411013},
+            { "name":"Melanin-concentrating hormone receptors bind MCH", "size":3.7411013},
+            { "name":"Proteinase-activated receptors can bind thrombin", "size":4.2973967},
+            { "name":"Neuromedin-U receptors bind neuromedins U, S", "size":3.7411013},
+            { "name":"NMUR2 binds neuromedin-S", "size":3.7411013},
+            { "name":"GPR37 binds prosaptide", "size":3.7411013},
+            { "name":"Prolactin-releasing hormone receptor binds PRH", "size":3.7411013},
+            { "name":"GPR37L binds prosaposin", "size":3.7411013},
+            { "name":"Neuropeptide Y receptors can bind neuropeptide Y-related peptides", "size":3.7411013},
+            { "name":"Neurotensin receptors can bind neurotensins", "size":3.7411013},
+            { "name":"Galanin receptors can bind galanin", "size":3.7411013},
+            { "name":"Nociceptin receptor binds to nociceptin", "size":3.7411013},
+            { "name":"Cholecystokinin receptors bind cholecystokinin", "size":3.7411013},
+            { "name":"GPCR neuropeptide receptor binds neuropeptides B and W", "size":3.7411013},
+            { "name":"Opioid receptors bind opioid peptides", "size":3.319508},
+            { "name":"Somatostatin receptors bind somatostatin", "size":3.7411013},
+            {
+             "name":"Orexin and neuropeptides FF and QRFP bind to their respective receptors",
+             "children": [
+              { "name":"The orphan QRFP receptor can bind neuropeptide QRFP", "size":3.7411013},
+              { "name":"Two NPFF receptors can bind neuropeptide FF", "size":3.7411013},
+              { "name":"Orexin 1 receptor can bind orexin-A neuropeptide", "size":3.7411013},
+              { "name":"Orexin 2 receptor can bind orexin-B neuropeptide", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Formyl peptide receptors bind formyl peptides and many other ligands",
+             "children": [
+              { "name":"FPRL2 receptor binds a wide range of ligands", "size":3.7411013},
+              { "name":"FPR is a receptor for formyl peptides", "size":3.7411013},
+              { "name":"FPRL1 receptor binds a wide range of ligands", "size":3.319508}
+              ]
+            },
+            {
+             "name":"Relaxin receptors",
+             "children": [
+              { "name":"Relaxin 3 receptor 1 binds relaxin 3", "size":4.0476723},
+              { "name":"Relaxin 3 receptor 2 binds relaxin 3 and INSL5", "size":3.319508},
+              { "name":"Relaxin receptor 1 binds relaxin 2 and 3", "size":3.319508},
+              { "name":"Relaxin receptor 2 binds relaxin 2 and INSL3", "size":3.319508}
+              ]
+            },
+            {
+             "name":"Tachykinin receptors bind tachykinins",
+             "children": [
+              { "name":"Tachykinin receptor 1 (NK1) binds to substance P", "size":3.7411013},
+              { "name":"Tachykinin receptor 3 (NK3) binds to neurokinin B", "size":3.7411013},
+              { "name":"Tachykinin receptor 2 (NK2) binds to nuerokinin A", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Vasopressin-like receptors",
+             "children": [
+              { "name":"AVPR2 binds AVP(20-28)", "size":3.7411013},
+              { "name":"AVPR1A,B bind AVP(20-28)", "size":3.7411013},
+              { "name":"Oxytocin receptor bind oxytocin", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"Chemokine receptors bind chemokines",
+             "children": [
+              { "name":"Receptor CCR9 binds CCL25 ligand", "size":3.7411013},
+              { "name":"Receptor CX3C1 binds CX3CL1", "size":3.7411013},
+              { "name":"Receptor CXC1 binds to the ligands lymphotactin and cytokine SCM-1 beta", "size":3.7411013},
+              { "name":"Receptor CXCR1 binds CXCL6 and CXCL8 ligands", "size":3.7411013},
+              { "name":"CCRL2 binds CCL19", "size":3.7411013},
+              { "name":"Receptor CCBP2 binds most inflammatory CC chemokines", "size":3.7411013},
+              { "name":"Receptor CCR11 binds CCL19, CCL21 & CCL25", "size":3.7411013},
+              { "name":"Receptors CCR3, 4 and 5 bind CCL5 ligand", "size":3.7411013},
+              { "name":"Receptors CCR1, 2 and 8 bind CCL16 ligand", "size":3.7411013},
+              { "name":"Receptor CXCR6 binds CXCL16 ligand", "size":3.7411013},
+              { "name":"CXCR5 binds CXCL13", "size":3.7411013},
+              { "name":"Receptor CCR10 binds CCL27 and 28 ligands", "size":3.7411013},
+              { "name":"Receptors CXCR4 and 7 bind CXCL12 ligand", "size":3.7411013},
+              { "name":"Receptor CXCR3 binds ligands CXCL9 to 11", "size":3.7411013},
+              { "name":"Receptor CCR7 binds CCL19 and 21 ligands", "size":3.7411013},
+              { "name":"Receptor CXCR2 binds ligands CXCL1 to 7", "size":3.319508},
+              { "name":"Receptor CCR6 binds CCL20 ligand", "size":3.7411013}
+              ]
+            }
+            ]
+          },
+          {
+           "name":"Nucleotide-like (purinergic) receptors",
+           "children": [
+            {
+             "name":"Adenosine P1 receptors",
+             "children": [
+              { "name":"A1 and A3 receptors bind adenosine", "size":3.7411013},
+              { "name":"A2a and A2b receptors bind adenosine", "size":3.7411013}
+              ]
+            },
+            {
+             "name":"P2Y receptors",
+             "children": [
+              { "name":"P2Y5 receptor can bind to LPA", "size":3.7411013},
+              { "name":"P2Y6 receptor can bind to UDP", "size":3.7411013},
+              { "name":"P2Y9 receptor can bind to LPA", "size":3.5518456},
+              { "name":"P2Y10 receptor can bind to LPA", "size":3.7411013},
+              { "name":"P2Y11 receptor can bind to ATP", "size":3.7411013},
+              { "name":"P2Y1 receptor can bind to ADP", "size":3.7411013},
+              { "name":"P2Y12 receptor can bind to ADP", "size":3.7411013},
+              { "name":"P2Y13 receptor can bind ADP", "size":3.7411013},
+              { "name":"P2Y14 receptor can bind to UDP-glucose", "size":3.7411013},
+              { "name":"P2Y2 receptor binds ATP and UTP", "size":3.7411013},
+              { "name":"The UDP/CysLT (P2Y17) receptor can bind UTP", "size":3.7411013},
+              { "name":"P2Y4 receptor can bind to UTP", "size":3.7411013}
+              ]
+            }
+            ]
+          }
+          ]
+        }
+        ]
+      }
+      ]
+    }
+    ]
+  }

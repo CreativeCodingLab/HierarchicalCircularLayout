@@ -77,7 +77,7 @@ var svg = d3.select("body").append("svg")
 var link = svg.append("g").selectAll(".link"),
     node = svg.append("g").selectAll(".node");
 
-d3.json("readme-flare-imports.json", function(error, classes) {
+d3.json("../data/readme-flare-imports.json", function(error, classes) {
   var nodes = cluster.nodes(packageHierarchy(classes)),
       links = packageImports(nodes);
 
@@ -103,7 +103,7 @@ d3.json("readme-flare-imports.json", function(error, classes) {
 function mouseovered(d) {
   node
       .each(function(n) { n.target = n.source = false; });
-
+	console.log("  d.name="+d.name+" id="+d.id);
   link
       .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
       .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
