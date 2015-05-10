@@ -16,12 +16,6 @@
 }
 
 
-.link {
-   fill: none;
-  stroke: #990000;
-  stroke-width: 0.5px;
-  stroke-opacity: 0.7;
-}
 
 line.linkTree {
   fill: none;
@@ -29,11 +23,64 @@ line.linkTree {
   stroke-width: 0.1px;
 }
 
+.node:hover{
+  font-weight: 700;
+  stroke-opacity: 1;
+  stroke-width: 1.5px;
+  stroke: #000000;
+}
+
+.node--faded {
+  fill: #2ca02c;
+  fill-opacity: 0.05;
+}
+
+.node--source {
+  fill: #2ca02c;
+  stroke: #990000;
+}
+
+.node--target {
+  fill: #d62728;
+  stroke: #00ff00;
+}
+
+
+.link {
+   fill: none;
+  stroke: #990000;
+  stroke-width: 0.5px;
+  stroke-opacity: 0.7;
+}
+
+.link--faded {
+  stroke: #990000;
+  stroke-width: 0.1px;
+  stroke-opacity: 0.05;
+}
+
+.link--source {
+  stroke-opacity: 0.5;
+  stroke-width: 1px;
+  stroke: #00aa00;
+}
+
+.link--target {
+  stroke-opacity: 0.5;
+  stroke-width: 1px;
+  stroke: #aa00aa;
+}
+
+
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script type='text/javascript' src="http://bost.ocks.org/mike/fisheye/fisheye.js?0.0.3"> </script>
+<script src="javascripts/d3.v3.min.js"></script>
+<script src="javascripts/fisheye.js"></script>
+
 <script>
+//<script src="http://d3js.org/d3.v3.min.js">
+//<script type='text/javascript' src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"> 
+//<script type='text/javascript' src="http://bost.ocks.org/mike/fisheye/fisheye.js?0.0.3"> 
 
 var diameter = 1000,
     radius = diameter / 2,
@@ -95,14 +142,15 @@ var circles = svg.selectAll("circle.node");
 var nodeEnter;
 var nodes
 var time = 0;
-      
+var newNodes; 
 //d3.json(/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+  
 //d3.json("data/Mammals.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//d3.json("data/readme-flare-imports.json", function(error, classes) {
-
+d3.json("data/readme-flare-imports.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -115,11 +163,7 @@ d3.json("data/mammalsWithRelationships.json", function(error, classes) {
     } 
   });
 
-   
-  // debugger;
-
-  // Restart the force layout.
-    force
+   force
        .nodes(nodes)
        .links(linkTree)
         .start();
@@ -138,43 +182,29 @@ d3.json("data/mammalsWithRelationships.json", function(error, classes) {
       : 1; // leaf node
   }  
   count1 = childCount1(0, root); 
-  console.log(" count1 = "+count1);
-
   count2 = childCount2(0, root); 
   root.order1 =0;
 
-if (time==0){
-    var newNodes = tree(root)
+  if (time==0){
+    newNodes = tree(root)
       .map(function(d,i) {
         if (d.depth==0){
            d.treeX = 600; 
-           d.treeY = height-getRadius(root);
+           d.treeY = height-getRadius(root)/3;
            d.alpha = -Math.PI/2; 
         }
-        /*else if (d.depth==1){
-          xP = d.parent.treeX;
-          yP = d.parent.treeY;
-          aP = d.parent.alpha;
-          radius2 = 200;
-          d.treeX = xP+radius2*Math.cos(i/(2*d.parent.children.length)*Math.PI/8 -Math.PI*0.9); 
-          d.treeY = yP+radius2*Math.sin(i/(2*d.parent.children.length)*Math.PI/8 -Math.PI*0.9); 
-        }*/
         if (d.children){
           var totalRadius = 0;
-          var totalAngle = Math.PI*1;
+          var totalAngle = Math.PI*1.1;
           d.children.forEach(function(child) {
             totalRadius+=getBranchingAngle(getRadius(child));
           });  
-          //console.log("totalRadius="+totalRadius);
     
           var begin=d.alpha-totalAngle/2;
           d.children.forEach(function(child,i2) {
             xC =  d.treeX;
             yC =  d.treeY;
             rC = getRadius(d)+getRadius(child)/3;
-
-            //if (d.depth==2)
-            //  console.log("node = "+d.name +d.parent.children.indexOf(d)+ " d.parent.alpha="+d.parent.alpha);
              
             var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
             //console.log(begin + "    additional = "+additional);
@@ -185,27 +215,27 @@ if (time==0){
             child.treeY = yC+rC*Math.sin(child.alpha); 
           });
         }
-
-
         return d;
     });
   }  
   time++;
-
-
-  force.nodes(newNodes);
-
-  force.links(linkTree);
-
-  force.start();
-
-  
-  //Assign id to each node, root id = 0
+   //Assign id to each node, root id = 0
   nodes.forEach(function(d,i) {
     d.id =i;
   });
-  //nodes.sort(function(a,b) {return b.id-a.id;});
 
+// Restart the force layout.
+  force.nodes(newNodes);
+  force.links(linkTree);
+  force.start();
+
+  update();
+  circles = svg.selectAll("circle.node");
+  relationship_selection2 = svg.selectAll("path.link");
+});
+
+function update() {
+ 
   // Update links of hierarchy.
   link_selection = link_selection.data(linkTree, function(d) { return d.target.id; });
   link_selection.exit().remove();
@@ -227,22 +257,52 @@ if (time==0){
       .attr("r", getRadius)
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
-      .style("fill", color)
-          
+      .style("fill", color);
+
+   nodeEnter.on('mouseover', mouseovered)
+      .on("mouseout", mouseouted);
+
   // Update links of relationships.
-relationship_selection = relationship_selection 
+  relationship_selection = relationship_selection 
       .data(bundle(links))
     .enter().append("path")
       .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
       .attr("class", "link")
       .attr("d", line);
- 
- 
 
-  circles = svg.selectAll("circle.node");
-  relationship_selection2 = svg.selectAll("path.link");
   tick();
-});
+}
+
+function mouseovered(d) {
+  if (!d.children){
+    node_selection
+        .each(function(n) { n.target = n.source = false; });
+    
+   relationship_selection
+      .classed("link--faded", function(l) { if (l) return true;  })
+   
+   relationship_selection
+      .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
+      .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
+     ;
+   node_selection   
+      .classed("node--faded", function(n) { if (n) return true;  })
+    node_selection
+        .classed("node--target", function(n) { return n.target; })
+        .classed("node--source", function(n) { return n.source; });
+  }    
+ } 
+ function mouseouted(d) {
+  relationship_selection
+      .classed("link--faded", false)
+      .classed("link--target", false)
+      .classed("link--source", false);
+
+  node_selection
+      .classed("node--target", false)
+      .classed("node--source", false);
+}
+
 
 function tick(event) {
   link_selection.attr("x1", function(d) { return d.source.x; })
@@ -264,13 +324,14 @@ function tick(event) {
   
   relationship_selection2
       .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      .attr("class", "link")
+      //.attr("class", "link")
       .attr("d", line);
      
 }
 
 
 // Fisheye Lensing ************************************************
+/*
 var fisheye = d3.fisheye.circular()
       .radius(200);
 svg.on("mousemove", function() {
@@ -303,24 +364,23 @@ svg.on("mousemove", function() {
       d.x += (d.treeX - d.x) * (force_influence); //*event.alpha;
       d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
     });
-  
 });
-
+*/
 
 function color(d) {
-  var sat = 200-d.depth*4;
-  return d._children ? "#3182bd" // collapsed package
+  var sat = 200-d.depth*25;
+  return d._children ? "#ff82bd" // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
 }
 function getBranchingAngle(radius3) {
-  return Math.pow(radius3,2);
+  return Math.pow(radius3,0.8);
  } 
 
 function getRadius(d) {
-return d._children ? 0.6*Math.pow(d.childCount1, 0.75)// collapsed package
-      : d.children ? 0.6*Math.pow(d.childCount1, 0.5) // expanded package
-      : d.size ? Math.pow(d.size,0.1)/2
+return d._children ? 15*Math.pow(d.childCount1, 0.75)// collapsed package
+      : d.children ? 5*Math.pow(d.childCount1, 0.75) // expanded package
+      : d.size ? Math.pow(d.size,0.2)/2
       : 1; // leaf node
 }
 
@@ -334,11 +394,12 @@ function click(d) {
     d.children = d._children;
     d._children = null;
   }
-    console.log("  d.name="+d.name+" id="+d.id);
+  console.log("Clicking on = "+d.name+ " d.depth = "+d.depth);
   
-//  update();
+ update();
 }
 
+/*
 function collide(alpha) {
   var quadtree = d3.geom.quadtree(tree_nodes);
   return function(d) {
@@ -365,6 +426,7 @@ function collide(alpha) {
     });
   };
 }
+*/
 
 function flatten(root) {
   var i = 0;
