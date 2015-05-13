@@ -331,7 +331,7 @@ function tick(event) {
 
 
 // Fisheye Lensing ************************************************
-/*
+
 var fisheye = d3.fisheye.circular()
       .radius(200);
 svg.on("mousemove", function() {
@@ -365,7 +365,7 @@ svg.on("mousemove", function() {
       d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
     });
 });
-*/
+
 
 function color(d) {
   var sat = 200-d.depth*25;
@@ -386,7 +386,7 @@ return d._children ? 15*Math.pow(d.childCount1, 0.75)// collapsed package
 
 // Toggle children on click.
 function click(d) {
-  if (d3.event.defaultPrevented) return; // ignore drag
+/*  if (d3.event.defaultPrevented) return; // ignore drag
   if (d.children) {
     d._children = d.children;
     d.children = null;
@@ -396,7 +396,7 @@ function click(d) {
   }
   console.log("Clicking on = "+d.name+ " d.depth = "+d.depth);
   
- update();
+ update();*/
 }
 
 /*
