@@ -41,6 +41,7 @@ var nodeEnter;
 var nodes
 var time = 0;
 var newNodes; 
+
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/mammalsWithRelationships.json", function(error, classes) {
@@ -130,8 +131,75 @@ var newNodes;
   update();
   circles = svg.selectAll("circle.node");
   relationship_selection2 = svg.selectAll("path.link");
-});
 
+
+
+///////////////////////
+/*
+  select2Data = [];
+  select2DataCollectName(rootSearch);
+  select2DataObject = [];
+  select2Data.sort(function(a, b) {
+            if (a > b) return 1; // sort
+            if (a < b) return -1;
+            return 0;
+        })
+        .filter(function(item, i, ar) {
+            return ar.indexOf(item) === i;
+        }) // remove duplicate items
+        .filter(function(item, i, ar) {
+            select2DataObject.push({
+                "id": i,
+                "text": item
+            });
+        });
+    select2Data.sort(function(a, b) {
+            if (a > b) return 1; // sort
+            if (a < b) return -1;
+            return 0;
+        })
+        .filter(function(item, i, ar) {
+            return ar.indexOf(item) === i;
+        }) // remove duplicate items
+        .filter(function(item, i, ar) {
+            select2DataObject.push({
+                "id": i,
+                "text": item
+            });
+        });
+ */
+
+/*
+$("#searchName").select2({
+        data: select2DataObject,
+        containerCssClass: "search"
+  });
+
+  rootSearch.children.forEach(collapse);
+  updateSearch(rootSearch);
+*/
+  
+
+});
+/*
+var tree = d3.layout.tree()
+    .size([height, width]);
+
+    var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
+var i = 0,
+    duration = 750,
+    rootSearch;
+d3.json("data/flare.json", function(error, flare) {
+  rootSearch = flare;
+  rootSearch.x0 = height / 2;
+  rootSearch.y0 = 0;
+});*/
+
+
+
+//===============================================
 function hideSVG(inValue) {
     if(d3.select("#"+inValue).style("display") == "none") {
        d3.select("#"+inValue).style("display", "block")
@@ -168,10 +236,6 @@ function update() {
 
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
-
-  
-
-
 
 svg.append("linearGradient")                
         .attr("id", "line-gradient")            
@@ -239,8 +303,6 @@ svg.append("linearGradient")
   x.setAttribute("type", "checkbox");
   x.setAttribute("x",100);
   x.setAttribute("y",100);
-  
-
 }
 
 

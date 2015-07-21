@@ -72,13 +72,47 @@ line.linkTree {
     stroke: url(#line-gradient);    
     stroke-width: 2px;          
 }
+
+
+
+.found {
+  fill: #ff4136;
+  stroke: #ff4136;
+}
+
+.search {
+  float: left;
+  font: 10px sans-serif;
+  width: 30%;
+}
+
+ul.select2-results {
+ max-height: 100px;
+}
+
+.select2-container,
+.select2-drop,
+.select2-search,
+.select2-search input {
+  font: 10px sans-serif;
+}
+
+#block_container {
+  display: inline;
+}
+
 </style>
 <body>
 <input type="checkbox" id="checkbox1" value="value2" class="check" onclick="hideSVG('SVGmain')" checked>
 <label for="checkbox1">Text</label>
+<div id="block_container">
+   <div id="searchName"></div>
+</div>
 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="javascripts/d3.v3.min.js"></script>
 <script src="javascripts/fisheye.js"></script>
+<script src="javascripts/select2.min.js"></script>
 <script src="myscripts/input.js"></script>
 <script src="myscripts/main.js"></script>
 <script src="myscripts/gradientCurve.js"></script>

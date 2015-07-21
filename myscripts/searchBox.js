@@ -1,349 +1,77 @@
-var diameter = 1000,
-    radius = diameter / 2,
-    innerRadius = radius - 120;
 
-var cluster = d3.layout.cluster()
-    .size([360, innerRadius])
-    .sort(null)
-    .value(function(d) { return d.size; });
+//===============================================
+function select2DataCollectName(d) {
+    if (d.children)
+        d.children.forEach(select2DataCollectName);
+    else if (d._children)
+        d._children.forEach(select2DataCollectName);
+    select2Data.push(d.name);
+}
 
-var bundle = d3.layout.bundle();
-
-var line = d3.svg.line()
-      .interpolate("bundle")
-      .tension(0.98)
-      .x(function(d) { return d.x; })
-      .y(function(d) { return d.y; });
-
-var width = 1400,
-    height = 800,
-    root;
-
-var force = d3.layout.force()
-    .linkDistance(50)
-    .charge(-120)
-    .gravity(.15)
-    .size([width, height])
-    .on("tick", tick);
-     
-var svg = d3.select("body").append("svg")
-    .attr("id", "SVGmain")
-    .attr("width", width)
-    .attr("height", height);
-
-var relationship_selection = svg.selectAll(".link");
-var relationship_selection2 = svg.selectAll(".link");
-var link_selection = svg.selectAll(".link"),
-    node_selection = svg.selectAll(".node"); // Empty selection at first
-var circles = svg.selectAll("circle.node");
-  
-var nodeEnter;
-var nodes
-var time = 0;
-var newNodes; 
-//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("data/53_RAF_Dot.json", function(error, classes) {
-//d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
-  
-//d3.json("data/Mammals.json", function(error, classes) {
-//d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-  d3.json("data/readme-flare-imports.json", function(error, classes) {
-  nodes = cluster.nodes(packageHierarchy(classes));
-  nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
-  links = packageImports(nodes);
-  linkTree = d3.layout.tree().links(nodes);
-  tree_nodes = d3.layout.tree().nodes(classes);
-  nodes.forEach(function(d) {
-    if (d.depth == 1){
-      root = d;
-      console.log(d.name+ " d.depth = "+d.depth);
-    } 
-  });
-
-   force
-       .nodes(nodes)
-       .links(linkTree)
-        .start();
-
-  var tree = d3.layout.tree().size([ width, height ]);
-
-
-  tree.sort(comparator);
-  
-  function comparator(a, b) {
-    return b.order2 - a.order2;
-  }
-  
-  function nodeSize(d) {
-  return d.children ? Math.sqrt(d.children.length) // expanded package
-      : 1; // leaf node
-  }  
-  count1 = childCount1(0, root); 
-  count2 = childCount2(0, root); 
-  root.order1 =0;
-
-  if (time==0){
-    newNodes = tree(root)
-      .map(function(d,i) {
-        if (d.depth==0){
-           d.treeX = 600; 
-           d.treeY = height-getRadius(root)/3;
-           d.alpha = -Math.PI/2; 
-        }
-        if (d.children){
-          var totalRadius = 0;
-          var totalAngle = Math.PI*1.1;
-          d.children.forEach(function(child) {
-            totalRadius+=getBranchingAngle(getRadius(child));
-          });  
-    
-          var begin=d.alpha-totalAngle/2;
-          d.children.forEach(function(child,i2) {
-            xC =  d.treeX;
-            yC =  d.treeY;
-            rC = getRadius(d)+getRadius(child)/3;
-             
-            var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
-            //console.log(begin + "    additional = "+additional);
-            child.alpha = begin+additional/2;
-            begin +=additional;
-            
-            child.treeX = xC+rC*Math.cos(child.alpha); 
-            child.treeY = yC+rC*Math.sin(child.alpha); 
-          });
-        }
-        return d;
-    });
-  }  
-  time++;
-   //Assign id to each node, root id = 0
-  nodes.forEach(function(d,i) {
-    d.id =i;
-  });
-
-// Restart the force layout.
-  force.nodes(newNodes);
-  force.links(linkTree);
-  force.start();
-
-  update();
-  circles = svg.selectAll("circle.node");
-  relationship_selection2 = svg.selectAll("path.link");
-});
-
-function hideSVG(inValue) {
-    if(d3.select("#"+inValue).style("display") == "none") {
-       d3.select("#"+inValue).style("display", "block")
+//===============================================
+function searchTree(d) {
+    if (d.children)
+        d.children.forEach(searchTree);
+    else if (d._children)
+        d._children.forEach(searchTree);
+    var searchFieldValue = eval(searchField);
+    if (searchFieldValue && searchFieldValue.match(searchText)) {
+            // Walk parent chain
+            var ancestors = [];
+            var parent = d;
+            while (typeof(parent) !== "undefined") {
+                ancestors.push(parent);
+        //console.log(parent);
+                parent.class = "found";
+                parent = parent.parent;
+            }
+        //console.log(ancestors);
     }
-    else {
-       d3.select("#"+inValue).style("display", "none")
+}
+
+//===============================================
+function clearAll(d) {
+    d.class = "";
+    if (d.children)
+        d.children.forEach(clearAll);
+    else if (d._children)
+        d._children.forEach(clearAll);
+}
+
+//===============================================
+function collapse(d) {
+    if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapse);
+        d.children = null;
     }
- }
-
-function update() {
- 
-  // Update links of hierarchy.
-  link_selection = link_selection.data(linkTree, function(d) { return d.target.id; });
-  link_selection.exit().remove();
-  link_selection.enter().append("line", ".node")
-      .attr("class", "linkTree");
-
-// Update nodes.
-  node_selection = svg.selectAll(".node").data(nodes);
-
-  node_selection.exit().remove();
-
-  nodeEnter = node_selection.enter().append("g")
-      .attr("class", "node")
-      .on("click", click)
-      .call(force.drag);
-  
-  nodeEnter.append("circle")
-      .attr("class", "node")
-      .attr("r", getRadius)
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .style("fill", color);
-
-   nodeEnter.on('mouseover', mouseovered)
-      .on("mouseout", mouseouted);
-
-  
-
-
-
-svg.append("linearGradient")                
-        .attr("id", "line-gradient")            
-        .attr("gradientUnits", "userSpaceOnUse")    
-        .attr("x1", 0).attr("y1", 0)         
-        .attr("x2", 1000).attr("y2", 1000)      
-    .selectAll("stop")                      
-        .data([                             
-            {offset: "0%", color: "red"},       
-            {offset: "100%", color: "lawngreen"}   
-        ])                  
-    .enter().append("stop")         
-        .attr("offset", function(d) { return d.offset; })   
-        .attr("stop-color", function(d) { return d.color; });  
-
-/*svg.append("line")
-  .attr("x1", 100)
-  .attr("x2", 1000)
-  .attr("y1", 100)
-  .attr("y2", 600)
-  .style("stroke", "url(#line-gradient)");*/
-
-
-// Update links of relationships.
- /*relationship_selection = relationship_selection 
-      .data(bundle(links))
-    .enter().append("path")
-      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      .attr("class", "link")
-      .attr("d", line)
-      .style("stroke", "url(#line-gradient)");
-//     .style("stroke", function(d) { return color2((d.source.x)/100); })*/
-
-//  tick();
-
-
-
-  var aa = bundle(links);
-  for (var i=0; i< aa.length;i++){
-    var points =  new Array(aa[i].length);;
-    for (var j=0; j< aa[i].length;j++){
-      var a = new Array(2);
-      a[0] = aa[i][j].treeX;
-      a[1] = aa[i][j].treeY;
-      points[j] = a;
-    }  
-
-    //console.log(points);
-    //debugger;
-
-    var color2 = d3.interpolateLab("#008000", "#c83a22");
-
-    var line2 = d3.svg.line()
-        .interpolate("basis");
-
-    svg.selectAll("path"+i)
-        .data(quad(sample(line2(points), 10)))
-      .enter().append("path")
-        .style("fill", function(d) { return color2(d.t); })
-        .style("stroke", function(d) { return color2(d.t); })
-        .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], 0.003); });
-  }
-
-  var x = document.createElement("INPUT");
-  x.setAttribute("type", "checkbox");
-  x.setAttribute("x",100);
-  x.setAttribute("y",100);
-  
-
 }
 
-
-function mouseovered(d) {
-  if (!d.children){
-  	node_selection
-       .each(function(n) { n.target = n.source = false; });
-    relationship_selection
-      .classed("link--faded", function(l) { if (l) return true;  })
-      .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
-      .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
-     ;
-   //  debugger;
-   }    
- }
-
-function mouseouted(d) {
-  relationship_selection
-      .classed("link--faded", false)
-      .classed("link--target", false)
-      .classed("link--source", false);
-  node_selection
-      .classed("node--target", false)
-      .classed("node--source", false);
+//===============================================
+function collapseAllNotFound(d) {
+    if (d.children) {
+        if (d.class !== "found") {
+            d._children = d.children;
+            d._children.forEach(collapseAllNotFound);
+            d.children = null;
+    } else 
+            d.children.forEach(collapseAllNotFound);
+    }
 }
 
-function tick(event) {
-  link_selection.attr("x1", function(d) { return d.source.x; })
-    .attr("y1", function(d) { return d.source.y; })
-    .attr("x2", function(d) { return d.target.x; })
-    .attr("y2", function(d) { return d.target.y; }); 
-  var force_influence = 0.9;
-  node_selection
-    .each(function(d) {
-      d.x += (d.treeX - d.x) * (force_influence); //*event.alpha;
-      d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
-    });
-  circles.attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; });  
-  
-  relationship_selection2
-      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      //.attr("class", "link")
-      .attr("d", line);
-     
+//===============================================
+function expandAll(d) {
+    if (d._children) {
+        d.children = d._children;
+        d.children.forEach(expandAll);
+        d._children = null;
+    } else if (d.children)
+        d.children.forEach(expandAll);
 }
 
-
-// Fisheye Lensing ************************************************
-var fisheye = d3.fisheye.circular()
-      .radius(200);
-svg.on("mousemove", function() {
-  force.stop();
- //fisheye.focus(d3.mouse(this));
-  d3.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
-    .attr("cx", function(d) { return d.fisheye.x; })
-    .attr("cy", function(d) { return Math.round(d.fisheye.y); });
-   // .attr("r", function(d) { return d.fisheye.z * 8; });
-  link_selection.attr("x1", function(d) { return d.source.fisheye.x; })
-    .attr("y1", function(d) { return Math.round(d.source.fisheye.y); })
-    .attr("x2", function(d) { return d.target.fisheye.x; })
-    .attr("y2", function(d) { return Math.round(d.target.fisheye.y); });
- 
-  var force_influence = 0.5;
-  node_selection
-    .each(function(d) {
-      d.x = d.fisheye.x; //*event.alpha;
-      d.y = d.fisheye.y; //*event.alpha;
-    });
-  circles.attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return Math.round(d.y); });  
-  relationship_selection2
-      .each(function(d) { })
-      .attr("d", line);  
-
-  node_selection
-    .each(function(d) {
-      d.x += (d.treeX - d.x) * (force_influence); //*event.alpha;
-      d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
-    });
-});
-
-
-function color(d) {
-  var sat = 200-d.depth*25;
-  return d._children ? "#ff82bd" // collapsed package
-    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#0000f0"; // leaf node
-}
-function getBranchingAngle(radius3) {
-  return Math.pow(radius3,0.8);
- } 
-
-function getRadius(d) {
-return d._children ? 5*Math.pow(d.childCount1, 0.75)// collapsed package
-      : d.children ? 5*Math.pow(d.childCount1, 0.75) // expanded package
-      : d.size ? Math.pow(d.size,0.2)/2
-      : 1; // leaf node
-}
-
+//===============================================
 // Toggle children on click.
-function click(d) {
-/*  if (d3.event.defaultPrevented) return; // ignore drag
+function toggle(d) {
   if (d.children) {
     d._children = d.children;
     d.children = null;
@@ -351,85 +79,123 @@ function click(d) {
     d.children = d._children;
     d._children = null;
   }
-  console.log("Clicking on = "+d.name+ " d.depth = "+d.depth);
-  
- update();*/
+  clearAll(root);
+  updateSearch(d);
+  $("#searchName").select2("val", "");
 }
 
-/*
-function collide(alpha) {
-  var quadtree = d3.geom.quadtree(tree_nodes);
-  return function(d) {
-    quadtree.visit(function(quad, x1, y1, x2, y2) {
-    if (quad.point && (quad.point !== d) && (quad.point !== d.parent) && (quad.point.parent !== d)) {
-         var rb = getRadius(d) + getRadius(quad.point),
-        nx1 = d.x - rb,
-        nx2 = d.x + rb,
-        ny1 = d.y - rb,
-        ny2 = d.y + rb;
 
-        var x = d.x - quad.point.x,
-            y = d.y - quad.point.y,
-            l = Math.sqrt(x * x + y * y);
-          if (l < rb) {
-          l = (l - rb) / l * alpha;
-          d.x -= x *= l;
-          d.y -= y *= l;
-          quad.point.x += x;
-          quad.point.y += y;
-        }
-      }
-      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-    });
-  };
+//===============================================
+function updateSearch(source) {
+
+  // Compute the new tree layout.
+  var nodes = tree.nodes(root).reverse(),
+      links = tree.links(nodes);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+  // Update the nodes…
+  var node = svg.selectAll("g.node")
+      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+      .on("click", toggle);
+
+  nodeEnter.append("circle")
+      .attr("r", 1e-6)
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+  nodeEnter.append("text")
+      .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+      .text(function(d) { return d.name; })
+      .style("fill-opacity", 1e-6);
+
+  // Transition nodes to their new position.
+  var nodeUpdate = node.transition()
+      .duration(duration)
+      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+  nodeUpdate.select("circle")
+      .attr("r", 4.5)
+      .style("fill", function(d) {
+            if (d.class === "found") {
+                return "#ff4136"; //red
+            } else if (d._children) {
+                return "lightsteelblue";
+            } else {
+                return "#fff";
+            }
+        })
+        .style("stroke", function(d) {
+            if (d.class === "found") {
+                return "#ff4136"; //red
+            }
+        });
+
+  nodeUpdate.select("text")
+      .style("fill-opacity", 1);
+
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+      .duration(duration)
+      .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+      .remove();
+
+  nodeExit.select("circle")
+      .attr("r", 1e-6);
+
+  nodeExit.select("text")
+      .style("fill-opacity", 1e-6);
+
+  // Update the links…
+  var link = svg.selectAll("path.link")
+      .data(links, function(d) { return d.target.id; });
+
+  // Enter any new links at the parent's previous position.
+  link.enter().insert("path", "g")
+      .attr("class", "link")
+      .attr("d", function(d) {
+        var o = {x: source.x0, y: source.y0};
+        return diagonal({source: o, target: o});
+      });
+
+  // Transition links to their new position.
+  link.transition()
+      .duration(duration)
+      .attr("d", diagonal)
+      .style("stroke", function(d) {
+            if (d.target.class === "found") {
+                return "#ff4136";
+            }
+        });
+
+  // Transition exiting nodes to the parent's new position.
+  link.exit().transition()
+      .duration(duration)
+      .attr("d", function(d) {
+        var o = {x: source.x, y: source.y};
+        return diagonal({source: o, target: o});
+      })
+      .remove();
+
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
+    d.x0 = d.x;
+    d.y0 = d.y;
+  });
 }
-*/
 
-function flatten(root) {
-  var i = 0;
-  function recurse(node) {
-    if (node.children) node.children.forEach(recurse);
-    if (!node.id) node.id = ++i;
+
+  function collapse(d) {
+    if (d.children) {
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
   }
-  recurse(root);
-};
-
-function childCount1(level, n) {
-    count = 0;
-    if(n.children && n.children.length > 0) {
-      count += n.children.length;
-      n.children.forEach(function(d) {
-        count += childCount1(level + 1, d);
-      });
-      n.childCount1 = count;
-    }
-    else{
-       n.childCount1 = 0;
-    }
-    return count;
-};
-
-
-
-function childCount2(level, n) {
-    var arr = [];
-    if(n.children && n.children.length > 0) {
-      n.children.forEach(function(d) {
-        childCount2(level + 1, d);
-        arr.push(d);
-      });
-    }
-    arr.sort(function(a,b) { return parseFloat(a.childCount1) - parseFloat(b.childCount1) } );
-    var arr2 = [];
-    arr.forEach(function(d, i) {
-        d.order1 = i;
-        arr2.splice(arr2.length/2,0, d);
-    });
-    arr2.forEach(function(d, i) {
-        d.order2 = i;
-    });
-
-};
-
-d3.select(self.frameElement).style("height", diameter + "px");
-
