@@ -89,27 +89,27 @@ function toggle(d) {
 function updateSearch(source) {
 
   // Compute the new tree layout.
-  var nodes = tree.nodes(root).reverse(),
-      links = tree.links(nodes);
+  var nodesSeach = treeSearch.nodes(rootSearch).reverse(),
+      linksSearch = treeSearch.links(nodesSeach);
 
   // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.y = d.depth * 180; });
+  nodesSeach.forEach(function(d) { d.y = d.depth * 180; });
 
   // Update the nodes…
-  var node = svg.selectAll("g.node")
-      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+  var nodeSearch = svg.selectAll("g.nodeSearch")
+      .data(nodesSeach, function(d) { return d.id || (d.id = ++i); });
 
   // Enter any new nodes at the parent's previous position.
-  var nodeEnter = node.enter().append("g")
-      .attr("class", "node")
+  var nodeEnter2 = nodeSearch.enter().append("g")
+      .attr("class", "nodeSearch")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
       .on("click", toggle);
 
-  nodeEnter.append("circle")
+  nodeEnter2.append("circle")
       .attr("r", 1e-6)
       .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
-  nodeEnter.append("text")
+  nodeEnter2.append("text")
       .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
@@ -117,7 +117,7 @@ function updateSearch(source) {
       .style("fill-opacity", 1e-6);
 
   // Transition nodes to their new position.
-  var nodeUpdate = node.transition()
+  var nodeUpdate = nodeSearch.transition()
       .duration(duration)
       .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
@@ -142,7 +142,7 @@ function updateSearch(source) {
       .style("fill-opacity", 1);
 
   // Transition exiting nodes to the parent's new position.
-  var nodeExit = node.exit().transition()
+  var nodeExit = nodeSearch.exit().transition()
       .duration(duration)
       .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
       .remove();
@@ -154,11 +154,11 @@ function updateSearch(source) {
       .style("fill-opacity", 1e-6);
 
   // Update the links…
-  var link = svg.selectAll("path.link")
-      .data(links, function(d) { return d.target.id; });
+  var linkSearch = svg.selectAll("path.link")
+      .data(linksSearch, function(d) { return d.target.id; });
 
   // Enter any new links at the parent's previous position.
-  link.enter().insert("path", "g")
+  linkSearch.enter().insert("path", "g")
       .attr("class", "link")
       .attr("d", function(d) {
         var o = {x: source.x0, y: source.y0};
@@ -166,7 +166,7 @@ function updateSearch(source) {
       });
 
   // Transition links to their new position.
-  link.transition()
+  linkSearch.transition()
       .duration(duration)
       .attr("d", diagonal)
       .style("stroke", function(d) {
@@ -176,7 +176,7 @@ function updateSearch(source) {
         });
 
   // Transition exiting nodes to the parent's new position.
-  link.exit().transition()
+  linkSearch.exit().transition()
       .duration(duration)
       .attr("d", function(d) {
         var o = {x: source.x, y: source.y};
@@ -185,7 +185,7 @@ function updateSearch(source) {
       .remove();
 
   // Stash the old positions for transition.
-  nodes.forEach(function(d) {
+  nodesSeach.forEach(function(d) {
     d.x0 = d.x;
     d.y0 = d.y;
   });

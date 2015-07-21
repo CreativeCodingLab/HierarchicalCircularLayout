@@ -132,10 +132,25 @@ var newNodes;
   circles = svg.selectAll("circle.node");
   relationship_selection2 = svg.selectAll("path.link");
 
+});
 
 
-///////////////////////
-/*
+
+
+var treeSearch = d3.layout.tree()
+    .size([height, width]);
+
+    var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
+var i = 0,
+    duration = 750,
+    rootSearch;
+d3.json("data/flare.json", function(error, flare) {
+  rootSearch = flare;
+  rootSearch.x0 = height / 2;
+  rootSearch.y0 = 0;
+
   select2Data = [];
   select2DataCollectName(rootSearch);
   select2DataObject = [];
@@ -167,9 +182,7 @@ var newNodes;
                 "text": item
             });
         });
- */
-
-/*
+ 
 $("#searchName").select2({
         data: select2DataObject,
         containerCssClass: "search"
@@ -177,25 +190,7 @@ $("#searchName").select2({
 
   rootSearch.children.forEach(collapse);
   updateSearch(rootSearch);
-*/
-  
-
 });
-/*
-var tree = d3.layout.tree()
-    .size([height, width]);
-
-    var diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.y, d.x]; });
-
-var i = 0,
-    duration = 750,
-    rootSearch;
-d3.json("data/flare.json", function(error, flare) {
-  rootSearch = flare;
-  rootSearch.x0 = height / 2;
-  rootSearch.y0 = 0;
-});*/
 
 
 
@@ -298,11 +293,6 @@ svg.append("linearGradient")
         .style("stroke", function(d) { return color2(d.t); })
         .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], 0.003); });
   }
-
-  var x = document.createElement("INPUT");
-  x.setAttribute("type", "checkbox");
-  x.setAttribute("x",100);
-  x.setAttribute("y",100);
 }
 
 
