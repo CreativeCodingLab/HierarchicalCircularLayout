@@ -34,14 +34,20 @@ var svg = d3.select("body").append("svg")
 var relationship_selection = svg.selectAll(".link");
 var relationship_selection2 = svg.selectAll(".link");
 var link_selection = svg.selectAll(".link"),
-    node_selection = svg.selectAll(".node"); // Empty selection at first
-var circles = svg.selectAll("circle.node");
+    node_selection = svg.selectAll(".node1"); // Empty selection at first
+var circles = svg.selectAll("circle.node1");
   
 var nodeEnter;
 var nodes
 var time = 0;
 var newNodes; 
 
+
+var i = 0,
+    duration = 750,
+    rootSearch;
+var treeSearch;
+var diagonal;
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/mammalsWithRelationships.json", function(error, classes) {
@@ -129,14 +135,12 @@ var newNodes;
   force.start();
 
   update();
-  circles = svg.selectAll("circle.node");
+  circles = svg.selectAll("circle.node1");
   relationship_selection2 = svg.selectAll("path.link");
-
-});
-
 
 //===============================================
 $("#searchName").on("select2-selecting", function(e) {
+    clearAll(root);
     clearAll(rootSearch);
     expandAll(rootSearch);
     updateSearch(rootSearch);
@@ -148,18 +152,13 @@ $("#searchName").on("select2-selecting", function(e) {
     updateSearch(rootSearch);
 })
 
-var i = 0,
-    duration = 750,
-    rootSearch;
-
-var treeSearch = d3.layout.tree()
+ treeSearch = d3.layout.tree()
     .size([height, width]);
 
-var diagonal = d3.svg.diagonal()
+ diagonal = d3.svg.diagonal()
     .projection(function(d) { return [d.y, d.x]; });
 
-d3.json("data/flare.json", function(error, flare) {
-  rootSearch = flare;
+  rootSearch = root;
   rootSearch.x0 = height / 2;
   rootSearch.y0 = 0;
 
@@ -198,50 +197,71 @@ d3.json("data/flare.json", function(error, flare) {
         data: select2DataObject,
         containerCssClass: "search"
   });
-
   rootSearch.children.forEach(collapse);
   updateSearch(rootSearch);
 });
 
 
+
+
+
 //===============================================
 function hideSVG(inValue) {
-    if(d3.select("#"+inValue).style("display") == "none") {
+  //console.log("value   "+document.getElementById("checkbox1").checked);
+    /*if(d3.select("#"+inValue).style("display") == "none") {
        d3.select("#"+inValue).style("display", "block")
     }
     else {
        d3.select("#"+inValue).style("display", "none")
-    }
+    }*/
+    update();
  }
 
 function update() {
- 
   // Update links of hierarchy.
   link_selection = link_selection.data(linkTree, function(d) { return d.target.id; });
   link_selection.exit().remove();
-  link_selection.enter().append("line", ".node")
+  link_selection.enter().append("line", ".node2")
       .attr("class", "linkTree");
 
 // Update nodes.
-  node_selection = svg.selectAll(".node").data(nodes);
-
-  node_selection.exit().remove();
-
-  nodeEnter = node_selection.enter().append("g")
-      .attr("class", "node")
-      .on("click", click)
-      .call(force.drag);
+  svg.selectAll(".node1").remove();
+  node_selection = svg.selectAll(".node1").data(nodes);
   
-  nodeEnter.append("circle")
-      .attr("class", "node")
-      .attr("r", getRadius)
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .style("fill", color);
+  nodeEnter = node_selection.enter().append("g")
+    .attr("class", "node0")
+    .on("click", click)
+    .call(force.drag);
+  
 
+  //console.log("***nodeEnter   "+nodeEnter);
+  nodeEnter.append("circle")
+    .attr("class", "node1")
+    .attr("r", getRadius)
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .style("fill-opacity", function(d){ 
+      if (document.getElementById("checkbox1").checked){
+        return 1;
+      }
+      else{
+     //   console.log(d.children+"  "+d._children);
+        if (d.children || d._children)
+          return 0;
+        else
+          return 1;
+      }
+     })   
+    .style("fill", color);
+   
+  
+    
+    
+   
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
-
+  
+/*
 svg.append("linearGradient")                
         .attr("id", "line-gradient")            
         .attr("gradientUnits", "userSpaceOnUse")    
@@ -255,7 +275,7 @@ svg.append("linearGradient")
     .enter().append("stop")         
         .attr("offset", function(d) { return d.offset; })   
         .attr("stop-color", function(d) { return d.color; });  
-
+*/
 /*svg.append("line")
   .attr("x1", 100)
   .attr("x2", 1000)
@@ -278,6 +298,8 @@ svg.append("linearGradient")
 
 
 
+
+// Draw directed links *******************************************************
   var aa = bundle(links);
   for (var i=0; i< aa.length;i++){
     var points =  new Array(aa[i].length);;
@@ -287,10 +309,8 @@ svg.append("linearGradient")
       a[1] = aa[i][j].treeY;
       points[j] = a;
     }  
-
     //console.log(points);
     //debugger;
-
     var color2 = d3.interpolateLab("#008000", "#c83a22");
 
     var line2 = d3.svg.line()
@@ -356,7 +376,8 @@ var fisheye = d3.fisheye.circular()
       .radius(200);
 svg.on("mousemove", function() {
   force.stop();
- //fisheye.focus(d3.mouse(this));
+if (document.getElementById("checkbox2").checked)
+   fisheye.focus(d3.mouse(this));
   d3.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
     .attr("cx", function(d) { return d.fisheye.x; })
     .attr("cy", function(d) { return Math.round(d.fisheye.y); });
@@ -388,7 +409,7 @@ svg.on("mousemove", function() {
 
 function color(d) {
   var sat = 200-d.depth*25;
-  return d._children ? "#ff82bd" // collapsed package
+  return d._children ? "rgb("+sat+", "+255+", "+255+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
 }
