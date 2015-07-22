@@ -32,10 +32,8 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 var relationship_selection = svg.selectAll(".link");
-var relationship_selection2 = svg.selectAll(".link");
 var link_selection = svg.selectAll(".link"),
     node_selection = svg.selectAll(".node1"); // Empty selection at first
-var circles = svg.selectAll("circle.node1");
   
 var nodeEnter;
 var nodes
@@ -135,9 +133,7 @@ var diagonal;
   force.start();
 
   update();
-  circles = svg.selectAll("circle.node1");
-  relationship_selection2 = svg.selectAll("path.link");
-
+  
 //===============================================
 $("#searchName").on("select2-selecting", function(e) {
     clearAll(root);
@@ -221,7 +217,7 @@ function update() {
   // Update links of hierarchy.
   link_selection = link_selection.data(linkTree, function(d) { return d.target.id; });
   link_selection.exit().remove();
-  link_selection.enter().append("line", ".node2")
+  link_selection.enter().append("line")
       .attr("class", "linkTree");
 
 // Update nodes.
@@ -229,7 +225,7 @@ function update() {
   node_selection = svg.selectAll(".node1").data(nodes);
   
   nodeEnter = node_selection.enter().append("g")
-    .attr("class", "node0")
+    .attr("class", "nodeG")
     .on("click", click)
     .call(force.drag);
   
@@ -253,11 +249,7 @@ function update() {
       }
      })   
     .style("fill", color);
-   
   
-    
-    
-   
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
   
@@ -284,53 +276,53 @@ svg.append("linearGradient")
   .style("stroke", "url(#line-gradient)");*/
 
 
-// Update links of relationships.
- /*relationship_selection = relationship_selection 
-      .data(bundle(links))
-    .enter().append("path")
-      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      .attr("class", "link")
-      .attr("d", line)
-      .style("stroke", "url(#line-gradient)");
-//     .style("stroke", function(d) { return color2((d.source.x)/100); })*/
+  if (document.getElementById("checkbox2").checked){
+  // Draw directed links *******************************************************
+    var aa = bundle(links);
+    for (var i=0; i< aa.length;i++){
+      var points =  new Array(aa[i].length);;
+      for (var j=0; j< aa[i].length;j++){
+        var a = new Array(2);
+        a[0] = aa[i][j].treeX;
+        a[1] = aa[i][j].treeY;
+        points[j] = a;
+      }  
+      //console.log(points);
+      //debugger;
+      var color2 = d3.interpolateLab("#008000", "#c83a22");
 
+      var line2 = d3.svg.line()
+          .interpolate("basis");
+
+      svg.selectAll("path"+i)
+          .data(quad(sample(line2(points), 10)))
+        .enter().append("path")
+          .style("fill", function(d) { return color2(d.t); })
+          .style("stroke", function(d) { return color2(d.t); })
+          .style("stroke-width", 0.1 )
+          .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], 1); });
+    }
+  }
+  else {
+    // Update Undirected links of relationships.
+    var color2 = d3.interpolateLab("#008000", "#c83a22");
+    svg.selectAll("path.link").remove();
+    relationship_selection 
+        .data(bundle(links))
+      .enter().append("path")
+        .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+        .attr("d", line);
+  }
 //  tick();
 
-
-
-
-// Draw directed links *******************************************************
-  var aa = bundle(links);
-  for (var i=0; i< aa.length;i++){
-    var points =  new Array(aa[i].length);;
-    for (var j=0; j< aa[i].length;j++){
-      var a = new Array(2);
-      a[0] = aa[i][j].treeX;
-      a[1] = aa[i][j].treeY;
-      points[j] = a;
-    }  
-    //console.log(points);
-    //debugger;
-    var color2 = d3.interpolateLab("#008000", "#c83a22");
-
-    var line2 = d3.svg.line()
-        .interpolate("basis");
-
-    svg.selectAll("path"+i)
-        .data(quad(sample(line2(points), 10)))
-      .enter().append("path")
-        .style("fill", function(d) { return color2(d.t); })
-        .style("stroke", function(d) { return color2(d.t); })
-        .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], 0.003); });
-  }
 }
 
 
 function mouseovered(d) {
   if (!d.children){
-  	node_selection
+    node_selection
        .each(function(n) { n.target = n.source = false; });
-    relationship_selection
+    svg.selectAll("path.link")
       .classed("link--faded", function(l) { if (l) return true;  })
       .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
       .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
@@ -340,7 +332,7 @@ function mouseovered(d) {
  }
 
 function mouseouted(d) {
-  relationship_selection
+  svg.selectAll("path.link")
       .classed("link--faded", false)
       .classed("link--target", false)
       .classed("link--source", false);
@@ -360,14 +352,9 @@ function tick(event) {
       d.x += (d.treeX - d.x) * (force_influence); //*event.alpha;
       d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
     });
-  circles.attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; });  
+ // circles.attr("cx", function(d) { return d.x; })
+  //    .attr("cy", function(d) { return d.y; });  
   
-  relationship_selection2
-      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      //.attr("class", "link")
-      .attr("d", line);
-     
 }
 
 
@@ -382,7 +369,7 @@ if (document.getElementById("checkbox2").checked)
     .attr("cx", function(d) { return d.fisheye.x; })
     .attr("cy", function(d) { return Math.round(d.fisheye.y); });
    // .attr("r", function(d) { return d.fisheye.z * 8; });
-  link_selection.attr("x1", function(d) { return d.source.fisheye.x; })
+ link_selection.attr("x1", function(d) { return d.source.fisheye.x; })
     .attr("y1", function(d) { return Math.round(d.source.fisheye.y); })
     .attr("x2", function(d) { return d.target.fisheye.x; })
     .attr("y2", function(d) { return Math.round(d.target.fisheye.y); });
@@ -393,9 +380,9 @@ if (document.getElementById("checkbox2").checked)
       d.x = d.fisheye.x; //*event.alpha;
       d.y = d.fisheye.y; //*event.alpha;
     });
-  circles.attr("cx", function(d) { return d.x; })
+  svg.selectAll("circle.node1").attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return Math.round(d.y); });  
-  relationship_selection2
+  svg.selectAll("path.link")
       .each(function(d) { })
       .attr("d", line);  
 
