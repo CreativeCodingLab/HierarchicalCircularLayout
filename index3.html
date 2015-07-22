@@ -69,6 +69,8 @@ $("#searchName").on("select2-selecting", function(e) {
     expandAll(rootSearch);
     updateSearch(rootSearch);
 
+    console.log("AAA "+e);
+
     searchField = "d.name";
     searchText = e.object.text;
     searchTree(rootSearch);
@@ -97,8 +99,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("data/flare.json", function(error, flare) {
-  rootSearch = flare;
+  rootSearch = root;
   rootSearch.x0 = height / 2;
   rootSearch.y0 = 0;
 
@@ -140,7 +141,7 @@ d3.json("data/flare.json", function(error, flare) {
 
   rootSearch.children.forEach(collapse);
   updateSearch(rootSearch);
-});
+
 
 d3.select(self.frameElement).style("height", "800px");
 
