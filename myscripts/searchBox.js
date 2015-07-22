@@ -79,7 +79,7 @@ function toggle(d) {
     d.children = d._children;
     d._children = null;
   }
-  clearAll(root);
+  clearAll(rootSearch);
   updateSearch(d);
   $("#searchName").select2("val", "");
 }
@@ -154,12 +154,12 @@ function updateSearch(source) {
       .style("fill-opacity", 1e-6);
 
   // Update the links…
-  var linkSearch = svg.selectAll("path.link")
+  var linkSearch = svg.selectAll("path.linkSearch")
       .data(linksSearch, function(d) { return d.target.id; });
 
   // Enter any new links at the parent's previous position.
   linkSearch.enter().insert("path", "g")
-      .attr("class", "link")
+      .attr("class", "linkSearch")
       .attr("d", function(d) {
         var o = {x: source.x0, y: source.y0};
         return diagonal({source: o, target: o});

@@ -16,7 +16,7 @@
   font: 10px sans-serif;
 }
 
-.link {
+.linkSearch {
   fill: none;
   stroke: #ccc;
   stroke-width: 1.5px;
@@ -65,15 +65,15 @@ ul.select2-results {
 
 //===============================================
 $("#searchName").on("select2-selecting", function(e) {
-    clearAll(root);
-    expandAll(root);
-    updateSearch(root);
+    clearAll(rootSearch);
+    expandAll(rootSearch);
+    updateSearch(rootSearch);
 
     searchField = "d.name";
     searchText = e.object.text;
-    searchTree(root);
-    root.children.forEach(collapseAllNotFound);
-    updateSearch(root);
+    searchTree(rootSearch);
+    rootSearch.children.forEach(collapseAllNotFound);
+    updateSearch(rootSearch);
 })
 
 //===============================================
@@ -85,7 +85,7 @@ var i = 0,
     duration = 750,
     rootSearch;
 
-var tree = d3.layout.tree()
+var treeSearch = d3.layout.tree()
     .size([height, width]);
 
 var diagonal = d3.svg.diagonal()
@@ -138,8 +138,8 @@ d3.json("data/flare.json", function(error, flare) {
         containerCssClass: "search"
   });
 
-  root.children.forEach(collapse);
-  updateSearch(root);
+  rootSearch.children.forEach(collapse);
+  updateSearch(rootSearch);
 });
 
 d3.select(self.frameElement).style("height", "800px");

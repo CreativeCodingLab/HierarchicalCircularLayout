@@ -135,17 +135,29 @@ var newNodes;
 });
 
 
+//===============================================
+$("#searchName").on("select2-selecting", function(e) {
+    clearAll(rootSearch);
+    expandAll(rootSearch);
+    updateSearch(rootSearch);
 
-
-var treeSearch = d3.layout.tree()
-    .size([height, width]);
-
-    var diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.y, d.x]; });
+    searchField = "d.name";
+    searchText = e.object.text;
+    searchTree(rootSearch);
+    rootSearch.children.forEach(collapseAllNotFound);
+    updateSearch(rootSearch);
+})
 
 var i = 0,
     duration = 750,
     rootSearch;
+
+var treeSearch = d3.layout.tree()
+    .size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
 d3.json("data/flare.json", function(error, flare) {
   rootSearch = flare;
   rootSearch.x0 = height / 2;
@@ -182,8 +194,7 @@ d3.json("data/flare.json", function(error, flare) {
                 "text": item
             });
         });
- 
-$("#searchName").select2({
+  $("#searchName").select2({
         data: select2DataObject,
         containerCssClass: "search"
   });
@@ -191,7 +202,6 @@ $("#searchName").select2({
   rootSearch.children.forEach(collapse);
   updateSearch(rootSearch);
 });
-
 
 
 //===============================================
