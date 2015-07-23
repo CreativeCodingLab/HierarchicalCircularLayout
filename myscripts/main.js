@@ -48,8 +48,8 @@ var treeSearch;
 var diagonal;
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
-//d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
   
 //d3.json("data/Mammals.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
@@ -88,12 +88,15 @@ var diagonal;
   count2 = childCount2(0, root); 
   root.order1 =0;
 
+
   if (time==0){
+    
+    var disFactor = 4;
     newNodes = tree(root)
       .map(function(d,i) {
         if (d.depth==0){
            d.treeX = 600; 
-           d.treeY = height-getRadius(root)/3;
+           d.treeY = height-getRadius(root)/disFactor;
            d.alpha = -Math.PI/2; 
         }
         if (d.children){
@@ -107,15 +110,13 @@ var diagonal;
           d.children.forEach(function(child,i2) {
             xC =  d.treeX;
             yC =  d.treeY;
-            rC = getRadius(d)+getRadius(child)/3;
+            rC = getRadius(d)+getRadius(child)/disFactor;
              
             var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
-            //console.log(begin + "    additional = "+additional);
             child.alpha = begin+additional/2;
-            begin +=additional;
-            
             child.treeX = xC+rC*Math.cos(child.alpha); 
             child.treeY = yC+rC*Math.sin(child.alpha); 
+            begin +=additional;
           });
         }
         return d;
@@ -405,13 +406,13 @@ function color(d) {
     : "#0000f0"; // leaf node
 }
 function getBranchingAngle(radius3) {
-  return Math.pow(radius3,0.8);
+  return Math.pow(radius3,2);
  } 
 
 function getRadius(d) {
-return d._children ? 10*Math.pow(d.childCount1, 0.5)// collapsed package
-      : d.children ? 10*Math.pow(d.childCount1, 0.5) // expanded package
-      : d.size ? Math.pow(d.size,0.2)
+return d._children ? 0.75*Math.pow(d.childCount1, 0.5)// collapsed package
+      : d.children ? 0.75*Math.pow(d.childCount1, 0.5) // expanded package
+      : d.size ? Math.pow(d.size,0.1)
       : 1; // leaf node
 }
 
