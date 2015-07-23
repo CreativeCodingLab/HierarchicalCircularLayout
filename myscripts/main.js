@@ -49,11 +49,11 @@ var diagonal;
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
   
 //d3.json("data/Mammals.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-  d3.json("data/readme-flare-imports.json", function(error, classes) {
+//  d3.json("data/readme-flare-imports.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -98,7 +98,7 @@ var diagonal;
         }
         if (d.children){
           var totalRadius = 0;
-          var totalAngle = Math.PI*1.1;
+          var totalAngle = Math.PI*1;
           d.children.forEach(function(child) {
             totalRadius+=getBranchingAngle(getRadius(child));
           });  
@@ -399,7 +399,7 @@ if (document.getElementById("checkbox2").checked)
 
 
 function color(d) {
-  var sat = 240-d.depth*20;
+  var sat = 240-d.depth*10;
   return d._children ? "rgb("+sat+", "+255+", "+255+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
@@ -409,9 +409,9 @@ function getBranchingAngle(radius3) {
  } 
 
 function getRadius(d) {
-return d._children ? 5*Math.pow(d.childCount1, 0.75)// collapsed package
-      : d.children ? 5*Math.pow(d.childCount1, 0.75) // expanded package
-      : d.size ? Math.pow(d.size,0.2)/2
+return d._children ? 10*Math.pow(d.childCount1, 0.5)// collapsed package
+      : d.children ? 10*Math.pow(d.childCount1, 0.5) // expanded package
+      : d.size ? Math.pow(d.size,0.2)
       : 1; // leaf node
 }
 
