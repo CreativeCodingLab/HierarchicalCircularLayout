@@ -46,14 +46,52 @@ var i = 0,
     rootSearch;
 var treeSearch;
 var diagonal;
+
+
+
+ var tree = d3.layout.tree().size([ width, height ]);
+
+
+ var xSlider = d3.scale.linear()
+    .domain([0, 180])
+    .range([0, width])
+    .clamp(true);
+
+var brush = d3.svg.brush()
+    .x(xSlider)
+    .extent([0, 0])
+    .on("brush", brushed);
+
+     var slider = svg.append("g")
+    .attr("class", "slider")
+    .call(brush);
+
+slider.selectAll(".extent,.resize")
+    .remove();
+
+slider.select(".background")
+    .attr("height", height);
+
+var handle = slider.append("circle")
+    .attr("class", "handle")
+    .attr("transform", "translate(0," + height / 2 + ")")
+    .attr("r", 9);
+
+slider
+    .call(brush.event)
+  .transition() // gratuitous intro!
+    .duration(750)
+    .call(brush.extent([70, 70]))
+    .call(brush.event);
+
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
-d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
   
 //d3.json("data/Mammals.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//  d3.json("data/readme-flare-imports.json", function(error, classes) {
+  d3.json("data/readme-flare-imports.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -71,8 +109,7 @@ d3.json("data/mammalsWithRelationships.json", function(error, classes) {
        .links(linkTree)
         .start();
 
-  var tree = d3.layout.tree().size([ width, height ]);
-
+ 
 
   tree.sort(comparator);
   
@@ -89,41 +126,56 @@ d3.json("data/mammalsWithRelationships.json", function(error, classes) {
   root.order1 =0;
 
 
-  if (time==0){
-    
-    var disFactor = 4;
-    newNodes = tree(root)
-      .map(function(d,i) {
-        if (d.depth==0){
-           d.treeX = 600; 
-           d.treeY = height-getRadius(root)/disFactor;
-           d.alpha = -Math.PI/2; 
-        }
-        if (d.children){
-          var totalRadius = 0;
-          var totalAngle = Math.PI*1;
-          d.children.forEach(function(child) {
-            totalRadius+=getBranchingAngle(getRadius(child));
-          });  
-    
-          var begin=d.alpha-totalAngle/2;
-          d.children.forEach(function(child,i2) {
-            xC =  d.treeX;
-            yC =  d.treeY;
-            rC = getRadius(d)+getRadius(child)/disFactor;
-             
-            var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
-            child.alpha = begin+additional/2;
-            child.treeX = xC+rC*Math.cos(child.alpha); 
-            child.treeY = yC+rC*Math.sin(child.alpha); 
-            begin +=additional;
-          });
-        }
-        return d;
-    });
-  }  
-  time++;
-   //Assign id to each node, root id = 0
+  var disFactor = 4;
+  setupTree(disFactor);
+
+  update();
+  addSearchBox();
+});  
+
+function brushed() {
+  var value = brush.extent()[0];
+
+  if (d3.event.sourceEvent) { // not a programmatic event
+    value = xSlider.invert(d3.mouse(this)[0]);
+    brush.extent([value, value]);
+  }
+  handle.attr("cx", xSlider(value));
+  d3.select("body").style("background-color", d3.hsl(value, .8, .8));
+}
+
+
+function setupTree(disFactor) {
+  newNodes = tree(root)
+    .map(function(d,i) {
+      if (d.depth==0){
+         d.treeX = 600; 
+         d.treeY = height-getRadius(root)/disFactor;
+         d.alpha = -Math.PI/2; 
+      }
+      if (d.children){
+        var totalRadius = 0;
+        var totalAngle = Math.PI*1;
+        d.children.forEach(function(child) {
+          totalRadius+=getBranchingAngle(getRadius(child));
+        });  
+  
+        var begin=d.alpha-totalAngle/2;
+        d.children.forEach(function(child,i2) {
+          xC =  d.treeX;
+          yC =  d.treeY;
+          rC = getRadius(d)+getRadius(child)/disFactor;
+           
+          var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
+          child.alpha = begin+additional/2;
+          child.treeX = xC+rC*Math.cos(child.alpha); 
+          child.treeY = yC+rC*Math.sin(child.alpha); 
+          begin +=additional;
+        });
+      }
+      return d;
+  });
+  //Assign id to each node, root id = 0
   nodes.forEach(function(d,i) {
     d.id =i;
   });
@@ -132,87 +184,74 @@ d3.json("data/mammalsWithRelationships.json", function(error, classes) {
   force.nodes(newNodes);
   force.links(linkTree);
   force.start();
+}  
 
-  update();
-  
-//===============================================
-$("#searchName").on("select2-selecting", function(e) {
-    clearAll(root);
-    clearAll(rootSearch);
-    expandAll(rootSearch);
-    updateSearch(rootSearch);
 
-    searchField = "d.name";
-    searchText = e.object.text;
-    searchTree(rootSearch);
-    rootSearch.children.forEach(collapseAllNotFound);
-    updateSearch(rootSearch);
-})
 
- treeSearch = d3.layout.tree()
-    .size([height, width]);
+function addSearchBox() {
+  //===============================================
+  $("#searchName").on("select2-selecting", function(e) {
+      clearAll(root);
+      clearAll(rootSearch);
+      expandAll(rootSearch);
+      updateSearch(rootSearch);
 
- diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.y, d.x]; });
+      searchField = "d.name";
+      searchText = e.object.text;
+      searchTree(rootSearch);
+      rootSearch.children.forEach(collapseAllNotFound);
+      updateSearch(rootSearch);
+  })
 
-  rootSearch = root;
-  rootSearch.x0 = height / 2;
-  rootSearch.y0 = 0;
+   treeSearch = d3.layout.tree()
+      .size([height, width]);
 
-  select2Data = [];
-  select2DataCollectName(rootSearch);
-  select2DataObject = [];
-  select2Data.sort(function(a, b) {
-            if (a > b) return 1; // sort
-            if (a < b) return -1;
-            return 0;
-        })
-        .filter(function(item, i, ar) {
-            return ar.indexOf(item) === i;
-        }) // remove duplicate items
-        .filter(function(item, i, ar) {
-            select2DataObject.push({
-                "id": i,
-                "text": item
-            });
-        });
+   diagonal = d3.svg.diagonal()
+      .projection(function(d) { return [d.y, d.x]; });
+
+    rootSearch = root;
+    rootSearch.x0 = height / 2;
+    rootSearch.y0 = 0;
+
+    select2Data = [];
+    select2DataCollectName(rootSearch);
+    select2DataObject = [];
     select2Data.sort(function(a, b) {
-            if (a > b) return 1; // sort
-            if (a < b) return -1;
-            return 0;
-        })
-        .filter(function(item, i, ar) {
-            return ar.indexOf(item) === i;
-        }) // remove duplicate items
-        .filter(function(item, i, ar) {
-            select2DataObject.push({
-                "id": i,
-                "text": item
-            });
-        });
-  $("#searchName").select2({
-        data: select2DataObject,
-        containerCssClass: "search"
-  });
-  rootSearch.children.forEach(collapse);
-  updateSearch(rootSearch);
-});
+              if (a > b) return 1; // sort
+              if (a < b) return -1;
+              return 0;
+          })
+          .filter(function(item, i, ar) {
+              return ar.indexOf(item) === i;
+          }) // remove duplicate items
+          .filter(function(item, i, ar) {
+              select2DataObject.push({
+                  "id": i,
+                  "text": item
+              });
+          });
+      select2Data.sort(function(a, b) {
+              if (a > b) return 1; // sort
+              if (a < b) return -1;
+              return 0;
+          })
+          .filter(function(item, i, ar) {
+              return ar.indexOf(item) === i;
+          }) // remove duplicate items
+          .filter(function(item, i, ar) {
+              select2DataObject.push({
+                  "id": i,
+                  "text": item
+              });
+          });
+    $("#searchName").select2({
+          data: select2DataObject,
+          containerCssClass: "search"
+    });
+    rootSearch.children.forEach(collapse);
+    updateSearch(rootSearch);
+ } 
 
-
-
-
-
-//===============================================
-function hideSVG(inValue) {
-  //console.log("value   "+document.getElementById("checkbox1").checked);
-    /*if(d3.select("#"+inValue).style("display") == "none") {
-       d3.select("#"+inValue).style("display", "block")
-    }
-    else {
-       d3.select("#"+inValue).style("display", "none")
-    }*/
-    update();
- }
 
 function update() {
   // Update links of hierarchy.
@@ -221,7 +260,7 @@ function update() {
   link_selection.enter().append("line")
       .attr("class", "linkTree");
 
-// Update nodes.
+  // Update nodes.
   svg.selectAll(".node1").remove();
   node_selection = svg.selectAll(".node1").data(nodes);
   
@@ -253,30 +292,7 @@ function update() {
   
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
-  
-/*
-svg.append("linearGradient")                
-        .attr("id", "line-gradient")            
-        .attr("gradientUnits", "userSpaceOnUse")    
-        .attr("x1", 0).attr("y1", 0)         
-        .attr("x2", 1000).attr("y2", 1000)      
-    .selectAll("stop")                      
-        .data([                             
-            {offset: "0%", color: "red"},       
-            {offset: "100%", color: "lawngreen"}   
-        ])                  
-    .enter().append("stop")         
-        .attr("offset", function(d) { return d.offset; })   
-        .attr("stop-color", function(d) { return d.color; });  
-*/
-/*svg.append("line")
-  .attr("x1", 100)
-  .attr("x2", 1000)
-  .attr("y1", 100)
-  .attr("y2", 600)
-  .style("stroke", "url(#line-gradient)");*/
-
-
+ 
   if (document.getElementById("checkbox3").checked){
   // Draw directed links *******************************************************
     var aa = bundle(links);
@@ -316,7 +332,7 @@ svg.append("linearGradient")
        // .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
        // .attr("d", line);
   }
-//  tick();
+  //  tick();
 
 }
 
@@ -368,7 +384,7 @@ svg.on("mousemove", function() {
   force.stop();
 if (document.getElementById("checkbox2").checked)
    fisheye.focus(d3.mouse(this));
-  d3.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
+  d3.selectAll(".node1").each(function(d) { d.fisheye = fisheye(d); })
     .attr("cx", function(d) { return d.fisheye.x; })
     .attr("cy", function(d) { return Math.round(d.fisheye.y); });
    // .attr("r", function(d) { return d.fisheye.z * 8; });
@@ -410,8 +426,8 @@ function getBranchingAngle(radius3) {
  } 
 
 function getRadius(d) {
-return d._children ? 0.75*Math.pow(d.childCount1, 0.5)// collapsed package
-      : d.children ? 0.75*Math.pow(d.childCount1, 0.5) // expanded package
+return d._children ? 14.75*Math.pow(d.childCount1, 0.5)// collapsed package
+      : d.children ? 15.75*Math.pow(d.childCount1, 0.5) // expanded package
       : d.size ? Math.pow(d.size,0.1)
       : 1; // leaf node
 }
