@@ -9,7 +9,7 @@ var cluster = d3.layout.cluster()
 
 var bundle = d3.layout.bundle();
 
-var line = d3.svg.line()
+var lineBundle = d3.svg.line()
       .interpolate("bundle")
       .tension(0.98)
       .x(function(d) { return d.x; })
@@ -19,12 +19,12 @@ var width = 1400,
     height = 800,
     root;
 
-var force = d3.layout.force()
+/*var force = d3.layout.force()
     .linkDistance(50)
     .charge(-120)
     .gravity(.15)
     .size([width, height])
-    .on("tick", tick);
+    .on("tick", tick);*/
      
 var svg = d3.select("body").append("svg")
     .attr("id", "SVGmain")
@@ -32,7 +32,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 var relationship_selection = svg.selectAll(".link");
-var link_selection = svg.selectAll(".link"),
+var linkTree_selection = svg.selectAll(".link"),
     node_selection = svg.selectAll(".node1"); // Empty selection at first
   
 var nodeEnter;
@@ -49,9 +49,9 @@ var diagonal;
 
 
 
- var tree = d3.layout.tree().size([ width, height ]);
+var treeLayout = d3.layout.tree().size([ width, height ]);
 
-var scaleCircle = 1;  // The scale to update node size, defined by slider.js
+var scaleCircle = 10;  // The scale to update node size, defined by slider.js
 
  
 
@@ -74,15 +74,15 @@ var scaleCircle = 1;  // The scale to update node size, defined by slider.js
       console.log(d.name+ " d.depth = "+d.depth);
     } 
   });
+  
 
+/*
    force
        .nodes(nodes)
        .links(linkTree)
-        .start();
+        .start();*/
 
- 
-
-  tree.sort(comparator);
+  treeLayout.sort(comparator);
   
   function comparator(a, b) {
     return b.order2 - a.order2;
@@ -96,23 +96,15 @@ var scaleCircle = 1;  // The scale to update node size, defined by slider.js
   count2 = childCount2(0, root); 
   root.order1 =0;
 
-
-
-  setupTree();
-
   //Assign id to each node, root id = 0
   nodes.forEach(function(d,i) {
     d.id =i;
   });
 
-// Restart the force layout.
-  force.nodes(newNodes);
-  force.links(linkTree);
-  force.start();
 
-
+  setupTree();
   update();
-  addSearchBox();
+ // addSearchBox();
   setupSlider(svg);
 });  
 
@@ -120,7 +112,7 @@ var scaleCircle = 1;  // The scale to update node size, defined by slider.js
 
 function setupTree() {
   var disFactor = 4;
-    newNodes = tree(root).map(function(d,i) {
+    newNodes = treeLayout(root).map(function(d,i) {
       if (d.depth==0){
          d.treeX = 600; 
          d.treeY = height-getRadius(root)/disFactor;
@@ -148,80 +140,18 @@ function setupTree() {
       }
       return d;
   });
+
+// Restart the force layout.
+//  force.nodes(newNodes);
+//  force.links(linkTree);
+//  force.start();
 }  
-
-
-
-function addSearchBox() {
-  //===============================================
-  $("#searchName").on("select2-selecting", function(e) {
-      clearAll(root);
-      clearAll(rootSearch);
-      expandAll(rootSearch);
-      updateSearch(rootSearch);
-
-      searchField = "d.name";
-      searchText = e.object.text;
-      searchTree(rootSearch);
-      rootSearch.children.forEach(collapseAllNotFound);
-      updateSearch(rootSearch);
-  })
-
-   treeSearch = d3.layout.tree()
-      .size([height, width]);
-
-   diagonal = d3.svg.diagonal()
-      .projection(function(d) { return [d.y, d.x]; });
-
-    rootSearch = root;
-    rootSearch.x0 = height / 2;
-    rootSearch.y0 = 0;
-
-    select2Data = [];
-    select2DataCollectName(rootSearch);
-    select2DataObject = [];
-    select2Data.sort(function(a, b) {
-              if (a > b) return 1; // sort
-              if (a < b) return -1;
-              return 0;
-          })
-          .filter(function(item, i, ar) {
-              return ar.indexOf(item) === i;
-          }) // remove duplicate items
-          .filter(function(item, i, ar) {
-              select2DataObject.push({
-                  "id": i,
-                  "text": item
-              });
-          });
-      select2Data.sort(function(a, b) {
-              if (a > b) return 1; // sort
-              if (a < b) return -1;
-              return 0;
-          })
-          .filter(function(item, i, ar) {
-              return ar.indexOf(item) === i;
-          }) // remove duplicate items
-          .filter(function(item, i, ar) {
-              select2DataObject.push({
-                  "id": i,
-                  "text": item
-              });
-          });
-    $("#searchName").select2({
-          data: select2DataObject,
-          containerCssClass: "search"
-    });
-    rootSearch.children.forEach(collapse);
-    updateSearch(rootSearch);
- } 
-
 
 function update() {
   // Update links of hierarchy.
-  link_selection = link_selection.data(linkTree, function(d) { return d.target.id; });
-  link_selection.exit().remove();
-  link_selection.enter().append("line")
+  linkTree_selection = linkTree_selection.data(linkTree, function(d) { return d.target.id; });
+  linkTree_selection.exit().remove();
+  linkTree_selection.enter().append("line")
       .attr("class", "linkTree");
 
   // Update nodes.
@@ -230,11 +160,10 @@ function update() {
   
   nodeEnter = node_selection.enter().append("g")
     .attr("class", "nodeG")
-    .on("click", click)
-    .call(force.drag);
+    .on("click", click);
+ //   .call(force.drag);
   
 
-  //console.log("***nodeEnter   "+nodeEnter);
   nodeEnter.append("circle")
     .attr("class", "node1")
     .attr("r", getRadius)
@@ -324,6 +253,7 @@ function mouseouted(d) {
       .classed("node--source", false);
 }
 
+/*
 function tick(event) {
   link_selection.attr("x1", function(d) { return d.source.x; })
     .attr("y1", function(d) { return d.source.y; })
@@ -338,24 +268,24 @@ function tick(event) {
  // circles.attr("cx", function(d) { return d.x; })
   //    .attr("cy", function(d) { return d.y; });  
   
-}
+}*/
 
 
 // Fisheye Lensing ************************************************
 var fisheye = d3.fisheye.circular()
       .radius(200);
 svg.on("mousemove", function() {
-  force.stop();
+//  force.stop();
 if (document.getElementById("checkbox2").checked)
    fisheye.focus(d3.mouse(this));
-  d3.selectAll(".node1").each(function(d) { d.fisheye = fisheye(d); })
+d3.selectAll(".node1").each(function(d) { d.fisheye = fisheye(d); })
     .attr("cx", function(d) { return d.fisheye.x; })
     .attr("cy", function(d) { return Math.round(d.fisheye.y); });
    // .attr("r", function(d) { return d.fisheye.z * 8; });
-// link_selection.attr("x1", function(d) { return d.source.fisheye.x; })
-//    .attr("y1", function(d) { return Math.round(d.source.fisheye.y); })
-//    .attr("x2", function(d) { return d.target.fisheye.x; })
-//    .attr("y2", function(d) { return Math.round(d.target.fisheye.y); });
+linkTree_selection.attr("x1", function(d) { return d.source.fisheye.x; })
+    .attr("y1", function(d) { return Math.round(d.source.fisheye.y); })
+    .attr("x2", function(d) { return d.target.fisheye.x; })
+    .attr("y2", function(d) { return Math.round(d.target.fisheye.y); });
  
   var force_influence = 0.5;
   node_selection
@@ -367,8 +297,8 @@ if (document.getElementById("checkbox2").checked)
  if (!document.getElementById("checkbox3").checked){  // no lensing on directed relationships
    svg.selectAll("path.link")
       .each(function(d) { })
-      .attr("d", line); 
-         console.log("HERE2");    
+      .attr("d", lineBundle); 
+      //   console.log("HERE2");    
   
   }    
   node_selection
@@ -381,7 +311,7 @@ if (document.getElementById("checkbox2").checked)
 
 function color(d) {
   var sat = 240-d.depth*10;
-  return d._children ? "rgb("+sat+", "+255+", "+255+")"  // collapsed package
+  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
 }
@@ -390,7 +320,7 @@ function getBranchingAngle(radius3) {
  } 
 
 function getRadius(d) {
-  console.log(scaleCircle );
+  console.log("scaleCircle = "+scaleCircle);
 return d._children ? scaleCircle*Math.pow(d.childCount1, 0.5)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, 0.5) // expanded package
       : d.size ? Math.pow(d.size,0.1)

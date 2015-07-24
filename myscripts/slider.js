@@ -9,12 +9,12 @@ var xSlider;
 function setupSlider(svg) {
 xSlider = d3.scale.linear()
     .domain([1, 20])
-    .range([10, 200])
+    .range([5, 120])
     .clamp(true);
 
  brush = d3.svg.brush()
     .x(xSlider)
-    .extent([0, 0])
+    .extent([10, 10])
     .on("brush", brushed);
 
 svg.append("g")
@@ -24,7 +24,7 @@ svg.append("g")
       .scale(xSlider)
       .ticks(4)
       .orient("bottom")
-      .tickFormat(function(d) { return d + "°"; })
+      .tickFormat(function(d) { return d; })
       .tickSize(0)
       .tickPadding(10))
   .select(".domain")
@@ -44,13 +44,12 @@ slider.select(".background")
  handle = slider.append("circle")
     .attr("class", "handle")
     .attr("transform", "translate(0," + 30 + ")")
-    .attr("r", 9);
+    .attr("r", 6);
 
 slider
     .call(brush.event)
   .transition() // gratuitous intro!
     .duration(750)
-    .call(brush.extent([70, 70]))
     .call(brush.event);
 }
 
@@ -62,8 +61,9 @@ function brushed() {
     brush.extent([value, value]);
   }
   handle.attr("cx", xSlider(value));
-  scaleCircle =value/3;
+  console.log(value);
+  scaleCircle =value;
   //d3.select("body").style("background-color", d3.hsl(value*20, .8, .8));
   setupTree();
-  update();
+//  update();
 }

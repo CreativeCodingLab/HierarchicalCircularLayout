@@ -1,3 +1,67 @@
+function addSearchBox() {
+  //===============================================
+  $("#searchName").on("select2-selecting", function(e) {
+      clearAll(root);
+      clearAll(rootSearch);
+      expandAll(rootSearch);
+      updateSearch(rootSearch);
+
+      searchField = "d.name";
+      searchText = e.object.text;
+      searchTree(rootSearch);
+      rootSearch.children.forEach(collapseAllNotFound);
+      updateSearch(rootSearch);
+  })
+
+   treeSearch = d3.layout.tree()
+      .size([height, width]);
+
+   diagonal = d3.svg.diagonal()
+      .projection(function(d) { return [d.y, d.x]; });
+
+    rootSearch = root;
+    rootSearch.x0 = height / 2;
+    rootSearch.y0 = 0;
+
+    select2Data = [];
+    select2DataCollectName(rootSearch);
+    select2DataObject = [];
+    select2Data.sort(function(a, b) {
+              if (a > b) return 1; // sort
+              if (a < b) return -1;
+              return 0;
+          })
+          .filter(function(item, i, ar) {
+              return ar.indexOf(item) === i;
+          }) // remove duplicate items
+          .filter(function(item, i, ar) {
+              select2DataObject.push({
+                  "id": i,
+                  "text": item
+              });
+          });
+      select2Data.sort(function(a, b) {
+              if (a > b) return 1; // sort
+              if (a < b) return -1;
+              return 0;
+          })
+          .filter(function(item, i, ar) {
+              return ar.indexOf(item) === i;
+          }) // remove duplicate items
+          .filter(function(item, i, ar) {
+              select2DataObject.push({
+                  "id": i,
+                  "text": item
+              });
+          });
+    $("#searchName").select2({
+          data: select2DataObject,
+          containerCssClass: "search"
+    });
+    rootSearch.children.forEach(collapse);
+    updateSearch(rootSearch);
+ } 
+ 
 
 //===============================================
 function select2DataCollectName(d) {
