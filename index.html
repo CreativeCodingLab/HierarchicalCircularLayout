@@ -113,6 +113,38 @@ ul.select2-results {
   display: inline;
 }
 
+
+<!-- For the slider -->
+.axis {
+  font: 10px sans-serif;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.axis .domain {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .3;
+  stroke-width: 10px;
+  stroke-linecap: round;
+}
+
+.axis .halo {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 8px;
+  stroke-linecap: round;
+}
+
+.slider .handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: .5;
+  stroke-width: 1.25px;
+  cursor: crosshair;
+}
+
 </style>
 <body>
 <input type="checkbox" id="checkbox1" value="value2" class="check" onclick="update()" checked>
@@ -134,6 +166,7 @@ ul.select2-results {
 <script src="javascripts/fisheye.js"></script>
 <script src="javascripts/select2.min.js"></script>
 <script src="myscripts/input.js"></script>
+<script src="myscripts/slider.js"></script>
 <script src="myscripts/main.js"></script>
 <script src="myscripts/gradientCurve.js"></script>
 <script src="myscripts/searchBox.js"></script>

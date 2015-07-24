@@ -51,38 +51,9 @@ var diagonal;
 
  var tree = d3.layout.tree().size([ width, height ]);
 
+var scaleCircle = 1;  // The scale to update node size, defined by slider.js
 
- var xSlider = d3.scale.linear()
-    .domain([0, 180])
-    .range([0, width])
-    .clamp(true);
-
-var brush = d3.svg.brush()
-    .x(xSlider)
-    .extent([0, 0])
-    .on("brush", brushed);
-
-     var slider = svg.append("g")
-    .attr("class", "slider")
-    .call(brush);
-
-slider.selectAll(".extent,.resize")
-    .remove();
-
-slider.select(".background")
-    .attr("height", height);
-
-var handle = slider.append("circle")
-    .attr("class", "handle")
-    .attr("transform", "translate(0," + height / 2 + ")")
-    .attr("r", 9);
-
-slider
-    .call(brush.event)
-  .transition() // gratuitous intro!
-    .duration(750)
-    .call(brush.extent([70, 70]))
-    .call(brush.event);
+ 
 
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
@@ -126,28 +97,30 @@ slider
   root.order1 =0;
 
 
-  var disFactor = 4;
-  setupTree(disFactor);
+
+  setupTree();
+
+  //Assign id to each node, root id = 0
+  nodes.forEach(function(d,i) {
+    d.id =i;
+  });
+
+// Restart the force layout.
+  force.nodes(newNodes);
+  force.links(linkTree);
+  force.start();
+
 
   update();
   addSearchBox();
+  setupSlider(svg);
 });  
 
-function brushed() {
-  var value = brush.extent()[0];
-
-  if (d3.event.sourceEvent) { // not a programmatic event
-    value = xSlider.invert(d3.mouse(this)[0]);
-    brush.extent([value, value]);
-  }
-  handle.attr("cx", xSlider(value));
-  d3.select("body").style("background-color", d3.hsl(value, .8, .8));
-}
 
 
-function setupTree(disFactor) {
-  newNodes = tree(root)
-    .map(function(d,i) {
+function setupTree() {
+  var disFactor = 4;
+    newNodes = tree(root).map(function(d,i) {
       if (d.depth==0){
          d.treeX = 600; 
          d.treeY = height-getRadius(root)/disFactor;
@@ -175,15 +148,6 @@ function setupTree(disFactor) {
       }
       return d;
   });
-  //Assign id to each node, root id = 0
-  nodes.forEach(function(d,i) {
-    d.id =i;
-  });
-
-// Restart the force layout.
-  force.nodes(newNodes);
-  force.links(linkTree);
-  force.start();
 }  
 
 
@@ -426,8 +390,9 @@ function getBranchingAngle(radius3) {
  } 
 
 function getRadius(d) {
-return d._children ? 14.75*Math.pow(d.childCount1, 0.5)// collapsed package
-      : d.children ? 15.75*Math.pow(d.childCount1, 0.5) // expanded package
+  console.log(scaleCircle );
+return d._children ? scaleCircle*Math.pow(d.childCount1, 0.5)// collapsed package
+      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.5) // expanded package
       : d.size ? Math.pow(d.size,0.1)
       : 1; // leaf node
 }
