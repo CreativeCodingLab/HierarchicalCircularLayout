@@ -61,9 +61,9 @@ function brushed() {
     brush.extent([value, value]);
   }
   handle.attr("cx", xSlider(value));
-  console.log(value);
+  //console.log(value);
   scaleCircle =value;
   //d3.select("body").style("background-color", d3.hsl(value*20, .8, .8));
   setupTree();
-//  update();
+  update();
 }
