@@ -12,7 +12,7 @@ var lineBundle = d3.svg.line()
       .x(function(d) { return d.x; })
       .y(function(d) { return d.y; });
 
-var width = 1400,
+var width = 1200,
     height = 800,
     root;
 
@@ -47,19 +47,16 @@ var diagonal;
 
 
 var treeLayout = d3.layout.tree().size([ width, height ]);
-
-var scaleCircle = 10;  // The scale to update node size, defined by slider.js
-
+var scaleCircle = 1;  // The scale to update node size, defined by slider.js
+var scaleRate;
  
+var maxDepth=1;
 
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
-  
-//d3.json("data/Mammals.json", function(error, classes) {
-//d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-  d3.json("data/readme-flare-imports.json", function(error, classes) {
+  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+//  d3.json("data/readme-flare-imports.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -68,16 +65,14 @@ var scaleCircle = 10;  // The scale to update node size, defined by slider.js
   nodes.forEach(function(d) {
     if (d.depth == 1){
       root = d;
-      console.log(d.name+ " d.depth = "+d.depth);
     } 
   });
   
 
-/*
-   force
-       .nodes(nodes)
-       .links(linkTree)
-        .start();*/
+/* force
+    .nodes(nodes)
+    .links(linkTree)
+    .start();*/
 
   treeLayout.sort(comparator);
   
@@ -109,40 +104,50 @@ var scaleCircle = 10;  // The scale to update node size, defined by slider.js
 
 
 function setupTree() {
-  var disFactor = 4;
-    newNodes = treeLayout(root).map(function(d,i) {
-      if (d.depth==0){
-         d.treeX = 600; 
-         d.treeY = height-getRadius(root)/disFactor;
-         d.alpha = -Math.PI/2; 
-      }
-      if (d.children){
-        var totalRadius = 0;
-        var totalAngle = Math.PI*1;
-        d.children.forEach(function(child) {
-          totalRadius+=getBranchingAngle(getRadius(child));
-        });  
-  
-        var begin=d.alpha-totalAngle/2;
-        d.children.forEach(function(child,i2) {
-          xC =  d.treeX;
-          yC =  d.treeY;
-          rC = getRadius(d)+getRadius(child)/disFactor;
-           
-          var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
-          child.alpha = begin+additional/2;
-          child.treeX = xC+rC*Math.cos(child.alpha); 
-          child.treeY = yC+rC*Math.sin(child.alpha); 
-          begin +=additional;
-        });
-      }
-      return d;
-  });
+  var disFactor = 2;
+  var minY = height*100;   // used to compute the best scale for the input tree
+  newNodes = treeLayout(root).map(function(d,i) {
+    if (d.depth==0){
+       d.treeX = 600; 
+       d.treeY = height-getRadius(root)/1;
+       d.alpha = -Math.PI/2; 
+    }
+    if (d.children){
+      var totalRadius = 0;
+      var totalAngle = Math.PI*1;
+      d.children.forEach(function(child) {
+        totalRadius+=getBranchingAngle(getRadius(child));
+      });  
 
-// Restart the force layout.
-//  force.nodes(newNodes);
-//  force.links(linkTree);
-//  force.start();
+      var begin=d.alpha-totalAngle/2;
+      d.children.forEach(function(child,i2) {
+        xC =  d.treeX;
+        yC =  d.treeY;
+        rC = getRadius(d)+getRadius(child)/disFactor;
+         
+        var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
+        child.alpha = begin+additional/2;
+        child.treeX = xC+rC*Math.cos(child.alpha); 
+        child.treeY = yC+rC*Math.sin(child.alpha); 
+        
+        if (child.treeY-rC<minY) {
+          minY = child.treeY-rC;
+        };
+        if (child.depth>maxDepth){
+          maxDepth = child.depth;
+        }
+        begin +=additional;
+      });
+    }
+    scaleRate= height/(height-minY);
+    // console.log(" minY = "+minY +"  "+scaleRate);
+   // console.log("maxDepth = "+maxDepth);
+    return d;
+  });
+  /// Restart the force layout.
+  //  force.nodes(newNodes);
+  //  force.links(linkTree);
+  //  force.start();
 }  
 
 function drawNodeAndLink() {

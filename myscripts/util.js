@@ -4,13 +4,17 @@ var diameter = 1000,
 
 
 function color(d) {
-  var sat = 240-d.depth*10;
+  var minSat = 100;
+  var maxSat = 240;
+  var step = (maxSat-minSat)/maxDepth;
+  var sat = Math.round(maxSat-d.depth*step);
+  console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
 }
 function getBranchingAngle(radius3) {
-  return Math.pow(radius3,2);
+  return Math.pow(radius3,1);
  } 
 
 function getRadius(d) {

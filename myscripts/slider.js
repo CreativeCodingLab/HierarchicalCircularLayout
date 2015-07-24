@@ -8,25 +8,25 @@ var xSlider;
 
 function setupSlider(svg) {
 xSlider = d3.scale.linear()
-    .domain([1, 20])
-    .range([5, 120])
+    .domain([0.02, 20])
+    .range([5, 180])
     .clamp(true);
 
  brush = d3.svg.brush()
     .x(xSlider)
-    .extent([10, 10])
+    .extent([scaleRate, scaleRate])
     .on("brush", brushed);
 
 svg.append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(0," + 30 + ")")
+    .attr("transform", "translate(0," + 25 + ")")
     .call(d3.svg.axis()
       .scale(xSlider)
       .ticks(4)
       .orient("bottom")
       .tickFormat(function(d) { return d; })
       .tickSize(0)
-      .tickPadding(10))
+      .tickPadding(8))
   .select(".domain")
   .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
     .attr("class", "halo");
@@ -43,7 +43,7 @@ slider.select(".background")
 
  handle = slider.append("circle")
     .attr("class", "handle")
-    .attr("transform", "translate(0," + 30 + ")")
+    .attr("transform", "translate(0," + 25 + ")")
     .attr("r", 6);
 
 slider
