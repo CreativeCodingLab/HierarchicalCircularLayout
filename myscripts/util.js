@@ -4,7 +4,7 @@ var diameter = 1000,
 
 
 function color(d) {
-  var minSat = 100;
+  var minSat = 60;
   var maxSat = 240;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
@@ -14,13 +14,13 @@ function color(d) {
     : "#0000f0"; // leaf node
 }
 function getBranchingAngle(radius3) {
-  return Math.pow(radius3,1);
+  return Math.pow(radius3,0.7);
  } 
 
 function getRadius(d) {
 //  console.log("scaleCircle = "+scaleCircle);
-return d._children ? scaleCircle*Math.pow(d.childCount1, 0.5)// collapsed package
-      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.5) // expanded package
+return d._children ? scaleCircle*Math.pow(d.childCount1, 0.7)// collapsed package
+      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.7) // expanded package
       : scaleCircle/2;
      // : 1; // leaf node
 }

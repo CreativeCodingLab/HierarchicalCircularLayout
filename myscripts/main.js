@@ -12,7 +12,7 @@ var lineBundle = d3.svg.line()
       .x(function(d) { return d.x; })
       .y(function(d) { return d.y; });
 
-var width = 1200,
+var width = 1400,
     height = 800,
     root;
 
@@ -52,10 +52,10 @@ var scaleRate;
  
 var maxDepth=1;
 
-//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
+d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
 //  d3.json("data/readme-flare-imports.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
@@ -114,7 +114,7 @@ function setupTree() {
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1;
+      var totalAngle = Math.PI*1.2;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle(getRadius(child));
       });  
