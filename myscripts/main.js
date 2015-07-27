@@ -51,12 +51,18 @@ var scaleCircle = 1;  // The scale to update node size, defined by slider.js
 var scaleRate;
  
 var maxDepth=1;
+var frameCount = 0;
+var setIntervalFunction;
 
-d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("data/53_RAF_Dot.json", function(error, classes) {
-//d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+
+var nodeCount = 0;
 //  d3.json("data/readme-flare-imports.json", function(error, classes) {
+//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+//  d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
+//d3.json("data/53_RAF_Dot.json", function(error, classes) {
+d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+//d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -92,7 +98,7 @@ d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
   nodes.forEach(function(d,i) {
     d.id =i;
   });
-
+  dfs(root);
 
   setupTree();
   drawNodeAndLink();
@@ -101,6 +107,14 @@ d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
   setupSlider(svg);
 });  
 
+
+function dfs(node) {
+  node.idDFS = nodeCount;
+  nodeCount++;
+  node.children.forEach(function(d) {
+      dfs(d);
+  });
+}
 
 
 function setupTree() {
@@ -185,9 +199,22 @@ function drawNodeAndLink() {
       }
      })   
     .style("fill", color);
-  
+
+  nodeEnter.append("text")
+    .attr("class", "nodeText")
+    .attr("x", function(d) { return d.x; })
+    .attr("y", function(d) { return d.y; })
+    .attr("dy", ".21em")
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "10px")
+    .text(function(d) { return d.idDFS; });
+
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
+
+  //count++;
+  // console.log("count = "+count);
+  // update();
 }
 
 
@@ -199,12 +226,60 @@ function update() {
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius);
 
+    d3.selectAll(".nodeText").each(function(d) {
+        d.x = (d.treeX ); //*event.alpha;
+        d.y = d.treeY ; })
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y; });  
+
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return Math.round(d.target.y); });
 
   // Draw relationship links *******************************************************
+  var displayLinks;
+  if (!document.getElementById("checkbox4").checked 
+    && !document.getElementById("checkbox5").checked){
+      displayLinks = new Array(0);
+  }  
+  else if (document.getElementById("checkbox4").checked 
+    && document.getElementById("checkbox5").checked){
+     displayLinks = links;
+  }
+  else{
+    var count1 = 0;
+    for (var i=0; i< links.length;i++){
+      if (links[i].source.parent == links[i].target.parent)
+        count1++;
+    } 
+    if (document.getElementById("checkbox4").checked){
+      displayLinks = new Array(count1);
+      var count2 =0;
+      for (var i=0; i< links.length;i++){
+        if (links[i].source.parent == links[i].target.parent){
+          displayLinks[count2] = links[i];  
+          count2++;
+        }
+      } 
+    } 
+    else if (document.getElementById("checkbox5").checked){
+      displayLinks = new Array(links.length-count1);
+      var count2 =0;
+      for (var i=0; i< links.length;i++){
+        if (links[i].source.parent != links[i].target.parent){
+          displayLinks[count2] = links[i];  
+          count2++;
+        }
+      } 
+    } 
+    else{
+      console.log("ERROR: THe program should never get here!!!");
+    }
+
+
+  }
+
   if (document.getElementById("checkbox3").checked){ //directed
     var aa = bundle(links);
     svg.selectAll("path.link").remove();
@@ -237,15 +312,41 @@ function update() {
     var color2 = d3.interpolateLab("#008000", "#c83a22");
     svg.selectAll("path.link").remove();
     relationship_selection 
-        .data(bundle(links))
+        .data(bundle(displayLinks))
       .enter().append("path")
         .attr("class", "link")
-       // .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      .attr("d", lineBundle);
+        .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+        .attr("d", lineBundle);
+  
   }
 }
 
+// Collision ***********************************************************
+function startCollisionTimer() {
+  setIntervalFunction = setInterval(function () {console.log("frameCount**** "+frameCount);
+    // Compute collision
+    d3.selectAll(".node1").each(function(d) {
+        d.x = d.treeX; 
+        d.y = d.treeY; 
+       d3.selectAll(".node1").each(function(d2) {
+          if (d.id != d2.id && d.id==2){
+              console.log(d.id +" "+d2.id);
+          }
+       })
+    })
 
+
+
+    d3.selectAll(".node1").each(function(d) {
+        d.x = d.treeX; 
+        d.y = d.treeY; 
+      })
+      .attr("cx", function(d) { return d.x+frameCount; })
+      .attr("cy", function(d) { return d.y; })
+      .attr("r", getRadius);
+  frameCount++; 
+  }, 1000);
+}  
 
 
 
@@ -285,6 +386,8 @@ svg.on("mousemove", function() {
     });
  
 });
+
+
 
 
 function mouseovered(d) {

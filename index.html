@@ -161,10 +161,19 @@ ul.select2-results {
 <br>
 <input type="checkbox" id="checkbox3" value="value2" class="check" onclick="update()">
 <label for="checkbox1">Enable Direction</label>
+<input type="checkbox" id="checkbox4" value="value2" class="check" onclick="update()">
+<label for="checkbox4">Display Internal</label>
+<input type="checkbox" id="checkbox5" value="value2" class="check" onclick="update()">
+<label for="checkbox4">Display External</label>
+
+
 
 <div id="block_container">
    <div id="searchName"></div>
 </div>
+
+<button onclick="startCollisionTimer()">Start timer</button>
+<button onclick="clearInterval(setIntervalFunction)">Stop timer</button>
 
 <link rel="stylesheet" type="text/css" href="javascripts/select2.min.css"></link>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

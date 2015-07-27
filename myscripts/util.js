@@ -4,11 +4,12 @@ var diameter = 1000,
 
 
 function color(d) {
+  var ccc = count%100;
   var minSat = 60;
-  var maxSat = 240;
+  var maxSat = 140;
   var step = (maxSat-minSat)/maxDepth;
-  var sat = Math.round(maxSat-d.depth*step);
-  console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth);
+  var sat = Math.round(maxSat-d.depth*step)+ccc;
+  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
