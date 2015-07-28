@@ -47,8 +47,9 @@ var diagonal;
 
 
 var treeLayout = d3.layout.tree().size([ width, height ]);
-var scaleCircle = 1;  // The scale to update node size, defined by slider.js
+var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
+var scaleRadius = 1;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
@@ -59,11 +60,15 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 
 //  d3.json("data/readme-flare-imports.json", function(error, classes) {
 //  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
-//  d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+  d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
+//d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
+//d3.json("data/Diseases of glycosyl_Dot.json", function(error, classes) {
+//d3.json("data/DefectInVitamin_Dot.json", function(error, classes) {
+// d3.json("data/AllDesease_Dot.json", function(error, classes) {
+ 
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -106,7 +111,8 @@ d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
   drawNodeAndLink();
   update();
  // addSearchBox();
-  setupSlider(svg);
+  setupSliderRadius(svg);
+  setupSliderScale(svg);
 });  
 
 
@@ -216,8 +222,8 @@ function drawNodeAndLink() {
     .attr("dy", ".21em")
     .attr("font-family", "sans-serif")
     .attr("font-size", "10px")
-    .text(function(d) { return d.idDFS; });*/
-
+    .text(function(d) { return d.idDFS; });
+*/
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
 
@@ -234,8 +240,8 @@ function update() {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius);
-
-  /*  d3.selectAll(".nodeText").each(function(d) {
+/*
+    d3.selectAll(".nodeText").each(function(d) {
         d.x = (d.treeX ); //*event.alpha;
         d.y = d.treeY ; })
       .attr("x", function(d) { return d.x; })
@@ -375,7 +381,7 @@ function startCollisionTimer() {
 
 function getCollisionOfSubtree(node1, deep) {
   var results = getCollisionOfNode(node1);
-  if (node1.children && deep<5) {  // do not go more than 10 levels
+  if (node1.children && deep<0) {  // do not go more than 10 levels
     for (var i=0; i<node1.children.length; i++){
       var results2 = getCollisionOfSubtree(node1.children[i],deep+1)
       results[0] += results2[0];

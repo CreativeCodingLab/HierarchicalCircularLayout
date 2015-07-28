@@ -25,10 +25,10 @@ function getBranchingAngle1(radius3, numChild) {
  } 
 
 function getRadius(d) {
-//  console.log("scaleCircle = "+scaleCircle);
-return d._children ? scaleCircle*Math.pow(d.childCount1, 0.7)// collapsed package
-      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.7) // expanded package
-      : scaleCircle*0.7;
+ // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
+return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
+      : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
+      : scaleCircle*0.75;
      // : 1; // leaf node
 }
 
