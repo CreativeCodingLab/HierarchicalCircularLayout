@@ -17,13 +17,13 @@ function color(d) {
     : "#0000f0"; // leaf node
 }
 function getBranchingAngle(radius3) {
-  return Math.pow(radius3,0.7);
+  return Math.pow(radius3,1.2);
  } 
 
 function getRadius(d) {
 //  console.log("scaleCircle = "+scaleCircle);
-return d._children ? scaleCircle*Math.pow(d.childCount1, 0.7)// collapsed package
-      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.7) // expanded package
+return d._children ? scaleCircle*Math.pow(d.childCount1, 0.6)// collapsed package
+      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.6) // expanded package
       : scaleCircle/2;
      // : 1; // leaf node
 }

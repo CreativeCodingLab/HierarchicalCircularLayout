@@ -143,7 +143,8 @@ function setupTree() {
         xC =  d.treeX;
         yC =  d.treeY;
         rC = getRadius(d)+getRadius(child)/disFactor;
-         
+        child.treeRC = rC;
+
         var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
         child.alpha = begin+additional/2;
         child.treeX = xC+rC*Math.cos(child.alpha); 
@@ -188,6 +189,7 @@ function drawNodeAndLink() {
   // Draw nodes *****************************************************
   nodeEnter.append("circle")
     .attr("class", "node1")
+    .attr("id", function(d) { return d.idDFS; })
     .attr("r", getRadius)
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y; })
@@ -330,35 +332,30 @@ function update() {
 // Collision ***********************************************************
 var currentNode=1;
 function startCollisionTimer() {
-  setIntervalFunction = setInterval(function () {console.log("currentNode**** "+currentNode);
+  setIntervalFunction = setInterval(function () {
+    console.log("currentNode**** "+currentNode);
     // Compute collision
-    var x1 = nodes[currentNode].x; 
-    var y1 = nodes[currentNode].y; 
-    var r1 = getRadius(nodes[currentNode]);
-    var sumOverlapWithGreaterDFSid=0;
-    var sumOverlapWithSmallerDFSid=0;
-    for (var i=0; i<nodes.length;i++){
-      if (i==currentNode || nodes[i]==nodes[currentNode].parent || isAChildOf(nodes[i], nodes[currentNode])) continue;
-      var x2 = nodes[i].x; 
-      var y2 = nodes[i].y; 
-      var r2 = getRadius(nodes[i]); 
-      var dis = (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
-      dis = Math.sqrt(dis);
-      if (dis<r1+r2){
-        if (nodes[i].idDFS>nodes[currentNode].idDFS)
-          sumOverlapWithGreaterDFSid += (r1+r2)-dis;
-        else 
-          sumOverlapWithSmallerDFSid += (r1+r2)-dis;
-      }   
-    }
+    var results = getCollisionOfSubtree(nodes[currentNode],0);
+    var sumOverlapWithGreaterDFSid=results[1];
+    var sumOverlapWithSmallerDFSid=results[0];
      
-    console.log("current="+currentNode+"  Smaller = "+sumOverlapWithSmallerDFSid
-      +"  Greater = "+sumOverlapWithGreaterDFSid);
+    //console.log("current="+currentNode+"  Smaller = "+sumOverlapWithSmallerDFSid
+    //  +"  Greater = "+sumOverlapWithGreaterDFSid);
    
 
     d3.selectAll(".node1").each(function(d) {
-        d.x = d.treeX; 
-        d.y = d.treeY; 
+        if (d.parent && d.treeRC){
+          if (d.id==currentNode){
+            if (sumOverlapWithGreaterDFSid>sumOverlapWithSmallerDFSid)
+              d.alpha += 0.05;
+            if (sumOverlapWithGreaterDFSid<sumOverlapWithSmallerDFSid)
+              d.alpha -= 0.05;
+          }  
+          d.treeX = d.parent.treeX+d.treeRC*Math.cos(d.alpha); 
+          d.treeY = d.parent.treeY+d.treeRC*Math.sin(d.alpha); 
+          d.x = d.treeX; 
+          d.y = d.treeY; 
+        }
       })
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
@@ -372,8 +369,47 @@ function startCollisionTimer() {
       if (currentNode==nodes.length)
         currentNode=1;
     }
-  }, 1000);
+  }, 1);
 } 
+
+function getCollisionOfSubtree(node1, deep) {
+  var results = getCollisionOfNode(node1);
+  if (node1.children && deep<5) {  // do not go more than 10 levels
+    for (var i=0; i<node1.children.length; i++){
+      var results2 = getCollisionOfSubtree(node1.children[i],deep+1)
+      results[0] += results2[0];
+      results[1] += results2[1];
+    }
+  }
+  return results;
+}
+
+
+function getCollisionOfNode(node1) {
+  var results = new Array(2);
+  var x1 = node1.x; 
+  var y1 = node1.y; 
+  var r1 = getRadius(node1);
+  var sumOverlapWithGreaterDFSid=0;
+  var sumOverlapWithSmallerDFSid=0;
+  for (var i=0; i<nodes.length;i++){
+    if (nodes[i]==node1 || nodes[i]==node1.parent || isAChildOf(nodes[i], node1)) continue;
+    var x2 = nodes[i].x; 
+    var y2 = nodes[i].y; 
+    var r2 = getRadius(nodes[i]); 
+    var dis = (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+    dis = Math.sqrt(dis);
+    if (dis<r1+r2){
+      if (nodes[i].idDFS>node1.idDFS)
+        sumOverlapWithGreaterDFSid += (r1+r2)-dis;
+      else 
+        sumOverlapWithSmallerDFSid += (r1+r2)-dis;
+    }   
+  }
+  results[0] = sumOverlapWithSmallerDFSid;
+  results[1] = sumOverlapWithGreaterDFSid;
+  return results;
+}
 
 function isAChildOf(node1, node2) {
   if (!node2.children) return false;
