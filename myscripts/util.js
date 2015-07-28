@@ -27,12 +27,25 @@ return d._children ? scaleCircle*Math.pow(d.childCount1, 0.7)// collapsed packag
 }
 
 
+function childCount1(level, n) {
+    count = 0;
+    if(n.children && n.children.length > 0) {
+      count += n.children.length;
+      n.children.forEach(function(d) {
+        count += childCount1(level + 1, d);
+      });
+      n.childCount1 = count;
+    }
+    else{
+       n.childCount1 = 0;
+    }
+    return count;
+};
 
 function childCount2(level, n) {
     var arr = [];
     if(n.children && n.children.length > 0) {
       n.children.forEach(function(d) {
-        childCount2(level + 1, d);
         arr.push(d);
       });
     }
@@ -44,6 +57,8 @@ function childCount2(level, n) {
     });
     arr2.forEach(function(d, i) {
         d.order2 = i;
+        childCount2(level + 1, d);
+        d.idDFS = nodeDFSCount++;   // this set DFS id for nodes
     });
 
 };

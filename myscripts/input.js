@@ -50,17 +50,4 @@ function flatten(root) {
   recurse(root);
 };
 
-function childCount1(level, n) {
-    count = 0;
-    if(n.children && n.children.length > 0) {
-      count += n.children.length;
-      n.children.forEach(function(d) {
-        count += childCount1(level + 1, d);
-      });
-      n.childCount1 = count;
-    }
-    else{
-       n.childCount1 = 0;
-    }
-    return count;
-};
+

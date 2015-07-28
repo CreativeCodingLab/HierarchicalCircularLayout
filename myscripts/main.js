@@ -55,13 +55,15 @@ var frameCount = 0;
 var setIntervalFunction;
 
 
-var nodeCount = 0;
+var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
+
+
 //  d3.json("data/readme-flare-imports.json", function(error, classes) {
 //  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
 //  d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("data/53_RAF_Dot.json", function(error, classes) {
-d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+d3.json("data/53_RAF_Dot.json", function(error, classes) {
+//d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
 //d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
@@ -91,14 +93,15 @@ d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
       : 1; // leaf node
   }  
   count1 = childCount1(0, root); 
-  count2 = childCount2(0, root); 
+  count2 = childCount2(0, root);  // DFS id of nodes are also set in this function
+  root.idDFS = nodeDFSCount++; 
   root.order1 =0;
 
   //Assign id to each node, root id = 0
   nodes.forEach(function(d,i) {
     d.id =i;
   });
-  dfs(root);
+ // dfs(root);
 
   setupTree();
   drawNodeAndLink();
@@ -108,13 +111,16 @@ d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
 });  
 
 
+/*
 function dfs(node) {
   node.idDFS = nodeCount;
   nodeCount++;
-  node.children.forEach(function(d) {
-      dfs(d);
-  });
-}
+  if (node.children){
+    node.children.forEach(function(d) {
+        dfs(d);
+    });
+  }
+}*/
 
 
 function setupTree() {
