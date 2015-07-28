@@ -134,8 +134,9 @@ function setupTree() {
     if (d.children){
       var totalRadius = 0;
       var totalAngle = Math.PI*1.2;
+      var numChild =  d.children.length;
       d.children.forEach(function(child) {
-        totalRadius+=getBranchingAngle(getRadius(child));
+        totalRadius+=getBranchingAngle1(getRadius(child), numChild);
       });  
 
       var begin=d.alpha-totalAngle/2;
@@ -145,7 +146,7 @@ function setupTree() {
         rC = getRadius(d)+getRadius(child)/disFactor;
         child.treeRC = rC;
 
-        var additional = totalAngle*(getBranchingAngle(getRadius(child))/totalRadius);
+        var additional = totalAngle*getBranchingAngle1(getRadius(child), numChild)/totalRadius;
         child.alpha = begin+additional/2;
         child.treeX = xC+rC*Math.cos(child.alpha); 
         child.treeY = yC+rC*Math.sin(child.alpha); 

@@ -4,27 +4,31 @@ var diameter = 1000,
 
 
 function color(d) {
-  var ccc = count%100;
-  var minSat = 60;
-  var maxSat = 140;
+  var minSat = 50;
+  var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
-  var sat = Math.round(maxSat-d.depth*step)+ccc;
+  var sat = Math.round(maxSat-d.depth*step);
   if (d==nodes[currentNode])
     return "#ff0000";
-  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth);
+
+  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#0000f0"; // leaf node
 }
-function getBranchingAngle(radius3) {
-  return Math.pow(radius3,1.2);
+function getBranchingAngle1(radius3, numChild) {
+  if (numChild<=2){
+    return Math.pow(radius3,2);
+  }  
+  else
+    return Math.pow(radius3,1);
  } 
 
 function getRadius(d) {
 //  console.log("scaleCircle = "+scaleCircle);
-return d._children ? scaleCircle*Math.pow(d.childCount1, 0.6)// collapsed package
-      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.6) // expanded package
-      : scaleCircle/2;
+return d._children ? scaleCircle*Math.pow(d.childCount1, 0.7)// collapsed package
+      : d.children ? scaleCircle*Math.pow(d.childCount1, 0.7) // expanded package
+      : scaleCircle*0.7;
      // : 1; // leaf node
 }
 
