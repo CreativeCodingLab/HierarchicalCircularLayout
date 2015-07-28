@@ -51,7 +51,6 @@ var scaleCircle = 1;  // The scale to update node size, defined by slider.js
 var scaleRate;
  
 var maxDepth=1;
-var frameCount = 0;
 var setIntervalFunction;
 
 
@@ -62,9 +61,9 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
 //  d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-d3.json("data/53_RAF_Dot.json", function(error, classes) {
+//d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
+d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
@@ -206,6 +205,7 @@ function drawNodeAndLink() {
      })   
     .style("fill", color);
 
+/*
   nodeEnter.append("text")
     .attr("class", "nodeText")
     .attr("x", function(d) { return d.x; })
@@ -213,7 +213,7 @@ function drawNodeAndLink() {
     .attr("dy", ".21em")
     .attr("font-family", "sans-serif")
     .attr("font-size", "10px")
-    .text(function(d) { return d.idDFS; });
+    .text(function(d) { return d.idDFS; });*/
 
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
@@ -232,12 +232,12 @@ function update() {
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius);
 
-    d3.selectAll(".nodeText").each(function(d) {
+  /*  d3.selectAll(".nodeText").each(function(d) {
         d.x = (d.treeX ); //*event.alpha;
         d.y = d.treeY ; })
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; });  
-
+*/
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
       .attr("x2", function(d) { return d.target.x; })
@@ -328,31 +328,61 @@ function update() {
 }
 
 // Collision ***********************************************************
+var currentNode=1;
 function startCollisionTimer() {
-  setIntervalFunction = setInterval(function () {console.log("frameCount**** "+frameCount);
+  setIntervalFunction = setInterval(function () {console.log("currentNode**** "+currentNode);
     // Compute collision
-    d3.selectAll(".node1").each(function(d) {
-        d.x = d.treeX; 
-        d.y = d.treeY; 
-       d3.selectAll(".node1").each(function(d2) {
-          if (d.id != d2.id && d.id==2){
-              console.log(d.id +" "+d2.id);
-          }
-       })
-    })
-
-
+    var x1 = nodes[currentNode].x; 
+    var y1 = nodes[currentNode].y; 
+    var r1 = getRadius(nodes[currentNode]);
+    var sumOverlapWithGreaterDFSid=0;
+    var sumOverlapWithSmallerDFSid=0;
+    for (var i=0; i<nodes.length;i++){
+      if (i==currentNode || nodes[i]==nodes[currentNode].parent || isAChildOf(nodes[i], nodes[currentNode])) continue;
+      var x2 = nodes[i].x; 
+      var y2 = nodes[i].y; 
+      var r2 = getRadius(nodes[i]); 
+      var dis = (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+      dis = Math.sqrt(dis);
+      if (dis<r1+r2){
+        if (nodes[i].idDFS>nodes[currentNode].idDFS)
+          sumOverlapWithGreaterDFSid += (r1+r2)-dis;
+        else 
+          sumOverlapWithSmallerDFSid += (r1+r2)-dis;
+      }   
+    }
+     
+    console.log("current="+currentNode+"  Smaller = "+sumOverlapWithSmallerDFSid
+      +"  Greater = "+sumOverlapWithGreaterDFSid);
+   
 
     d3.selectAll(".node1").each(function(d) {
         d.x = d.treeX; 
         d.y = d.treeY; 
       })
-      .attr("cx", function(d) { return d.x+frameCount; })
+      .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
-      .attr("r", getRadius);
-  frameCount++; 
+      .attr("r", getRadius)
+      .style("fill", color);
+    currentNode++;
+    if (currentNode==nodes.length)
+      currentNode=1;
+    while (!nodes[currentNode].children){   // skip all leaf nodes
+      currentNode++;
+      if (currentNode==nodes.length)
+        currentNode=1;
+    }
   }, 1000);
-}  
+} 
+
+function isAChildOf(node1, node2) {
+  if (!node2.children) return false;
+  for (var i=0; i<node2.children.length;i++){
+    if (node1==node2.children[i])
+      return true;
+  } 
+  return false;
+}
 
 
 
