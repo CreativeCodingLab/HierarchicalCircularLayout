@@ -49,7 +49,7 @@ var diagonal;
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
-var scaleRadius = 1;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.8;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
@@ -57,10 +57,9 @@ var setIntervalFunction;
 
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
-
-//  d3.json("data/readme-flare-imports.json", function(error, classes) {
+ // d3.json("data/readme-flare-imports.json", function(error, classes) {
 //  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
-  d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+ d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
@@ -111,8 +110,8 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
   drawNodeAndLink();
   update();
  // addSearchBox();
-  setupSliderRadius(svg);
   setupSliderScale(svg);
+  setupSliderRadius(svg);
 });  
 
 
@@ -166,8 +165,8 @@ function setupTree() {
         begin +=additional;
       });
     }
-    scaleRate= height/(height-minY);
-    // console.log(" minY = "+minY +"  "+scaleRate);
+    scaleRate = height/(height-minY);
+  //  console.log(" minY = "+minY +"  "+scaleRate);
    // console.log("maxDepth = "+maxDepth);
     return d;
   });

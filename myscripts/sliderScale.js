@@ -77,7 +77,7 @@ function brushed() {
   handle.attr("cx", xScale(value));
   //console.log(value);
   scaleCircle =value;
-  //d3.select("body").style("background-color", d3.hsl(value*20, .8, .8));
   setupTree();
   update();
+
 }

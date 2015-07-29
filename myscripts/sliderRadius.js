@@ -75,9 +75,9 @@ function brushedRadius() {
     brushRadius.extent([value, value]);
   }
   handleRadius.attr("cx", xScaleRadius(value));
-  console.log("*****"+scaleRadius);
   scaleRadius =value;
   //d3.select("body").style("background-color", d3.hsl(value*20, .8, .8));
+ 
   setupTree();
   update();
 }
