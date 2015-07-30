@@ -58,8 +58,8 @@ var setIntervalFunction;
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
  // d3.json("data/readme-flare-imports.json", function(error, classes) {
-//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
- d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+// d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
 //d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
@@ -112,6 +112,8 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
  // addSearchBox();
   setupSliderScale(svg);
   setupSliderRadius(svg);
+
+        
 });  
 
 
@@ -213,7 +215,7 @@ function drawNodeAndLink() {
      })   
     .style("fill", color);
 
-/*
+
   nodeEnter.append("text")
     .attr("class", "nodeText")
     .attr("x", function(d) { return d.x; })
@@ -221,8 +223,22 @@ function drawNodeAndLink() {
     .attr("dy", ".21em")
     .attr("font-family", "sans-serif")
     .attr("font-size", "10px")
-    .text(function(d) { return d.idDFS; });
-*/
+    .text(function(d) { 
+      var list = d.name.split(".");
+      var url = "https://www.google.com/search?q="+list[list.length-1]+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
+            console.log( url );
+            resolver.resolve( url, function( result ){
+                console.log( result );
+                if ( result ) {
+                  console.log("result.image="+result.image);
+                    $('body').css('background-image', 'url(' + result.image + ')');
+                } else {
+                    alert('Can not find image');
+                }
+            });
+
+      return list[list.length-1]; });
+
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
 
@@ -239,13 +255,13 @@ function update() {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius);
-/*
+
     d3.selectAll(".nodeText").each(function(d) {
         d.x = (d.treeX ); //*event.alpha;
         d.y = d.treeY ; })
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; });  
-*/
+
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
       .attr("x2", function(d) { return d.target.x; })

@@ -15,7 +15,7 @@ function setupSliderRadius(svg) {
 
   brushRadius = d3.svg.brush()
     .x(xScaleRadius)
-    .extent([1, 1])
+    .extent([scaleRadius, scaleRadius])
     .on("brush", brushedRadius);
 
   svg.append("g")
@@ -76,8 +76,14 @@ function brushedRadius() {
   }
   handleRadius.attr("cx", xScaleRadius(value));
   scaleRadius =value;
+  
   //d3.select("body").style("background-color", d3.hsl(value*20, .8, .8));
  
+  // scaleRate = height/(height-minY);
+  //scaleCircle = 10-value;
+  //handle.attr("cx", xScale(scaleCircle));
+  //console.log("scaleCircle1 = "+scaleCircle);
+
   setupTree();
   update();
 }
