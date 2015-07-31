@@ -220,28 +220,33 @@ function drawNodeAndLink() {
      })   
     .style("fill", color);
 
-/*
+
 nodeEnter.append("circle")
-    .attr("r", 30)
+     .attr("class", "nodeImage")
+     .attr("r", 30)
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y; })
     .attr("fill", function(d) { 
       var nodeName = d.key;
-     // var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
-       var url = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png";
-      if (nodeName!="0" && nodeName!=1){
+      
+      var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
+     //  var url = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png";
+      /*if (nodeName!="0" && nodeName!=1){
         resolver.resolve(url, function( result ){
             console.log("result = "+result );
             if (result) {
+              console.log(" d.image1 = "+ d.image  );
               d.image =  result.image ;
               //  $('body').css('background-image', 'url(' + result.image + ')');
             } else {
               d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
             }
         });
-      }  
-      
-
+      }  */
+      console.log(" d.image  = "+ d.image  );
+            
+d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
+          
 
 
         var imgurl = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"
@@ -255,7 +260,7 @@ nodeEnter.append("circle")
                                 .attr("y", "0")
 
         catpattern.append("image")
-             .attr("class", "nodeImage")
+             .attr("class", "nodeImage1")
              .attr("x", -130)
              .attr("y", -220)
              .attr("height", 640)
@@ -267,9 +272,11 @@ nodeEnter.append("circle")
 
 
       )
-*/
+
+
+
  nodeEnter.append("image")
-      .attr("class", "nodeImage")
+      .attr("class", "nodeImage3")
      .attr("x", function(d) { return d.x; })
      .attr("y", function(d) { return d.y; })
      .attr("height", getRadius)
@@ -322,7 +329,33 @@ function update() {
         d.y = d.treeY ; })
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
-      .attr("r", getRadius);
+      .attr("r", getRadius)
+      .style("fill", function(d) { 
+        var defs = svg.append("defs").attr("id", "imgdefs")
+        var catpattern = defs.append("pattern")
+                                .attr("id", "catpattern")
+                                .attr("height", 1)
+                                .attr("width", 1)
+                                .attr("x", "0")
+                                .attr("y", "0")
+
+        catpattern.append("image")
+             .attr("class", "nodeImage2")
+             .attr("x", -130)
+             .attr("y", -220)
+             .attr("height", 640)
+             .attr("width", 480)
+             .attr("xlink:href", d.image )
+
+         if (d.key=="0")
+            return "#00ff00";
+         else if (d.key=="1")
+            return "#00aaaa";
+         else{
+             console.log(d.key+" ***** "+d.image);   
+            return "url(#catpattern)"; 
+         }
+   });
 
     d3.selectAll(".nodeText").each(function(d) {
         d.x = (d.treeX ); //*event.alpha;
@@ -330,14 +363,14 @@ function update() {
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; });  
 
-    d3.selectAll(".nodeImage").each(function(d) {
-        d.x = (d.treeX ); //*event.alpha;
-        d.y = d.treeY ; })
+/*
+    d3.selectAll(".nodeImage3").each(function(d) {
+         })
      .attr("x", function(d) { return d.x; })
      .attr("y", function(d) { return d.y; })
      .attr("height", getRadius)
      .attr("width", getRadius)
-     .attr("xlink:href", function(d) { return d.image; });
+     .attr("xlink:href", function(d) { return d.image; });*/
       
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
