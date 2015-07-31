@@ -178,6 +178,11 @@ function setupTree() {
   //  force.start();
 }  
 
+
+
+
+
+
 function drawNodeAndLink() {
 // Update links of hierarchy.
   linkTree_selection = linkTree_selection.data(linkTree, function(d) { return d.target.id; });
@@ -215,6 +220,83 @@ function drawNodeAndLink() {
      })   
     .style("fill", color);
 
+/*
+nodeEnter.append("circle")
+    .attr("r", 30)
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr("fill", function(d) { 
+      var nodeName = d.key;
+     // var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
+       var url = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png";
+      if (nodeName!="0" && nodeName!=1){
+        resolver.resolve(url, function( result ){
+            console.log("result = "+result );
+            if (result) {
+              d.image =  result.image ;
+              //  $('body').css('background-image', 'url(' + result.image + ')');
+            } else {
+              d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
+            }
+        });
+      }  
+      
+
+
+
+        var imgurl = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"
+        var defs = svg.append("defs").attr("id", "imgdefs")
+
+        var catpattern = defs.append("pattern")
+                                .attr("id", "catpattern")
+                                .attr("height", 1)
+                                .attr("width", 1)
+                                .attr("x", "0")
+                                .attr("y", "0")
+
+        catpattern.append("image")
+             .attr("class", "nodeImage")
+             .attr("x", -130)
+             .attr("y", -220)
+             .attr("height", 640)
+             .attr("width", 480)
+             .attr("xlink:href", d.image )
+
+
+      return "url(#catpattern)"; }
+
+
+      )
+*/
+ nodeEnter.append("image")
+      .attr("class", "nodeImage")
+     .attr("x", function(d) { return d.x; })
+     .attr("y", function(d) { return d.y; })
+     .attr("height", getRadius)
+     .attr("width", getRadius)
+     .attr("fill", "#ff0000")
+     .attr("xlink:href", function(d) { 
+      var nodeName = d.key;
+      var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
+      if (nodeName!="0" && nodeName!=1){
+        resolver.resolve(url, function( result ){
+            console.log("result = "+result );
+            if (result) {
+              d.image =  result.image ;
+              //  $('body').css('background-image', 'url(' + result.image + ')');
+            } else {
+              d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
+            }
+        });
+      }  
+      else{
+        return null;
+      }  
+
+    }
+    )
+;
+  
 
   nodeEnter.append("text")
     .attr("class", "nodeText")
@@ -223,21 +305,7 @@ function drawNodeAndLink() {
     .attr("dy", ".21em")
     .attr("font-family", "sans-serif")
     .attr("font-size", "10px")
-    .text(function(d) { 
-      var list = d.name.split(".");
-      var url = "https://www.google.com/search?q="+list[list.length-1]+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
-            console.log( url );
-            resolver.resolve( url, function( result ){
-                console.log( result );
-                if ( result ) {
-                  console.log("result.image="+result.image);
-                    $('body').css('background-image', 'url(' + result.image + ')');
-                } else {
-                    alert('Can not find image');
-                }
-            });
-
-      return list[list.length-1]; });
+    .text(function(d) {   return d.key; });
 
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
@@ -262,6 +330,15 @@ function update() {
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; });  
 
+    d3.selectAll(".nodeImage").each(function(d) {
+        d.x = (d.treeX ); //*event.alpha;
+        d.y = d.treeY ; })
+     .attr("x", function(d) { return d.x; })
+     .attr("y", function(d) { return d.y; })
+     .attr("height", getRadius)
+     .attr("width", getRadius)
+     .attr("xlink:href", function(d) { return d.image; });
+      
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
       .attr("x2", function(d) { return d.target.x; })
