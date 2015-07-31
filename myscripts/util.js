@@ -4,7 +4,7 @@ var diameter = 1000,
 
 
 function color(d) {
-  var minSat = 50;
+  var minSat = 80;
   var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
@@ -28,7 +28,7 @@ function getRadius(d) {
  // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*0.75;
+      : scaleCircle;
      // : 1; // leaf node
 }
 

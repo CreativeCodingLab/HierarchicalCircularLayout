@@ -220,89 +220,28 @@ function drawNodeAndLink() {
      })   
     .style("fill", color);
 
-
-nodeEnter.append("circle")
-     .attr("class", "nodeImage")
-     .attr("r", 30)
-    .attr("cx", function(d) { return d.x; })
-    .attr("cy", function(d) { return d.y; })
-    .attr("fill", function(d) { 
-      var nodeName = d.key;
-      
-      var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
-     //  var url = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png";
-      /*if (nodeName!="0" && nodeName!=1){
-        resolver.resolve(url, function( result ){
-            console.log("result = "+result );
-            if (result) {
-              console.log(" d.image1 = "+ d.image  );
-              d.image =  result.image ;
-              //  $('body').css('background-image', 'url(' + result.image + ')');
-            } else {
-              d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
-            }
-        });
-      }  */
-      console.log(" d.image  = "+ d.image  );
-            
-d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
-          
-
-
-        var imgurl = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"
-        var defs = svg.append("defs").attr("id", "imgdefs")
-
-        var catpattern = defs.append("pattern")
-                                .attr("id", "catpattern")
-                                .attr("height", 1)
-                                .attr("width", 1)
-                                .attr("x", "0")
-                                .attr("y", "0")
-
-        catpattern.append("image")
-             .attr("class", "nodeImage1")
-             .attr("x", -130)
-             .attr("y", -220)
-             .attr("height", 640)
-             .attr("width", 480)
-             .attr("xlink:href", d.image )
-
-
-      return "url(#catpattern)"; }
-
-
-      )
-
-
-
  nodeEnter.append("image")
-      .attr("class", "nodeImage3")
-     .attr("x", function(d) { return d.x; })
-     .attr("y", function(d) { return d.y; })
-     .attr("height", getRadius)
-     .attr("width", getRadius)
-     .attr("fill", "#ff0000")
-     .attr("xlink:href", function(d) { 
-      var nodeName = d.key;
-      var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
-      if (nodeName!="0" && nodeName!=1){
-        resolver.resolve(url, function( result ){
-            console.log("result = "+result );
-            if (result) {
-              d.image =  result.image ;
-              //  $('body').css('background-image', 'url(' + result.image + ')');
-            } else {
-              d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png"; 
-            }
-        });
-      }  
-      else{
-        return null;
-      }  
-
-    }
-    )
-;
+    .attr("class", "nodeImage3")
+    .attr("x", function(d) { return d.x; })
+    .attr("y", function(d) { return d.y; })
+    .attr("height", getRadius)
+    .attr("width", getRadius)
+    .attr("fill", "#ff0000")
+    .attr("xlink:href", function(d) { 
+    var nodeName = d.key;
+    var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
+    if (nodeName!="0" && nodeName!="1"){
+      resolver.resolve(url, function( result ){
+          console.log("result = "+result );
+          if (result) {
+            d.image =  result.image ;
+            //  $('body').css('background-image', 'url(' + result.image + ')');
+          } else {
+            d.image = "http://www.fnordware.com/superpng/pngtest8rgba.png";  
+          }
+      });
+    }  
+  });
   
 
   nodeEnter.append("text")
@@ -312,14 +251,16 @@ d.image = "http://wallpapers.androlib.com/wallicons/wallpaper.big-pqC.cs.png";
     .attr("dy", ".21em")
     .attr("font-family", "sans-serif")
     .attr("font-size", "10px")
-    .text(function(d) {   return d.key; });
+    .style("text-anchor", "middle")
+    .text(function(d) {   
+      if (d.key=="0" || d.key=="1")
+            return "";
+      else 
+        return d.key; });
 
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
 
-  //count++;
-  // console.log("count = "+count);
-  // update();
 }
 
 
@@ -333,7 +274,7 @@ function update() {
       .style("fill", function(d) { 
         var defs = svg.append("defs").attr("id", "imgdefs")
         var catpattern = defs.append("pattern")
-                                .attr("id", "catpattern")
+                                .attr("id", "catpattern"+d.key)
                                 .attr("height", 1)
                                 .attr("width", 1)
                                 .attr("x", "0")
@@ -341,27 +282,23 @@ function update() {
 
         catpattern.append("image")
              .attr("class", "nodeImage2")
-             .attr("x", -130)
-             .attr("y", -220)
-             .attr("height", 640)
-             .attr("width", 480)
+             .attr("x", -getRadius(d)*0.25)
+             .attr("y", -getRadius(d)*0.25)
+             .attr("height", getRadius(d)*2.5)
+             .attr("width", getRadius(d)*2.5)
              .attr("xlink:href", d.image )
 
-         if (d.key=="0")
-            return "#00ff00";
-         else if (d.key=="1")
-            return "#00aaaa";
+         if (d.key=="0" || d.key=="1")
+            return color(d);
          else{
-             console.log(d.key+" ***** "+d.image);   
-            return "url(#catpattern)"; 
+             console.log(d.depth+"  "+ d.key+" ***** "+d.image);   
+            return "url(#catpattern"+d.key+")"; 
          }
    });
 
-    d3.selectAll(".nodeText").each(function(d) {
-        d.x = (d.treeX ); //*event.alpha;
-        d.y = d.treeY ; })
+    d3.selectAll(".nodeText")
       .attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y; });  
+      .attr("y", function(d) { return d.y-getRadius(d)-2; });  
 
 /*
     d3.selectAll(".nodeImage3").each(function(d) {
@@ -571,11 +508,17 @@ svg.on("mousemove", function() {
       .attr("x2", function(d) { return d.target.fisheye.x; })
       .attr("y2", function(d) { return Math.round(d.target.fisheye.y); });
    
+
   node_selection
     .each(function(d) {
       d.x = d.fisheye.x; //*event.alpha;
       d.y = d.fisheye.y; //*event.alpha;
     });
+d3.selectAll(".nodeText")
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y-getRadius(d)-2; }); 
+
+
   
  if (!document.getElementById("checkbox3").checked){  // no lensing on directed relationships
    svg.selectAll("path.link")
@@ -591,9 +534,6 @@ svg.on("mousemove", function() {
  
 });
 
-
-
-
 function mouseovered(d) {
   if (!d.children){
     node_selection
@@ -603,7 +543,6 @@ function mouseovered(d) {
       .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
       .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
      ;
-   //  debugger;
    }    
  }
 
