@@ -8,8 +8,8 @@ function color(d) {
   var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
-  if (d==nodes[currentNode])
-    return "#ff0000";
+ // if (d==nodes[currentNode])
+ //   return "#ff0000";
 
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package

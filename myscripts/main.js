@@ -57,7 +57,7 @@ var setIntervalFunction;
 
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
- // d3.json("data/readme-flare-imports.json", function(error, classes) {
+//  d3.json("data/readme-flare-imports.json", function(error, classes) {
   d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
 // d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
@@ -117,16 +117,7 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 });  
 
 
-/*
-function dfs(node) {
-  node.idDFS = nodeCount;
-  nodeCount++;
-  if (node.children){
-    node.children.forEach(function(d) {
-        dfs(d);
-    });
-  }
-}*/
+
 
 
 function setupTree() {
@@ -206,18 +197,6 @@ function drawNodeAndLink() {
     .attr("r", getRadius)
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y; })
-    .style("fill-opacity", function(d){ 
-      if (document.getElementById("checkbox1").checked){
-        return 1;
-      }
-      else{
-     //   console.log(d.children+"  "+d._children);
-        if (d.children || d._children)
-          return 0;
-        else
-          return 1;
-      }
-     })   
     .style("fill", color);
 
  nodeEnter.append("image")
@@ -229,6 +208,7 @@ function drawNodeAndLink() {
     .attr("fill", "#ff0000")
     .attr("xlink:href", function(d) { 
     var nodeName = d.key;
+    
     var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
     if (nodeName!="0" && nodeName!="1"){
       resolver.resolve(url, function( result ){
@@ -288,7 +268,7 @@ function update() {
              .attr("width", getRadius(d)*2.5)
              .attr("xlink:href", d.image )
 
-         if (d.key=="0" || d.key=="1")
+         if (d.key=="0" || d.key=="1" || d.depth<1 || !document.getElementById("checkbox12").checked)
             return color(d);
          else{
              console.log(d.depth+"  "+ d.key+" ***** "+d.image);   
@@ -298,8 +278,13 @@ function update() {
 
     d3.selectAll(".nodeText")
       .attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y-getRadius(d)-2; });  
-
+      .attr("y", function(d) { return d.y-getRadius(d)-2; })
+      .text(function(d) {   
+        if (d.key=="0" || d.key=="1" || !document.getElementById("checkbox11").checked)
+              return "";
+        else 
+          return d.key; 
+      });
 /*
     d3.selectAll(".nodeImage3").each(function(d) {
          })
