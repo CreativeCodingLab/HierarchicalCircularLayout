@@ -10,6 +10,10 @@ function color(d) {
   var sat = Math.round(maxSat-d.depth*step);
  // if (d==nodes[currentNode])
  //   return "#ff0000";
+ console.log(d.source);
+    if (d.source){
+    return "#00ff00";
+  }  
 
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package

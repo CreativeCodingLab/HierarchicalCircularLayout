@@ -49,7 +49,7 @@ var diagonal;
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
-var scaleRadius = 0.8;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.65;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
@@ -278,7 +278,7 @@ function update() {
 
     d3.selectAll(".nodeText")
       .attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y-getRadius(d)-2; })
+      .attr("y", function(d) { return d.y; })
       .text(function(d) {   
         if (d.key=="0" || d.key=="1" || !document.getElementById("checkbox11").checked)
               return "";
@@ -338,8 +338,6 @@ function update() {
     else{
       console.log("ERROR: THe program should never get here!!!");
     }
-
-
   }
 
   if (document.getElementById("checkbox3").checked){ //directed
@@ -527,8 +525,14 @@ function mouseovered(d) {
       .classed("link--faded", function(l) { if (l) return true;  })
       .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
       .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
+      .filter(function(l) { return l.target === d || l.source === d; })
+      .each(function() { this.parentNode.appendChild(this); });
      ;
-   }    
+   }  
+   
+   node_selection
+      .classed("node--target", function(n) { return n.target; })
+      .classed("node--source", function(n) { return n.source; });  
  }
 
 function mouseouted(d) {
