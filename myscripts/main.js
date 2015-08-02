@@ -529,11 +529,17 @@ function mouseovered(d) {
      ;
    }  
    
-   node_selection
-      .classed("node--target", function(n) { 
-        console.log(n.target);
-        return n.target; })
-      .classed("node--source", function(n) { return n.source; });  
+   d3.selectAll(".node1")
+      .style("fill" , function(n) {   
+        if (n.target) 
+          return "#ff0000";
+        else if (n.source)
+          return "#00ff00";
+        else
+          return color(n);
+       });
+      //.classed("node--target", function(n) {   return n.target; })
+      //.classed("node--source", function(n) { return n.source; });  
  }
 
 function mouseouted(d) {
