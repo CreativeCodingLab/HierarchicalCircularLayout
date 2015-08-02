@@ -196,8 +196,8 @@ function drawNodeAndLink() {
     .attr("id", function(d) { return d.idDFS; })
     .attr("r", getRadius)
     .attr("cx", function(d) { return d.x; })
-    .attr("cy", function(d) { return d.y; })
-    .style("fill", color);
+    .attr("cy", function(d) { return d.y; });
+  //  .style("fill", color);
 
  nodeEnter.append("image")
     .attr("class", "nodeImage3")
@@ -369,7 +369,6 @@ function update() {
   }
   
   else {  // Update Undirected links of relationships
-    var color2 = d3.interpolateLab("#008000", "#c83a22");
     svg.selectAll("path.link").remove();
     relationship_selection 
         .data(bundle(displayLinks))
@@ -531,7 +530,9 @@ function mouseovered(d) {
    }  
    
    node_selection
-      .classed("node--target", function(n) { return n.target; })
+      .classed("node--target", function(n) { 
+        console.log(n.target);
+        return n.target; })
       .classed("node--source", function(n) { return n.source; });  
  }
 
