@@ -517,6 +517,7 @@ d3.selectAll(".nodeText")
 });
 
 function mouseovered(d) {
+  
   if (!d.children){
     node_selection
        .each(function(n) { n.target = n.source = false; });
@@ -527,17 +528,20 @@ function mouseovered(d) {
       .filter(function(l) { return l.target === d || l.source === d; })
       .each(function() { this.parentNode.appendChild(this); });
      ;
-   }  
+     
    
-   d3.selectAll(".node1")
-      .style("fill" , function(n) {   
-        if (n.target) 
-          return "#ff0000";
-        else if (n.source)
-          return "#00ff00";
-        else
-          return color(n);
-       });
+     d3.selectAll(".node1")
+        .style("fill" , function(n) {   
+          if (n==d)
+            return "#0000f0";
+          if (n.target) 
+            return "#008800";
+          else if (n.source)
+            return "#880088";
+          else
+            return colorFaded(n);
+         });
+    }  
       //.classed("node--target", function(n) {   return n.target; })
       //.classed("node--source", function(n) { return n.source; });  
  }
@@ -547,9 +551,14 @@ function mouseouted(d) {
       .classed("link--faded", false)
       .classed("link--target", false)
       .classed("link--source", false);
-  node_selection
-      .classed("node--target", false)
-      .classed("node--source", false);
+
+  d3.selectAll(".node1")
+      .style("fill" , function(n) {   
+        return color(n);
+       });    
+  //node_selection
+  //    .classed("node--target", false)
+  //    .classed("node--source", false);
 }
 
 
