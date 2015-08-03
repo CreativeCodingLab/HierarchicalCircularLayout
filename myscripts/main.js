@@ -528,23 +528,7 @@ function mouseovered(d) {
       .each(function() { this.parentNode.appendChild(this); });
      ;
      
-   
      d3.selectAll(".node1")
-        .style("fill" , function(n) {   
-         if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked){
-            if (n==d)
-              return "#0000f0";
-            if (n.target) 
-              return "#008800";
-            else if (n.source)
-              return "#880088";
-            else
-              return colorFaded(n);
-         }   
-         else{
-            return "url(#catpattern"+n.key+")"; 
-         }
-       })
        .style("fill-opacity" , function(n) {   
         if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked)
           return 1;
@@ -574,6 +558,9 @@ function mouseouted(d) {
       .classed("link--source", false);
 
   d3.selectAll(".node1")
+      .attr("r", function(d){ 
+        return getRadius(d);
+       })
       .style("fill" , function(n) {   
           if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked)
             return color(n);
