@@ -517,7 +517,7 @@ d3.selectAll(".nodeText")
 });
 
 function mouseovered(d) {
-  
+
   if (!d.children){
     node_selection
        .each(function(n) { n.target = n.source = false; });
@@ -541,7 +541,8 @@ function mouseovered(d) {
           else
             return colorFaded(n);
          });
-    }  
+      drawColorLegend();  
+    }    
       //.classed("node--target", function(n) {   return n.target; })
       //.classed("node--source", function(n) { return n.source; });  
  }
@@ -555,7 +556,9 @@ function mouseouted(d) {
   d3.selectAll(".node1")
       .style("fill" , function(n) {   
         return color(n);
-       });    
+       }); 
+
+  removeColorLegend();        
   //node_selection
   //    .classed("node--target", false)
   //    .classed("node--source", false);

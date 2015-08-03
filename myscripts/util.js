@@ -2,6 +2,69 @@ var diameter = 1000,
     radius = diameter / 2,
     innerRadius = radius - 120;
 
+  // Add color legend
+function drawColorLegend() {
+      var xx = width-100;
+      var y1 = 5;
+      var y2 = 18;
+      var rr = 5;
+
+      svg.append("line")
+        .attr("class", "nodeLegend")
+        .attr("x1", xx-20)
+        .attr("y1", y1)
+        .attr("x2", xx)
+        .attr("y2", y1)
+        .style("stroke", "#880088");
+
+      svg.append("circle")
+        .attr("class", "nodeLegend")
+        .attr("cx", xx)
+        .attr("cy", y1)
+        .attr("r", rr)
+        .style("fill", "#880088");
+      
+      svg.append("text")
+        .attr("class", "nodeLegend")
+        .attr("x", xx+10)
+        .attr("y", y1+1)
+        .text("Source node")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "10px")
+        .style("text-anchor", "left")
+        .style("fill", "#880088");
+   
+      svg.append("line")
+        .attr("class", "nodeLegend")
+        .attr("x1", xx-20)
+        .attr("y1", y2)
+        .attr("x2", xx)
+        .attr("y2", y2)
+        .style("stroke", "#008800");
+          
+      svg.append("circle")
+        .attr("class", "nodeLegend")
+        .attr("cx", width-100)
+        .attr("cy", y2)
+        .attr("r", rr)
+        .style("fill", "#008800");  
+
+      svg.append("text")
+        .attr("class", "nodeLegend")
+        .attr("x", xx+10)
+        .attr("y", y2+1)
+        .text("Target node")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "10px")
+        .style("text-anchor", "left")
+        .style("fill", "#008800");  
+}
+
+function removeColorLegend() {
+ svg.selectAll(".nodeLegend").remove();
+}
 
 function color(d) {
   var minSat = 80;
