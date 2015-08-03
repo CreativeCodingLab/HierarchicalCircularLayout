@@ -271,8 +271,7 @@ function update() {
          if (d.key=="0" || d.key=="1" || d.depth<1 || !document.getElementById("checkbox12").checked)
             return color(d);
          else{
-             console.log(d.depth+"  "+ d.key+" ***** "+d.image);   
-            return "url(#catpattern"+d.key+")"; 
+             return "url(#catpattern"+d.key+")"; 
          }
    });
 
@@ -532,15 +531,36 @@ function mouseovered(d) {
    
      d3.selectAll(".node1")
         .style("fill" , function(n) {   
-          if (n==d)
-            return "#0000f0";
-          if (n.target) 
-            return "#008800";
-          else if (n.source)
-            return "#880088";
-          else
-            return colorFaded(n);
-         });
+         if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked){
+            if (n==d)
+              return "#0000f0";
+            if (n.target) 
+              return "#008800";
+            else if (n.source)
+              return "#880088";
+            else
+              return colorFaded(n);
+         }   
+         else{
+            return "url(#catpattern"+n.key+")"; 
+         }
+       })
+       .style("fill-opacity" , function(n) {   
+        if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked)
+          return 1;
+        else{
+           if (n==d)
+              return 1;
+            if (n.target) 
+              return 1;
+            else if (n.source)
+              return 1;
+            else
+              return 0.15;
+        }  
+          
+      });
+           
       drawColorLegend();  
     }    
       //.classed("node--target", function(n) {   return n.target; })
@@ -555,8 +575,12 @@ function mouseouted(d) {
 
   d3.selectAll(".node1")
       .style("fill" , function(n) {   
-        return color(n);
-       }); 
+          if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked)
+            return color(n);
+          else
+            return "url(#catpattern"+n.key+")"; 
+       })
+      .style("fill-opacity", 1); 
 
   removeColorLegend();        
   //node_selection
