@@ -351,9 +351,7 @@ function update() {
         points[j] = a;
       }  
       //console.log(points);
-      //debugger;
       var color2 = d3.interpolateLab("#008000", "#c83a22");
-
       var line2 = d3.svg.line()
           .interpolate("basis");
 
@@ -366,7 +364,6 @@ function update() {
           .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], 0.1); });
     }
   }
-  
   else {  // Update Undirected links of relationships
     svg.selectAll("path.link").remove();
     relationship_selection 
@@ -375,7 +372,6 @@ function update() {
         .attr("class", "link")
         .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
         .attr("d", lineBundle);
-  
   }
 }
 
