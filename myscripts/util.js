@@ -125,6 +125,8 @@ function childCount1(level, n) {
     return count;
 };
 
+
+
 function childCount2(level, n) {
     var arr = [];
     if(n.children && n.children.length > 0) {

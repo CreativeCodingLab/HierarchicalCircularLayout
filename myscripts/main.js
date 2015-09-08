@@ -49,7 +49,7 @@ var diagonal;
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
-var scaleRadius = 0.65;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
@@ -58,7 +58,7 @@ var setIntervalFunction;
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
 //  d3.json("data/readme-flare-imports.json", function(error, classes) {
-  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
 // d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
@@ -67,6 +67,9 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //d3.json("data/Diseases of glycosyl_Dot.json", function(error, classes) {
 //d3.json("data/DefectInVitamin_Dot.json", function(error, classes) {
 // d3.json("data/AllDesease_Dot.json", function(error, classes) {
+
+//d3.json("data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
+ d3.json("data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
  
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
@@ -109,7 +112,7 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
   setupTree();
   drawNodeAndLink();
   update();
- // addSearchBox();
+  //addSearchBox();
   setupSliderScale(svg);
   setupSliderRadius(svg);
 
@@ -468,12 +471,15 @@ function isAChildOf(node1, node2) {
 
 
 
-
 // Fisheye Lensing ************************************************
 var fisheye = d3.fisheye.circular()
       .radius(200);
+
 svg.on("mousemove", function() {
   //  force.stop();
+
+
+
   if (document.getElementById("checkbox2").checked)
      fisheye.focus(d3.mouse(this));
   d3.selectAll(".node1").each(function(d) { d.fisheye = fisheye(d); })
@@ -508,7 +514,6 @@ d3.selectAll(".nodeText")
       d.x += (d.treeX - d.x) * (force_influence); //*event.alpha;
       d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
     });
- 
 });
 
 function mouseovered(d) {
@@ -565,7 +570,8 @@ function mouseouted(d) {
        })
       .style("fill-opacity", 1); 
 
-  removeColorLegend();        
+  removeColorLegend();    
+
   //node_selection
   //    .classed("node--target", false)
   //    .classed("node--source", false);
