@@ -22,9 +22,9 @@ var line;
 var nodes1;
 var links;
 
-d3.json("1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//d3.json("3676778/data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("3676778/data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
+//d3.json("../../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
+//d3.json("../..//data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+d3.json("../../data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
 //d3.json("./3676778/data/3_Signaling to GPCR_Dot.json", function(error, classes) {
 //d3.json("./3676778/data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
@@ -80,8 +80,8 @@ svg = d3.select("#tree-container").append("svg")
       .style({"stroke": "#a00",
         "stroke-width": "1.5px"})
 
-  g1.append("g").selectAll(".node").data(nodes1)
-    .enter().append("circle")
+var ttt =  g1.append("g").selectAll(".node").data(nodes1).enter();
+  ttt.append("circle")
     .attr({
         r: 13,
         cx: function(d) { return d.y -500},

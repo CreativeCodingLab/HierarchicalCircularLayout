@@ -34,9 +34,9 @@ var g1 = svg.append('g');
 var link = g1.append("g").selectAll(".link"),
     node = g1.append("g").selectAll(".node");
       
-d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
+//d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
 //d3.json("3676778/data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("3676778/data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
+d3.json("../data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
 //d3.json("./3676778/data/3_Signaling to GPCR_Dot.json", function(error, classes) {
 //d3.json("./3676778/data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
@@ -74,7 +74,9 @@ d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classe
 //tree structure
 
 //d3.json("./3676778/data/3_Signaling to GPCR_Nested.json", function(classes) {
-d3.json("../data/1_Activation of Pro-caspase 8_Nested.json", function(classes) {
+//d3.json("../data/1_Activation of Pro-caspase 8_Nested.json", function(classes) {
+d3.json("../data/2_Signaling by ERBB2_Nested.json", function(classes) {
+
 //d3.json("./3676778/data/3-Rb-E2FpathwayReactome_Nested.json", function(classes) {
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
