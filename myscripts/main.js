@@ -8,12 +8,12 @@ var bundle = d3.layout.bundle();
 
 var lineBundle = d3.svg.line()
       .interpolate("bundle")
-      .tension(0.98)
+      .tension(0.97)
       .x(function(d) { return d.x; })
       .y(function(d) { return d.y; });
 
 var width = 1400,
-    height = 800,
+    height = 770,
     root;
 
 /*var force = d3.layout.force()
@@ -26,7 +26,7 @@ var width = 1400,
 var svg = d3.select("body").append("svg")
     .attr("id", "SVGmain")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height+100);
 
 var relationship_selection = svg.selectAll(".link");
 var linkTree_selection = svg.selectAll(".link"),
@@ -57,18 +57,12 @@ var setIntervalFunction;
 
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
-//  d3.json("data/readme-flare-imports.json", function(error, classes) {
-//d3.json("data/53_RAF_Dot.json", function(error, classes) {
-//d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
-//d3.json("data/Diseases of glycosyl_Dot.json", function(error, classes) {
-//d3.json("data/DefectInVitamin_Dot.json", function(error, classes) {
-// d3.json("data/AllDesease_Dot.json", function(error, classes) {
-
-//d3.json("data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
- d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
-// d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
-// d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+//var file = "data/1_Activation of Pro-caspase 8_Dot.json";
+//var file = "data/3-Rb-E2FpathwayReactome_Dot.json";
+//var file = "data/52_ERBB2_Dot.json";
+//var file = "data/carnivoraWithRelationships.json";
+var file = "data/mammalsWithRelationships.json";
+d3.json(file, function(error, classes) {
 
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
@@ -115,6 +109,30 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
   setupSliderScale(svg);
   setupSliderRadius(svg);
 
+  svg.append("text")
+        .attr("class", "nodeLegend3")
+        .attr("x", width/2+160)
+        .attr("y", height-50)
+        .text("HCL")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("text-anchor", "middle")
+        .style("fill", "#f00")
+        .style("font-weight", "bold");
+
+      var filename2 = file.split("/");
+      svg.append("text")
+        .attr("class", "nodeLegend3")
+        .attr("x", width/2+160)
+        .attr("y", height-25)
+        .text("Data: "+filename2[filename2.length-1])
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "18px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000");
+        //.style("font-weight", "bold");  
         
 });  
 
@@ -169,6 +187,8 @@ function setupTree() {
   //  force.nodes(newNodes);
   //  force.links(linkTree);
   //  force.start();
+
+    
 }  
 
 
@@ -211,10 +231,10 @@ function drawNodeAndLink() {
     .attr("xlink:href", function(d) { 
     var nodeName = d.key;
     
+    /*  // LOAD image from google
     var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
     if (nodeName!="0" && nodeName!="1"){
       resolver.resolve(url, function( result ){
-          console.log("result = "+result );
           if (result) {
             d.image =  result.image ;
             //  $('body').css('background-image', 'url(' + result.image + ')');
@@ -222,7 +242,7 @@ function drawNodeAndLink() {
             d.image = "http://www.fnordware.com/superpng/pngtest8rgba.png";  
           }
       });
-    }  
+    }  */
   });
   
 
@@ -547,6 +567,19 @@ function mouseovered(d) {
            
       drawColorLegend();  
     }    
+    else{
+      svg.append("text")
+        .attr("class", "nodeTextBrushing")
+        .attr("x", d.x)
+        .attr("y", d.y)
+        .text(""+d.name)
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "10px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000")
+        .style("font-weight", "bold");
+    }
       //.classed("node--target", function(n) {   return n.target; })
       //.classed("node--source", function(n) { return n.source; });  
  }
@@ -571,6 +604,8 @@ function mouseouted(d) {
 
   removeColorLegend();    
 
+ // svg.selectAll(".nodeTextBrushing").remove();  
+  
   //node_selection
   //    .classed("node--target", false)
   //    .classed("node--source", false);

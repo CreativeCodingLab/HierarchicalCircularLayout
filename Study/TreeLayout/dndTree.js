@@ -16,40 +16,35 @@ var bundle = d3.layout.bundle();
 
 var line;
 
-var nodes1;
+var nodes;
 var links;
 var maxDepth=0, numLeaf=0;
 
 var linkTree;
 var linkTree_selection;
 
-//d3.json("../../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-d3.json("../../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("../../data/52_ERBB2_Dot.json", function(error, classes) {
-///d3.json("../../data/3_Signaling to GPCR_Dot.json", function(error, classes) {
-//d3.json("../../data/carnivoraWithRelationships.json", function(error, classes) {
-//d3.json("../../data/mammalsWithRelationships.json", function(error, classes) {
-//d3.json("readme-flare-imports.json", function(error, classes) {
+//var file = "../../data/1_Activation of Pro-caspase 8_Dot.json";
+//var file = "../../data/3-Rb-E2FpathwayReactome_Dot.json";
+//var file = "../../data/52_ERBB2_Dot.json";
+//var file = "../../data/carnivoraWithRelationships.json";
+var file = "../../data/mammalsWithRelationships.json";
+d3.json(file, function(error, classes) {
 
 svg = d3.select("#tree-container").append("svg")
     .attr("width", diameter)
     .attr("height", diameter+300).append('g');
     
-   var tree = d3.layout.tree().size([diameter-100,diameter]);
-    nodes1 = tree(packageHierarchy(classes));
-    nodes1.forEach(function(d) { 
+   var tree = d3.layout.tree().size([diameter,diameter]);
+    nodes = tree(packageHierarchy(classes));
+    nodes.forEach(function(d) { 
         if (d.depth>maxDepth)
             maxDepth = d.depth;
         if (!d.children)
             numLeaf++;
     });
-
-
-
-  
    
    /// Hierarchical links
-    linkTree = d3.layout.tree().links(nodes1);
+    linkTree = d3.layout.tree().links(nodes);
     linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
     linkTree_selection.append("line")
       .attr("class", "linkTree")
@@ -71,7 +66,7 @@ svg = d3.select("#tree-container").append("svg")
       .attr("y2", function(d) { return Math.round(d.target.y); });
 
 
-   links = packageImports(nodes1);
+   links = packageImports(nodes);
 
    // debugger
     g1 = svg.append('g');
@@ -80,7 +75,7 @@ svg = d3.select("#tree-container").append("svg")
 
    var _line = d3.svg.line()
     .interpolate("bundle")
-    .tension(0.9)
+    .tension(0.97)
     .x(function(d) { return d.x })
     .y(function(d) { return d.y })
 
@@ -94,7 +89,7 @@ svg = d3.select("#tree-container").append("svg")
       .style({"stroke": "#a00",
         "stroke-width": "1px"})
 
-     g1.append("g").selectAll(".node").data(nodes1).enter()
+     g1.append("g").selectAll(".node").data(nodes).enter()
         .append("circle")
         .attr({
             r: diameter*0.4/numLeaf,
@@ -108,7 +103,31 @@ svg = d3.select("#tree-container").append("svg")
         return color(d); }
     });
 
-        
+      
+      svg.append("text")
+        .attr("class", "nodeLegend")
+        .attr("x", diameter/2+40)
+        .attr("y", diameter-70)
+        .text("Reingold–Tilford Tree")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000")
+        .style("font-weight", "bold");
+
+      var filename2 = file.split("/");
+      svg.append("text")
+        .attr("class", "nodeLegend")
+        .attr("x", diameter/2+40)
+        .attr("y", diameter-45)
+        .text("Data: "+filename2[filename2.length-1])
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "18px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000");
+        //.style("font-weight", "bold");  
 });
 
 

@@ -6,9 +6,9 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var diameter = 980,
+var diameter = 750,
     radius = diameter / 2,
-    innerRadius = radius - 120;
+    innerRadius = radius - 20;
 
 var cluster = d3.layout.cluster()
     .size([360, innerRadius])
@@ -19,7 +19,7 @@ var bundle = d3.layout.bundle();
 
 var line = d3.svg.line()
     .interpolate("bundle")
-    .tension(0.9)
+    .tension(0.97)
     //.radius(function(d) { return d.y; })
     //.angle(function(d) { return d.x / 180 * Math.PI; });
     .x(function(d) { return d.x })
@@ -27,8 +27,8 @@ var line = d3.svg.line()
 
 
 var svg = d3.select("body").append("svg")
-    .attr("width", diameter*2)
-    .attr("height", diameter)
+    .attr("width", diameter)
+    .attr("height", diameter+100)
   .append("g")
     .attr("transform", "translate(" + radius + "," + radius + ")");
 
@@ -40,19 +40,9 @@ var link = g1.append("g").selectAll(".link"),
 var nodes, links, linkTree;
 var linkTree_selection;
 
-//d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//d3.json("../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("../data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("../data/carnivoraWithRelationshipsBallon.json", function(error, classes) {
-d3.json("../data/mammalsWithRelationships.json", function(error, classes) {
-//d3.json("../data/readme-flare-imports.json", function(error, classes) {
-
-  //var treeLayout = d3.layout.tree().size([ radius, radius ]);
+var file = "../data/mammalsWithRelationships.json";
+d3.json(file, function(error, classes) {
  nodes = cluster.nodes(packageHierarchy(classes));
-  //// nodes = d3.layout.tree().nodes(nodes);
-  
-  
-  
 
   var a = [];
   nodes.forEach(function(d) {
@@ -143,17 +133,17 @@ d3.json("../data/mammalsWithRelationships.json", function(error, classes) {
 
 
   var numLevelFromLeaf = nodes[0].fromLeaf;
-  var gap = radius/(2*numLevelFromLeaf);
+  var gap = radius*0.6/(numLevelFromLeaf);
 
 
   nodes.forEach(function(d) { 
-    d.r2 = radius/2+d.fromLeaf*gap*0.6;
+    d.r2 = radius*0.6+d.fromLeaf*gap*0.6;
     if (d.children)
-      d.r2 = radius/2+(d.fromLeaf-0.6)*gap*0.6;
+      d.r2 = radius*0.6+(d.fromLeaf-0.6)*gap*0.6;
 
     var start = 2*Math.PI*(d.x/(d.y+maxX/nodes[0].numLeaf));
-    var xx1 = (radius/2-d.fromLeaf*gap)*Math.cos(start);
-    var yy1 = (radius/2-d.fromLeaf*gap)*Math.sin(start);
+    var xx1 = (radius*0.6-d.fromLeaf*gap)*Math.cos(start);
+    var yy1 = (radius*0.6-d.fromLeaf*gap)*Math.sin(start);
     var xx2 = (d.r2)*Math.cos(start);
     var yy2 = (d.r2)*Math.sin(start);
     d.x = xx1;
@@ -207,7 +197,7 @@ var nodeEnter = svg.selectAll("g.node").data(nodes)
 
     
 
-var arcMin = radius/2;
+var arcMin = radius*0.6;
       
 
  var drawArc = d3.svg.arc()
@@ -252,6 +242,34 @@ var arcMin = radius/2;
         .style("fill-opacity", 1)
        // .attr("d", linkArc)
         .attr("d", drawArc);
+
+
+    svg.append("text")
+        .attr("class", "nodeLegend3")
+        .attr("x", 0)
+        .attr("y", diameter/2)
+        .text("Radial Layout")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000")
+        .style("font-weight", "bold");
+
+      var filename2 = file.split("/");
+      svg.append("text")
+        .attr("class", "nodeLegend3")
+        .attr("x", 0)
+        .attr("y", diameter/2+25)
+        .text("Data: "+filename2[filename2.length-1])
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "18px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000");
+        //.style("font-weight", "bold");  
+        
+
 });
 
 

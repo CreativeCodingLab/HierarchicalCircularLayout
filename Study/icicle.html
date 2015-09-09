@@ -28,7 +28,7 @@ var width = 750,
     height = 750;
 
 var svg = d3.select("body").append("svg")
-    .attr("width", width+200)
+    .attr("width", width+300)
     .attr("height", height);
 
 var partition = d3.layout.partition()
@@ -40,19 +40,20 @@ var bundle = d3.layout.bundle();
 var maxDepth=0, numLeaf=0;
 
 
-//d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-d3.json("../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("../data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("../data/carnivoraWithRelationships.json", function(error, classes) {
-//d3.json("../data/mammalsWithRelationships.json", function(error, classes) {
+//var file = "../data/1_Activation of Pro-caspase 8_Dot.json";
+//var file = "../data/3-Rb-E2FpathwayReactome_Dot.json";
+//var file = "../data/52_ERBB2_Dot.json";
+//var file = "../data/carnivoraWithRelationships.json";
+var file = "../data/mammalsWithRelationships.json";
 
+d3.json(file, function(error, classes) {
   if (error) throw error;
 
   //debugger;
   var root = packageHierarchy(classes);
   nodes = partition.nodes(root);
   nodes.forEach(function(d) {
-    d.x = 100+d.x+d.dx/2;
+    d.x = 50+d.x+d.dx/2;
     d.y = -d.dy+d.y;
   });
 
@@ -89,7 +90,7 @@ d3.json("../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
 
     var _line = d3.svg.line()
     .interpolate("bundle")
-    .tension(0.9)
+    .tension(0.97)
     .x(function(d) { return d.x })
     .y(function(d) { return d.y })
 
@@ -103,16 +104,31 @@ d3.json("../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
       .style({"stroke": "#a00",
         "stroke-width": "1px"})
 
+
       svg.append("text")
         .attr("class", "nodeLegend")
-        .attr("x", width/2)
-        .attr("y", height-20)
-        .text("Source node")
+        .attr("x", width/2+40)
+        .attr("y", height-70)
+        .text("Icicle plot")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("text-anchor", "middle")
+        .style("fill", "#000")
+        .style("font-weight", "bold");
+
+      var filename2 = file.split("/");
+      svg.append("text")
+        .attr("class", "nodeLegend")
+        .attr("x", width/2+40)
+        .attr("y", height-45)
+        .text("Data: "+filename2[filename2.length-1])
         .attr("dy", ".21em")
         .attr("font-family", "sans-serif")
         .attr("font-size", "18px")
-        .style("text-anchor", "left")
+        .style("text-anchor", "middle")
         .style("fill", "#000");
+        //.style("font-weight", "bold");
    
 });
 
