@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Partition - Icicle</title>
+<style>
+
+.node {
+  fill: #ddd;
+  stroke: #fff;
+}
+
+.label {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+.link {
+   fill: none;
+  stroke: #990000;
+  stroke-width: 1px;
+  stroke-opacity: 0.7;
+}
+
+</style>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+
+var width = 750,
+    height = 750;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width+200)
+    .attr("height", height);
+
+var partition = d3.layout.partition()
+    .size([width, height])
+    .value(function(d) { return d.size; });
+
+var nodes, links;    
+var bundle = d3.layout.bundle();
+var maxDepth=0, numLeaf=0;
+
+
+//d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
+d3.json("../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+//d3.json("../data/52_ERBB2_Dot.json", function(error, classes) {
+//d3.json("../data/carnivoraWithRelationships.json", function(error, classes) {
+//d3.json("../data/mammalsWithRelationships.json", function(error, classes) {
+
+  if (error) throw error;
+
+  //debugger;
+  var root = packageHierarchy(classes);
+  nodes = partition.nodes(root);
+  nodes.forEach(function(d) {
+    d.x = 100+d.x+d.dx/2;
+    d.y = -d.dy+d.y;
+  });
+
+ nodes.forEach(function(d) { 
+      if (d.depth>maxDepth)
+          maxDepth = d.depth;
+      if (!d.children)
+          numLeaf++;
+  });
+
+  svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("rect")
+      .attr("class", "node")
+      .attr("x", function(d) { return d.x-d.dx/2; })
+      .attr("y", function(d) { return d.y; })
+      .attr("width", function(d) { return d.dx; })
+      .attr("height", function(d) { return d.dy; })
+      .style("fill", function(d) { 
+        if (d.depth==0)
+          return "#fff"
+        return color(d); });
+
+      /*
+  svg.selectAll(".label")
+      .data(nodes.filter(function(d) { return d.dx > 6; }))
+    .enter().append("text")
+      .attr("class", "label")
+      .attr("dy", ".35em")
+      .attr("transform", function(d) { return "translate(" + (d.x + d.dx / 2) + "," + (d.y + d.dy / 2) + ")rotate(90)"; })
+      .text(function(d) { return d.name; });*/
+
+  links = packageImports(nodes);
+
+    var _line = d3.svg.line()
+    .interpolate("bundle")
+    .tension(0.9)
+    .x(function(d) { return d.x })
+    .y(function(d) { return d.y })
+
+    link = svg.selectAll("path.link")
+      .data(bundle(links))
+    .enter().append("path")
+      .attr("class", "link")
+      .attr("d", function(d) {
+        return _line(d)
+      })
+      .style({"stroke": "#a00",
+        "stroke-width": "1px"})
+
+      svg.append("text")
+        .attr("class", "nodeLegend")
+        .attr("x", width/2)
+        .attr("y", height-20)
+        .text("Source node")
+        .attr("dy", ".21em")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "18px")
+        .style("text-anchor", "left")
+        .style("fill", "#000");
+   
+});
+
+// Lazily construct the package hierarchy from class names.
+function packageHierarchy(classes) {
+  var map = {};
+
+  function find(name, data) {
+    var node = map[name], i;
+    if (!node) {
+      node = map[name] = data || {name: name, children: []};
+      if (name.length) {
+        node.parent = find(name.substring(0, i = name.lastIndexOf(".")));
+        node.parent.children.push(node);
+        node.key = name.substring(i + 1);
+      }
+    }
+    return node;
+  }
+
+  classes.forEach(function(d) {
+    find(d.name, d);
+  });
+
+  return map[""];
+}
+
+// Return a list of imports for the given array of nodes.
+function packageImports(nodes) {
+  var map = {},
+      imports = [];
+
+  // Compute a map from name to node.
+  nodes.forEach(function(d) {
+    map[d.name] = d;
+  });
+
+  // For each import, construct a link from the source to target node.
+  nodes.forEach(function(d) {
+    if (d.imports) d.imports.forEach(function(i) {
+      imports.push({source: map[d.name], target: map[i]});
+    });
+  });
+
+  return imports;
+}
+
+
+function color(d) {
+  var minSat = 100;
+  var maxSat = 255;
+  var step = (maxSat-minSat)/maxDepth;
+  var sat = Math.round(maxSat-d.depth*step);
+ // if (d==nodes[currentNode])
+ //   return "#ff0000";
+  
+  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
+  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
+    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
+    : "#0000f0"; // leaf node
+}
+
+
+
+</script>

@@ -1,4 +1,4 @@
-var diameter = 800,
+var diameter = 750,
     radius = diameter / 2,
     innerRadius = radius - 120;
 
@@ -7,10 +7,7 @@ var cluster = d3.layout.cluster()
     .sort(null)
     .value(function(d) { return d.size; });
 
-var svg = d3.select("#tree-container").append("svg")
-    .attr("width", diameter)
-    .attr("height", diameter)
-  .append("g")
+var svg = d3.select("#tree-container").append("svg");
  
 var g1 = svg.append('g');
 var link = g1.append("g").selectAll(".link"),
@@ -23,27 +20,22 @@ var nodes1;
 var links;
 var maxDepth=0, numLeaf=0;
 
-d3.json("../../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//d3.json("../..//data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+var linkTree;
+var linkTree_selection;
+
+//d3.json("../../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
+d3.json("../../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
 //d3.json("../../data/52_ERBB2_Dot.json", function(error, classes) {
-//d3.json("./3676778/data/3_Signaling to GPCR_Dot.json", function(error, classes) {
-//d3.json("./3676778/data/mammalsWithRelationships.json", function(error, classes) {
-//d3.json("./3676778/data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
+///d3.json("../../data/3_Signaling to GPCR_Dot.json", function(error, classes) {
+//d3.json("../../data/carnivoraWithRelationships.json", function(error, classes) {
+//d3.json("../../data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("readme-flare-imports.json", function(error, classes) {
 
 svg = d3.select("#tree-container").append("svg")
     .attr("width", diameter)
-    .attr("height", diameter)
-  .append("g")
-    .attr("transform", "translate(" + radius/10 + "," + radius/10 + ")");
-
-    g1 = svg.append('g');
-
-
-    link = g1.append("g").selectAll(".link"),
-    node = g1.append("g").selectAll(".node");
-
-   var tree = d3.layout.tree().size([diameter-40,diameter+60]);
+    .attr("height", diameter+300).append('g');
+    
+   var tree = d3.layout.tree().size([diameter-100,diameter]);
     nodes1 = tree(packageHierarchy(classes));
     nodes1.forEach(function(d) { 
         if (d.depth>maxDepth)
@@ -54,28 +46,43 @@ svg = d3.select("#tree-container").append("svg")
 
 
 
-    var tree_links = tree.links(nodes1)
+  
+   
+   /// Hierarchical links
+    linkTree = d3.layout.tree().links(nodes1);
+    linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
+    linkTree_selection.append("line")
+      .attr("class", "linkTree")
+      .attr("stroke", function(d) { 
+            if (d.source.name=="")
+                return "#ff0000";
+            else
+                return color(d.source);
+        })
+      .attr("stroke-width", function(d) { 
+            if (d.source.name=="")
+                return 0;           // remove root link
+            else
+                return 0.6;
+        })
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return Math.round(d.source.y); })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return Math.round(d.target.y); });
 
-   // var _links = g1.append("g").selectAll(".link").data(tree_links)
-    //    .attr("d", d3.svg.diagonal())
-     //   .enter().append("line")
-      //      .attr({
-      //          x1: function(d) { return d.source.x; },
-      //          y1: function(d) { return d.source.y; },
-       //         x2: function(d) { return d.target.x; },
-        //        y2: function(d) { return d.target.y; }
-         //   })
-          //  .style({ stroke: "black" })
 
    links = packageImports(nodes1);
 
    // debugger
+    g1 = svg.append('g');
+    link = g1.append("g").selectAll(".link"),
+    node = g1.append("g").selectAll(".node");
 
    var _line = d3.svg.line()
     .interpolate("bundle")
     .tension(0.9)
-    .x(function(d) { return d.y })
-    .y(function(d) { return d.x })
+    .x(function(d) { return d.x })
+    .y(function(d) { return d.y })
 
   link = link
       .data(bundle(links))
@@ -87,14 +94,14 @@ svg = d3.select("#tree-container").append("svg")
       .style({"stroke": "#a00",
         "stroke-width": "1px"})
 
-var ttt =  g1.append("g").selectAll(".node").data(nodes1).enter();
-  ttt.append("circle")
-    .attr({
-        r: diameter*0.6/numLeaf,
-        cx: function(d) { return d.y },
-        cy: function(d) { return d.x }
-    })
-    .style({"fill": function(d) { 
+     g1.append("g").selectAll(".node").data(nodes1).enter()
+        .append("circle")
+        .attr({
+            r: diameter*0.4/numLeaf,
+            cx: function(d) { return d.x },
+            cy: function(d) { return d.y }
+        })
+     .style({"fill": function(d) { 
         if (d.depth==0)
             return "#ffffff";// Disable root node
 

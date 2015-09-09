@@ -65,8 +65,8 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 // d3.json("data/AllDesease_Dot.json", function(error, classes) {
 
 //d3.json("data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-// d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
+ d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 // d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
 // d3.json("data/mammalsWithRelationships.json", function(error, classes) {
 
