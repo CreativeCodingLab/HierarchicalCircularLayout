@@ -58,19 +58,18 @@ var setIntervalFunction;
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
 //  d3.json("data/readme-flare-imports.json", function(error, classes) {
-//  d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
-// d3.json("data/mammalsWithRelationships.json", function(error, classes) {
-//d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
 //d3.json("data/53_RAF_Dot.json", function(error, classes) {
-//d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
 //d3.json("data/3_Innate Immune System_Dot.json", function(error, classes) {
 //d3.json("data/Diseases of glycosyl_Dot.json", function(error, classes) {
 //d3.json("data/DefectInVitamin_Dot.json", function(error, classes) {
 // d3.json("data/AllDesease_Dot.json", function(error, classes) {
 
 //d3.json("data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
- d3.json("data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
- 
+// d3.json("data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
+d3.json("data/52_ERBB2_Dot.json", function(error, classes) {
+// d3.json("data/carnivoraWithRelationships.json", function(error, classes) {
+// d3.json("data/mammalsWithRelationships.json", function(error, classes) {
+
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);

@@ -40,10 +40,11 @@ var link = g1.append("g").selectAll(".link"),
 var nodes, links, linkTree;
 var linkTree_selection;
 
-d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
-//d3.json("../data/2_Signaling by ERBB2_Dot.json", function(error, classes) {
+//d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classes) {
 //d3.json("../data/3-Rb-E2FpathwayReactome_Dot.json", function(error, classes) {
-//d3.json("../data/mammalsWithRelationships.json", function(error, classes) {
+//d3.json("../data/52_ERBB2_Dot.json", function(error, classes) {
+//d3.json("../data/carnivoraWithRelationshipsBallon.json", function(error, classes) {
+d3.json("../data/mammalsWithRelationships.json", function(error, classes) {
 //d3.json("../data/readme-flare-imports.json", function(error, classes) {
 
   //var treeLayout = d3.layout.tree().size([ radius, radius ]);
@@ -99,7 +100,8 @@ d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classe
             if (!nod.children){
               num++;
               sum += nod.x;
-              fLeaf = 0;
+              if (fLeaf<0)
+               fLeaf = 0;
             }  
             else{
               if (nod.fromLeaf>fLeaf)
@@ -145,7 +147,9 @@ d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classe
 
 
   nodes.forEach(function(d) { 
-    d.r2 = radius/2+d.fromLeaf*gap/2;
+    d.r2 = radius/2+d.fromLeaf*gap*0.6;
+    if (d.children)
+      d.r2 = radius/2+(d.fromLeaf-0.6)*gap*0.6;
 
     var start = 2*Math.PI*(d.x/(d.y+maxX/nodes[0].numLeaf));
     var xx1 = (radius/2-d.fromLeaf*gap)*Math.cos(start);
@@ -157,19 +161,21 @@ d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classe
     d.x2 = xx2;
     d.y2 = yy2;  
   });
+  nodes[0].x = 0;
+  nodes[0].y = 0;
   nodes[1].x = 0;
   nodes[1].y = 0;
 
-
+ 
   
   var nodes2 = [];
   for (var i =0; i<nodes.length;i++){
-    if (nodes[i].children && nodes[i].depth>1)
+    if (nodes[i].children && nodes[i].depth>0)
       nodes2.push(nodes[i]);
   }
 
   links = packageImports(nodes);
-  linkTree = d3.layout.tree().links(nodes);
+/*  linkTree = d3.layout.tree().links(nodes);
    linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
    linkTree_selection.append("line")
       .attr("class", "linkTree")
@@ -178,15 +184,17 @@ d3.json("../data/1_Activation of Pro-caspase 8_Dot.json", function(error, classe
       .attr("y1", function(d) { return Math.round(d.source.y); })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return Math.round(d.target.y); });
+*/
+
 var nodeEnter = svg.selectAll("g.node").data(nodes)
       .enter().append("circle")
       .attr("class",  function(d) { return d.children ? "node" : "leaf node"; })
       .attr("cx", function(d) { return d.x2})
       .attr("cy", function(d) { return d.y2})
       .attr("r", function(d) { 
-        if (d.name == "flare.GRB2 events in ERBB2 signaling.RAF/MAP kinase cascade.ERK activation.ERK2 activation")
-          return (6)
-        else return 2;})
+        if (d.children)
+          return (0)
+        else return gap*0.2;})
       //.attr("transform", function(d) { return "rotate(" + (d.x-90) + ")translate(" + (d.y) + ")"; })
       ;
 
@@ -207,7 +215,7 @@ var arcMin = radius/2;
         return d.r2 ;
       })
       .outerRadius(function(d, i) {
-        return d.r2 + gap/2-1;
+        return d.r2 + gap*0.6-0.4;
       })
       .startAngle( function(d, i) { 
         var alpha = d.numLeaf/ nodes[0].numLeaf;
@@ -233,21 +241,33 @@ var arcMin = radius/2;
         .enter().append("path")
         .attr("class", "linkArc")
         .style("fill", function(d, i) {
-           return "#555555";
+           return color(d);
         })
         .style("stroke", function(d, i) {
-          return "#dddddd";
+          return "#eeeeee";
         
         })
         .style("stroke-width", 1)
-        .style("stroke-opacity", 0.7)
-        .style("fill-opacity", 0.4)
+        .style("stroke-opacity", 0.8)
+        .style("fill-opacity", 1)
        // .attr("d", linkArc)
         .attr("d", drawArc);
 });
 
 
-
+function color(d) {
+  var minSat = 80;
+  var maxSat = 230;
+  var step = (maxSat-minSat)/nodes[0].fromLeaf;
+  var sat = Math.round(maxSat-d.depth*step);
+ // if (d==nodes[currentNode])
+ //   return "#ff0000";
+  
+  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
+  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
+    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
+    : "#0000f0"; // leaf node
+}
 
 
 
