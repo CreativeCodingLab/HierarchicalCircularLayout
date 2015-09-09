@@ -89,7 +89,8 @@ var ttt =  g1.append("g").selectAll(".node").data(nodes1).enter();
     })
     .style({"fill": function(d) { return d.children ? "#666" : "#00b"; }
     });
-
+ttt.append("text")
+    .attr()
         
 });
 

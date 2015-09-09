@@ -105,7 +105,7 @@ function getRadius(d) {
  // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle;
+      : scaleCircle*0.75;
      // : 1; // leaf node
 }
 
