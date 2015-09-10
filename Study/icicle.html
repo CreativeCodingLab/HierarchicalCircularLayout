@@ -15,12 +15,13 @@
 .link {
    fill: none;
   stroke: #990000;
-  stroke-width: 1px;
-  stroke-opacity: 0.7;
+  stroke-width: 0.5px;
+  stroke-opacity: 0.9;
 }
 
 </style>
 <body>
+<script src="../myscripts/util.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script>
 
@@ -43,8 +44,9 @@ var maxDepth=0, numLeaf=0;
 //var file = "../data/1_Activation of Pro-caspase 8_Dot.json";
 //var file = "../data/3-Rb-E2FpathwayReactome_Dot.json";
 //var file = "../data/52_ERBB2_Dot.json";
-//var file = "../data/carnivoraWithRelationships.json";
-var file = "../data/mammalsWithRelationships.json";
+var file = "../data/carnivoraWithRelationships.json";
+//var file = "../data/mammalsWithRelationships.json";
+//var file = "../data/flare_Dot.json";
 
 d3.json(file, function(error, classes) {
   if (error) throw error;
@@ -75,7 +77,15 @@ d3.json(file, function(error, classes) {
       .style("fill", function(d) { 
         if (d.depth==0)
           return "#fff"
-        return color(d); });
+        return color(d); })
+      .style("stroke", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] )
+                return "#000";
+      })        
+      .style("stroke-width", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] )
+                return 1;        
+    });
 
       /*
   svg.selectAll(".label")
@@ -100,9 +110,7 @@ d3.json(file, function(error, classes) {
       .attr("class", "link")
       .attr("d", function(d) {
         return _line(d)
-      })
-      .style({"stroke": "#a00",
-        "stroke-width": "1px"})
+      });
 
 
       svg.append("text")
@@ -177,19 +185,6 @@ function packageImports(nodes) {
 }
 
 
-function color(d) {
-  var minSat = 100;
-  var maxSat = 255;
-  var step = (maxSat-minSat)/maxDepth;
-  var sat = Math.round(maxSat-d.depth*step);
- // if (d==nodes[currentNode])
- //   return "#ff0000";
-  
-  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
-  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
-    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#0000f0"; // leaf node
-}
 
 
 

@@ -26,8 +26,10 @@ var linkTree_selection;
 //var file = "../../data/1_Activation of Pro-caspase 8_Dot.json";
 //var file = "../../data/3-Rb-E2FpathwayReactome_Dot.json";
 //var file = "../../data/52_ERBB2_Dot.json";
-//var file = "../../data/carnivoraWithRelationships.json";
-var file = "../../data/mammalsWithRelationships.json";
+var file = "../../data/carnivoraWithRelationships.json";
+//var file = "../../data/mammalsWithRelationships.json";
+//var file = "../../data/flare_Dot.json";
+
 d3.json(file, function(error, classes) {
 
 svg = d3.select("#tree-container").append("svg")
@@ -41,7 +43,13 @@ svg = d3.select("#tree-container").append("svg")
             maxDepth = d.depth;
         if (!d.children)
             numLeaf++;
+        
     });
+    var sub_y = nodes[1].y;
+    nodes.forEach(function(d) { 
+        d.y = d.y-sub_y;
+    }); 
+    
    
    /// Hierarchical links
     linkTree = d3.layout.tree().links(nodes);
@@ -86,27 +94,31 @@ svg = d3.select("#tree-container").append("svg")
       .attr("d", function(d) {
         return _line(d)
       })
-      .style({"stroke": "#a00",
-        "stroke-width": "1px"})
 
      g1.append("g").selectAll(".node").data(nodes).enter()
         .append("circle")
         .attr({
-            r: diameter*0.4/numLeaf,
+            r: function(d) { 
+                if (listSelected1[d.name] || listSelected2[d.name] )
+                    return diameter*1.5/numLeaf;
+                return diameter*0.5/numLeaf; },
             cx: function(d) { return d.x },
             cy: function(d) { return d.y }
         })
-     .style({"fill": function(d) { 
+     .style("fill", function(d) { 
         if (d.depth==0)
-            return "#ffffff";// Disable root node
-
-        return color(d); }
+            return "#fff";// Disable root node
+        return color(d); 
+    })
+     .style("stroke", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] )
+                return "#000";
     });
 
       
       svg.append("text")
         .attr("class", "nodeLegend")
-        .attr("x", diameter/2+40)
+        .attr("x", diameter/2)
         .attr("y", diameter-70)
         .text("Reingold–Tilford Tree")
         .attr("dy", ".21em")
@@ -119,7 +131,7 @@ svg = d3.select("#tree-container").append("svg")
       var filename2 = file.split("/");
       svg.append("text")
         .attr("class", "nodeLegend")
-        .attr("x", diameter/2+40)
+        .attr("x", diameter/2)
         .attr("y", diameter-45)
         .text("Data: "+filename2[filename2.length-1])
         .attr("dy", ".21em")
@@ -176,19 +188,5 @@ function packageImports(nodes) {
   return imports;
 }
 
-
-function color(d) {
-  var minSat = 50;
-  var maxSat = 200;
-  var step = (maxSat-minSat)/maxDepth;
-  var sat = Math.round(maxSat-d.depth*step);
- // if (d==nodes[currentNode])
- //   return "#ff0000";
-  
-  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
-  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
-    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#0000f0"; // leaf node
-}
 
 

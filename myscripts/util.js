@@ -3,6 +3,21 @@ var diameter = 1000,
     innerRadius = radius - 120;
 
   // Add color legend
+ var listSelected1 = {}
+ var listSelected2 = {}
+  
+  listSelected1["flare.query.methods"] = 1;;
+  listSelected2["flare.vis.operator.label"] = 1;;
+
+  //ERBB
+  listSelected1["flare.SHC1 events in ERBB2 signaling.RAF/MAP kinase cascade.ERK activation.ERK1 activation"] = 1;
+  listSelected2["flare.PLCG1 events in ERBB2 signaling.DAG and IP3 signaling.CaM pathway.Calmodulin induced events"] = 1;
+
+  // Carnivora
+  listSelected1["carnivora.0.0.0.0.0.0.0.0.0.0.0.0"] = 1;
+  listSelected2["carnivora.0.0.0.1.0.0.0.1"] = 1;
+
+
 function drawColorLegend() {
       var xx = width-100;
       var y1 = 5;
@@ -71,8 +86,10 @@ function color(d) {
   var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
- // if (d==nodes[currentNode])
- //   return "#ff0000";
+  if (listSelected1[d.name])
+    return "#77ff77";
+  else if (listSelected2[d.name])
+    return "#ffff66";
   
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package

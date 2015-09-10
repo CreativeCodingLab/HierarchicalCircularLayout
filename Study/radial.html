@@ -4,6 +4,7 @@
 
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="../myscripts/util.js"></script>
 <script>
 
 var diameter = 750,
@@ -39,8 +40,13 @@ var link = g1.append("g").selectAll(".link"),
   
 var nodes, links, linkTree;
 var linkTree_selection;
+var maxDepth = 0;
 
-var file = "../data/mammalsWithRelationships.json";
+//var file = "../data/52_ERBB2_Dot.json";
+//var file = "../data/readme-flare-imports.json";
+//var file = "../data/flare_Dot.json";
+var file = "../data/carnivoraWithRelationships.json";
+
 d3.json(file, function(error, classes) {
  nodes = cluster.nodes(packageHierarchy(classes));
 
@@ -128,7 +134,7 @@ d3.json(file, function(error, classes) {
     d.y = maxX;
   }); 
 
-
+  maxDepth = nodes[0].fromLeaf;
 
 
 
@@ -184,7 +190,7 @@ var nodeEnter = svg.selectAll("g.node").data(nodes)
       .attr("r", function(d) { 
         if (d.children)
           return (0)
-        else return gap*0.2;})
+        else return gap*0.08;})
       //.attr("transform", function(d) { return "rotate(" + (d.x-90) + ")translate(" + (d.y) + ")"; })
       ;
 
@@ -234,14 +240,17 @@ var arcMin = radius*0.6;
            return color(d);
         })
         .style("stroke", function(d, i) {
-          return "#eeeeee";
+           if (listSelected1[d.name] || listSelected2[d.name] )
+                return "#000";
+            return "#eeeeee";
         
         })
         .style("stroke-width", 1)
         .style("stroke-opacity", 0.8)
         .style("fill-opacity", 1)
        // .attr("d", linkArc)
-        .attr("d", drawArc);
+        .attr("d", drawArc) ; 
+      
 
 
     svg.append("text")
@@ -273,19 +282,6 @@ var arcMin = radius*0.6;
 });
 
 
-function color(d) {
-  var minSat = 80;
-  var maxSat = 230;
-  var step = (maxSat-minSat)/nodes[0].fromLeaf;
-  var sat = Math.round(maxSat-d.depth*step);
- // if (d==nodes[currentNode])
- //   return "#ff0000";
-  
-  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
-  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
-    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#0000f0"; // leaf node
-}
 
 
 

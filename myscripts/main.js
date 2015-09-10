@@ -13,7 +13,7 @@ var lineBundle = d3.svg.line()
       .y(function(d) { return d.y; });
 
 var width = 1400,
-    height = 770,
+    height = 780,
     root;
 
 /*var force = d3.layout.force()
@@ -60,8 +60,10 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/1_Activation of Pro-caspase 8_Dot.json";
 //var file = "data/3-Rb-E2FpathwayReactome_Dot.json";
 //var file = "data/52_ERBB2_Dot.json";
-//var file = "data/carnivoraWithRelationships.json";
-var file = "data/mammalsWithRelationships.json";
+var file = "data/carnivoraWithRelationships.json";
+//var file = "data/mammalsWithRelationships.json";
+//var file = "data/flare_Dot.json";
+
 d3.json(file, function(error, classes) {
 
   nodes = cluster.nodes(packageHierarchy(classes));
@@ -111,7 +113,7 @@ d3.json(file, function(error, classes) {
 
   svg.append("text")
         .attr("class", "nodeLegend3")
-        .attr("x", width/2+160)
+        .attr("x", width/2-86)
         .attr("y", height-50)
         .text("HCL")
         .attr("dy", ".21em")
@@ -124,7 +126,7 @@ d3.json(file, function(error, classes) {
       var filename2 = file.split("/");
       svg.append("text")
         .attr("class", "nodeLegend3")
-        .attr("x", width/2+160)
+        .attr("x", width/2-86)
         .attr("y", height-25)
         .text("Data: "+filename2[filename2.length-1])
         .attr("dy", ".21em")
@@ -218,8 +220,15 @@ function drawNodeAndLink() {
     .attr("id", function(d) { return d.idDFS; })
     .attr("r", getRadius)
     .attr("cx", function(d) { return d.x; })
-    .attr("cy", function(d) { return d.y; });
-  //  .style("fill", color);
+    .attr("cy", function(d) { return d.y; })
+    .style("stroke", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] )
+                return "#000";
+      })        
+      .style("stroke-width", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] )
+                return 1;        
+    }); 
 
  nodeEnter.append("image")
     .attr("class", "nodeImage3")
@@ -428,7 +437,9 @@ function startCollisionTimer() {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius)
-      .style("fill", color);
+      .style("fill", color)
+      ;
+
     currentNode++;
     if (currentNode==nodes.length)
       currentNode=1;
@@ -566,23 +577,23 @@ function mouseovered(d) {
       });
            
       drawColorLegend();  
-    }    
-    else{
-      svg.append("text")
-        .attr("class", "nodeTextBrushing")
-        .attr("x", d.x)
-        .attr("y", d.y)
-        .text(""+d.name)
-        .attr("dy", ".21em")
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "10px")
-        .style("text-anchor", "middle")
-        .style("fill", "#000")
-        .style("font-weight", "bold");
-    }
-      //.classed("node--target", function(n) {   return n.target; })
-      //.classed("node--source", function(n) { return n.source; });  
- }
+  }    
+  else{
+    svg.append("text")
+      .attr("class", "nodeTextBrushing")
+      .attr("x", d.x)
+      .attr("y", d.y)
+      .text(""+d.name)
+      .attr("dy", ".21em")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "10px")
+      .style("text-anchor", "middle")
+      .style("fill", "#000")
+      .style("font-weight", "bold");
+   } 
+  //.classed("node--target", function(n) {   return n.target; })
+  //.classed("node--source", function(n) { return n.source; });  
+}
 
 function mouseouted(d) {
   svg.selectAll("path.link")
@@ -600,11 +611,10 @@ function mouseouted(d) {
           else
             return "url(#catpattern"+n.key+")"; 
        })
-      .style("fill-opacity", 1); 
+      .style("fill-opacity", 1);
 
   removeColorLegend();    
-
- // svg.selectAll(".nodeTextBrushing").remove();  
+  svg.selectAll(".nodeTextBrushing").remove();  
   
   //node_selection
   //    .classed("node--target", false)
