@@ -42,10 +42,14 @@ var nodes, links, linkTree;
 var linkTree_selection;
 var maxDepth = 0;
 
-//var file = "../data/52_ERBB2_Dot.json";
-//var file = "../data/readme-flare-imports.json";
-//var file = "../data/flare_Dot.json";
+//var file = "../data/0_RAF_Dot.json";
+
+//var file = "../data/1_Activation of Pro-caspase 8 Pathway.json";
+//var file = "../data/2_ERBB2 Pathway.json";
+//var file = "../data/3_Signaling to GPCR Pathway.json";
+//var file = "../data/flare package.json";
 var file = "../data/carnivoraWithRelationships.json";
+//var file = "../data/mammalsWithRelationships.json";
 
 d3.json(file, function(error, classes) {
  nodes = cluster.nodes(packageHierarchy(classes));
@@ -55,6 +59,8 @@ d3.json(file, function(error, classes) {
     if (!d.children)
       a.push(d);
   });
+
+
 
   a.sort(function (a, b) {
     if (a.x < b.x) {
@@ -162,7 +168,6 @@ d3.json(file, function(error, classes) {
   nodes[1].x = 0;
   nodes[1].y = 0;
 
- 
   
   var nodes2 = [];
   for (var i =0; i<nodes.length;i++){
@@ -190,7 +195,8 @@ var nodeEnter = svg.selectAll("g.node").data(nodes)
       .attr("r", function(d) { 
         if (d.children)
           return (0)
-        else return gap*0.08;})
+        else 
+          return 30/Math.sqrt(nodes.length);})
       //.attr("transform", function(d) { return "rotate(" + (d.x-90) + ")translate(" + (d.y) + ")"; })
       ;
 
@@ -240,7 +246,7 @@ var arcMin = radius*0.6;
            return color(d);
         })
         .style("stroke", function(d, i) {
-           if (listSelected1[d.name] || listSelected2[d.name] )
+           if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
                 return "#000";
             return "#eeeeee";
         
@@ -252,7 +258,7 @@ var arcMin = radius*0.6;
         .attr("d", drawArc) ; 
       
 
-
+/*
     svg.append("text")
         .attr("class", "nodeLegend3")
         .attr("x", 0)
@@ -278,6 +284,10 @@ var arcMin = radius*0.6;
         .style("fill", "#000");
         //.style("font-weight", "bold");  
         
+*/
+
+
+
 
 });
 

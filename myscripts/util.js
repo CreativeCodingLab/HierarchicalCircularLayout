@@ -5,18 +5,43 @@ var diameter = 1000,
   // Add color legend
  var listSelected1 = {}
  var listSelected2 = {}
+ var listSelected3 = {}
   
-  listSelected1["flare.query.methods"] = 1;;
-  listSelected2["flare.vis.operator.label"] = 1;;
+  
+// RAF
+  //listSelected1["flare.ERK activation.ERK2 activation"] = 1;
+  //listSelected2["flare.MEK activation.RAF phosphorylates MEK"] = 1;
+  listSelected3["flare.MEK activation"] = 1;
 
-  //ERBB
-  listSelected1["flare.SHC1 events in ERBB2 signaling.RAF/MAP kinase cascade.ERK activation.ERK1 activation"] = 1;
-  listSelected2["flare.PLCG1 events in ERBB2 signaling.DAG and IP3 signaling.CaM pathway.Calmodulin induced events"] = 1;
 
+  // Ativation of Pro-Caspase 8 
+  //listSelected1["flare.Apoptotic factor-mediated response.SMAC-mediated apoptotic response.SMAC-mediated dissociation of IAP:caspase complexes"] = 1;;
+  //listSelected2["flare.Release of apoptotic factors from the mitochondria"] = 1;
+  listSelected3["flare.Apoptotic factor-mediated response.Cytochrome c-mediated apoptotic response.Formation of apoptosome"]=1;
+  
+  //ERBB2
+  //listSelected1["flare.PI3K events in ERBB2 signaling.PIP3 activates AKT signaling"] = 1;
+  //listSelected2["flare.SHC1 events in ERBB2 signaling.RAF/MAP kinase cascade.ERK activation.ERK1 activation"] = 1;
+  listSelected3["flare.GRB2 events in ERBB2 signaling"] = 1;
+  
+  // GPCR
+  //listSelected1["Signaling by GPCR.Opioid Signalling.G-protein mediated events.PLC beta mediated events.Ca-dependent events.CaM pathway"] = 1;
+  //listSelected2["Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events.Effects of PIP2 hydrolysis"] = 1;
+  //listSelected1["flare.Signaling by GPCR.Opioid Signalling.G-protein mediated events.PLC beta mediated events.Ca-dependent events.CaM pathway"] = 1;;
+  //listSelected2["flare.Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events.Effects of PIP2 hydrolysis"] = 1;
+  listSelected3["Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events"] = 1;
+  
+  // Flare
+  //listSelected1["flare.query.methods"] = 1;
+  //listSelected2["flare.vis.operator.layout"] = 1;
+  listSelected3["flare.vis.operator.layout"] = 1;
+  
+  
   // Carnivora
-  listSelected1["carnivora.0.0.0.0.0.0.0.0.0.0.0.0"] = 1;
-  listSelected2["carnivora.0.0.0.1.0.0.0.1"] = 1;
-
+  //listSelected1["carnivora.0.0.0.0.0.0.0.0.0.0.0"] = 1;
+  //listSelected2["carnivora.0.0.0.1.0.0.0"] = 1;
+  listSelected3["carnivora.0.0.0.0.0.0.1.0.0"] = 1;
+  
 
 function drawColorLegend() {
       var xx = width-100;
@@ -90,11 +115,13 @@ function color(d) {
     return "#77ff77";
   else if (listSelected2[d.name])
     return "#ffff66";
+  else if (listSelected3[d.name])
+    return "#ffaaff";
   
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#0000f0"; // leaf node
+    : "#77f"; // leaf node
 }
 
 function colorFaded(d) {
@@ -115,7 +142,7 @@ function getBranchingAngle1(radius3, numChild) {
     return Math.pow(radius3,2);
   }  
   else
-    return Math.pow(radius3,1);
+    return Math.pow(radius3,0.9);
  } 
 
 function getRadius(d) {
@@ -142,6 +169,22 @@ function childCount1(level, n) {
     return count;
 };
 
+function childDepth1(n) {
+    if(n.children && n.children.length > 0) {
+      n.maxDepth = 0;
+      n.children.forEach(function(d) {
+        var childrenDeep = childDepth1(d);
+        console.log(" childrenDeep="+childrenDeep);
+        if (childrenDeep>n.maxDepth)
+          n.maxDepth = childrenDeep;
+      });
+    }
+    else{
+       n.maxDepth = n.depth;
+    }
+    return n.maxDepth;
+};
+
 
 
 function childCount2(level, n) {
@@ -151,7 +194,7 @@ function childCount2(level, n) {
         arr.push(d);
       });
     }
-    arr.sort(function(a,b) { return parseFloat(a.childCount1) - parseFloat(b.childCount1) } );
+    arr.sort(function(a,b) { return (a.maxDepth*100+a.childCount1) - (b.maxDepth*100+b.childCount1) } );
     var arr2 = [];
     arr.forEach(function(d, i) {
         d.order1 = i;
@@ -165,7 +208,7 @@ function childCount2(level, n) {
 
 };
 
-d3.select(self.frameElement).style("height", diameter + "px");
+//d3.select(self.frameElement).style("height", diameter + "px");
 
 /*
 function tick(event) {
