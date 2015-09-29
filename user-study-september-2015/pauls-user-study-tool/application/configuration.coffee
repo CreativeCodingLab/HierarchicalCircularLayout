@@ -7,18 +7,13 @@ module.exports = ->
 
   object.study_intro_pages = do ->
     pages = [
-      {
-        name: "intro"
-        # text: "Welcome to the study."
-        # options: continue_button
-        images: [ "IntroPic_small.jpg" ]
-        options: continue_button
-      },
       # {
       #   name: "intro"
-      #   text: "Here is another intro page."
+      #   # text: "Welcome to the study."
+      #   # options: continue_button
+      #   images: [ "IntroPic_small.jpg" ]
       #   options: continue_button
-      # }
+      # },
     ]
 
     return pages
@@ -62,33 +57,38 @@ module.exports = ->
     [
       "#{folder}#{layout}#{dataId}.png"
     ]
+  # coffeelint: disable=max_line_length
 
   object.task_blocks = [
     {
       name: "height_and_degree"
       layouts: layouts_a
       dataIds: dataIds_5
-      image_folder: "Study1"
+      image_folder: "Study1.1-2"
       imagesFunction: defaultImageFunction
       intro_pages: [
         {
-          text: "height and degree intro"
+          name: "intro"
+          text: "Study 1.1-2"
+          # text: "Welcome to the study."
+          # options: continue_button
+          images: [ "IntroPic_small.jpg" ]
           options: continue_button
         }
-        {
-          text: "height and degree intro 2"
-          options: continue_button
-        }
+        # {
+        #   text: "height and degree intro 2"
+        #   options: continue_button
+        # }
       ]
       question_pages: [
         {
           questionName: "height?"
-          text: "What is the depth of the tree shown?"
+          text: "What is the &nbsp;<span style='font-weight: 800; color: red'>depth</span>&nbsp; of the tree shown?"
           options: options_a
         },
         {
           questionName: "degree?"
-          text: "What is the degree of the tree shown?"
+          text: "What is the &nbsp;<span style='font-weight: 800; color: blue'>degree</span>&nbsp; of the tree shown?"
           options: options_a
         }
       ]
@@ -98,20 +98,26 @@ module.exports = ->
       layouts: layouts_a
       dataIds: [3, 4]
       subtreeIds: [1, 2]
-      image_folder: "Study13"
+      image_folder: "Study1.3"
       imagesFunction: (imagesFolder, layout, dataId, subtreeId) -> [
         "#{imagesFolder}/#{layout}#{subtreeId}.png"
         "#{imagesFolder}/#{layout}#{dataId}.png"
       ]
       intro_pages: [
         {
-          text: "subtree intro"
+          name: "intro"
+          text: "Study 1.3"
+          images: [ "Study1.3/introImage/example3.png"]
           options: continue_button
         }
-        {
-          text: "subtree intro 2"
-          options: continue_button
-        }
+        # {
+        #   text: "subtree intro"
+        #   options: continue_button
+        # }
+        # {
+        #   text: "subtree intro 2"
+        #   options: continue_button
+        # }
       ]
       question_pages: [
         {
@@ -126,26 +132,28 @@ module.exports = ->
       name: "hops"
       layouts: layouts_a
       dataIds: dataIds_5
-      image_folder: "Study2"
+      image_folder: "Study2.1"
       imagesFunction: defaultImageFunction
       intro_pages: [
         {
-          text: "height and degree intro"
+          name: "intro"
+          text: "Study 2.1"
+          images: [ "Study2.1/introImage/intro_small.png"]
           options: continue_button
         }
-        {
-          text: "height and degree intro 2"
-          options: continue_button
-        }
+        # {
+        #   text: "height and degree intro 2"
+        #   options: continue_button
+        # }
       ]
       question_pages: [
         {
           questionName: "hops?"
           text: "How many hops are on the path between
-            the node highlighted in
-             <span style='color: #dd0'> yellow </span>
-             and the node highlighted in
-             <span style='color: #0d0'> green </span>?"
+            the node highlighted
+            in &nbsp;<span style='color: #dd0'> yellow </span>&nbsp; and
+            the node highlighted
+            in &nbsp;<span style='color: #0d0'> green </span>&nbsp;?"
           options: options_a
         }
       ]
@@ -154,15 +162,13 @@ module.exports = ->
       name: "connected"
       layouts: layouts_a
       dataIds: dataIds_5
-      image_folder: "Study2"
+      image_folder: "Study2.2"
       imagesFunction: defaultImageFunction
       intro_pages: [
         {
-          text: "height and degree intro"
-          options: continue_button
-        }
-        {
-          text: "height and degree intro 2"
+          name: "intro"
+          text: "Study 2.2"
+          images: [ "Study2.2/introImage/intro.png"]
           options: continue_button
         }
       ]

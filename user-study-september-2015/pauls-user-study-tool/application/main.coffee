@@ -141,7 +141,7 @@ getTaskBlockPages = (taskBlock) ->
 
   # d3.shuffle combinations
 
-  return combinations.map (subtree) ->
+  pages = recursiveFlatten combinations.map (subtree) ->
     args = [taskBlock.image_folder].concat d3.values(subtree)
     images = taskBlock.imagesFunction.apply this, args
     questionPages.map (question) ->
@@ -157,12 +157,17 @@ getTaskBlockPages = (taskBlock) ->
       # images: taskBlock.imagesFunction.apply this, d3.values subtree
       images: images
 
+  intro = taskBlock.intro_pages || []
+
+  return intro.concat pages
+
 taskPages = do ->
   # d3.shuffle config.task_blocks
   recursiveFlatten config.task_blocks.map getTaskBlockPages
 
-pages = config.study_intro_pages
-  .concat taskPages
+intro = config.study_intro_pages || []
+
+pages = intro.concat taskPages
   .concat config.study_outro_pages
 
 pages.reduce (previous, current) ->
