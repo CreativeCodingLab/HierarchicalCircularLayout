@@ -24,9 +24,9 @@ yearMonthDay = do ->
   "#{d.getFullYear()}-#{d.getMonth()}-#{d.getDay()}"
 
 outputFile = do ->
-  #path.resolve __dirname, 'static', 'output', "output-#{yearMonthDay}.txt"
+  path.resolve __dirname, 'static', 'output', "output-#{yearMonthDay}.txt"
   #path.resolve "./", 'static', 'output', "output-#{yearMonthDay}.txt"
-  path.resolve './', 'foo.txt'
+  #path.resolve './', 'foo.txt'
   
 console.log outputFile
 
