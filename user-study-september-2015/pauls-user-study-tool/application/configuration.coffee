@@ -66,6 +66,8 @@ module.exports = ->
       dataIds: dataIds_5
       image_folder: "Study1.1-2"
       imagesFunction: defaultImageFunction
+      pageHook: (page) ->
+        console.log page
       intro_pages: [
         {
           name: "intro"
@@ -83,12 +85,12 @@ module.exports = ->
       question_pages: [
         {
           questionName: "height?"
-          text: "What is the &nbsp;<span style='font-weight: 800; color: red'>depth</span>&nbsp; of the tree shown?"
+          text: "What is the &nbsp;<span style='font-weight: 800; color: #30AD30'>height</span>&nbsp; of the tree shown?"
           options: options_a
         },
         {
           questionName: "degree?"
-          text: "What is the &nbsp;<span style='font-weight: 800; color: blue'>degree</span>&nbsp; of the tree shown?"
+          text: "What is the &nbsp;<span style='font-weight: 800; color: #ab0000'>degree</span>&nbsp; of the tree shown?"
           options: options_a
         }
       ]
@@ -103,6 +105,9 @@ module.exports = ->
         "#{imagesFolder}/#{layout}#{subtreeId}.png"
         "#{imagesFolder}/#{layout}#{dataId}.png"
       ]
+      pageHook: (page) ->
+        if page.questionName is "subtree?"
+          d3.selectAll("img").style("max-height", "60%")
       intro_pages: [
         {
           name: "intro"

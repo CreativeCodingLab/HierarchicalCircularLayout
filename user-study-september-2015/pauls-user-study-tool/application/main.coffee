@@ -52,7 +52,51 @@ addButtons = (row) ->
       "border": "1px solid #aaa"
     )
   buttons.text (d) -> d
-
+  
+addRow = (page, startTime) ->
+  return (d) ->
+    row = d3.select this
+  
+    row.selectAll("div").remove()
+  
+    if d.key is "text" then row.call addText
+  
+    #if d.key is "options"
+      #row.call addButtons
+        #.selectAll "button"
+        #.on "click", (d) ->
+          #obj =
+            #page: page
+            #response: d
+            #time: new Date()
+            #userHash: page.userHash || hash
+            #responseTime: new Date().getTime() - startTime
+            #userStartTime: userStartTime
+          #resolve obj
+  
+    if d.key is "images"
+      # row.style "height": "500px"
+      images = d.value
+      numImages = images.length
+      colWidth = Math.floor 12 / images.length
+      # colWidth = colWidth
+      imageColumns = row.selectAll(".image").data (d) -> d.value
+      imageColumns.exit().remove()
+      imageColumns.enter().append("div")
+        .style
+          "height": "#{window.innerHeight * .7}px" # "500px"
+          "margin-top": "100px"
+        .append("img")
+        # .classed("center-block img-responsive", true)
+        .classed("center-block", true)
+        .style
+          "max-height": "100%"
+          "max-width": "100%"
+      imageColumns
+        .attr("class", "col-xs-#{colWidth} image") # Override old classes!
+        .select("img")
+        .attr "src", (d) -> d
+            
 updatePage = (page) ->
   return new Promise (resolve) ->
     startTime = new Date().getTime()
@@ -64,15 +108,10 @@ updatePage = (page) ->
         display: "flex"
         "align-items": "center"
     rows.exit().remove()
+    rows.each addRow(page, startTime)
     rows.each (d) ->
-      row = d3.select this
-
-      row.selectAll("div").remove()
-
-      if d.key is "text" then row.call addText
-
       if d.key is "options"
-        row.call addButtons
+        d3.select(this).call addButtons
           .selectAll "button"
           .on "click", (d) ->
             obj =
@@ -83,34 +122,8 @@ updatePage = (page) ->
               responseTime: new Date().getTime() - startTime
               userStartTime: userStartTime
             resolve obj
+    if page.pageHook? then page.pageHook(page)
 
-      if d.key is "images"
-        # row.style "height": "500px"
-        images = d.value
-        numImages = images.length
-        colWidth = Math.floor 12 / images.length
-        # colWidth = colWidth
-        imageColumns = row.selectAll(".image").data (d) -> d.value
-        imageColumns.exit().remove()
-        imageColumns.enter().append("div")
-          .style
-            "height": "#{window.innerHeight * .7}px" # "500px"
-            "margin-top": "100px"
-          .append("img")
-          # .classed("center-block img-responsive", true)
-          .classed("center-block", true)
-          .style
-            "max-height": "100%"
-            "max-width": "100%"
-            # "width": "auto"
-        imageColumns
-          .attr("class", "col-xs-#{colWidth} image") # Override old classes!
-          .select("img")
-          .attr "src", (d) -> d
-            # "#{page.imageFolder}/#{d}"
-            # "#{page.imageFolder}/#{d}"
-
-  return promise
 
 do initialize
 
@@ -145,6 +158,7 @@ getTaskBlockPages = (taskBlock) ->
     args = [taskBlock.image_folder].concat d3.values(subtree)
     images = taskBlock.imagesFunction.apply this, args
     questionPages.map (question) ->
+      pageHook: taskBlock.pageHook
       questionName: question.questionName
       taskBlockName: taskBlock.name
       imageFolder: taskBlock.image_folder || ""
