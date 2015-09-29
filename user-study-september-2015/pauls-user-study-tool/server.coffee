@@ -24,12 +24,18 @@ yearMonthDay = do ->
   "#{d.getFullYear()}-#{d.getMonth()}-#{d.getDay()}"
 
 outputFile = do ->
-  path.resolve __dirname, 'static', 'output', "output-#{yearMonthDay}.txt"
+  #path.resolve __dirname, 'static', 'output', "output-#{yearMonthDay}.txt"
+  #path.resolve "./", 'static', 'output', "output-#{yearMonthDay}.txt"
+  path.resolve './', 'foo.txt'
+  
+console.log outputFile
 
 writeData = (data) ->
   string = "#{JSON.stringify(data)},\n"
   fs.appendFile outputFile, string, (err) ->
-    if (err) then throw err
+    if (err) 
+      console.error "there was an error trying to write to the file"
+      throw err
 
 app.use '/postData', bodyParser.json(), (request, response) ->
   console.log request.body

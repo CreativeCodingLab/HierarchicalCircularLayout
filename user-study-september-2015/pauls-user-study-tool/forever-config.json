@@ -6,5 +6,5 @@
   "killSignal": "SIGTERM",
   "fifo": true,
   "append": true,
-  "command": "nodemon --exitcrash"
+  "command": "nodemon --exitcrash --ignore *.log"
 }

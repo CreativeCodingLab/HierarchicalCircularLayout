@@ -139,7 +139,7 @@ getTaskBlockPages = (taskBlock) ->
 
   combinations = recursiveFlatten combinations
 
-  # d3.shuffle combinations
+  d3.shuffle combinations
 
   pages = recursiveFlatten combinations.map (subtree) ->
     args = [taskBlock.image_folder].concat d3.values(subtree)
