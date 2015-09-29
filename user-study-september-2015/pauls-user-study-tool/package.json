@@ -6,5 +6,8 @@
     "coffeeify": "^1.1.0",
     "express": "^4.13.3",
     "serve-index": "^1.7.2"
+  },
+  "scripts": {
+    "start": "forever start forever-config.json"
   }
 }
