@@ -29,18 +29,18 @@ initialize = ->
 showRows = ["text", "options", "images"]
 
 addText = (row) ->
-  # row.style height: "100px"
+  # row.style height: "150px"
   col = row.selectAll(".col-xs-12").data (d) -> [d]
-  col.enter().append("div").classed("col-xs-12", true)
+  col.enter().append("div").classed("col-xs-12 text", true)
     .style
       display: "flex"
       "align-items": "center"
-      height: "100px"
+      height: "250px"
   col.html (d) -> "#{d.value}"
 
 addButtons = (row) ->
   col = row.selectAll("div").data (d) -> [d]
-  col.enter().append("div").classed("col-xs-7", true)
+  col.enter().append("div").classed("col-xs-7 buttons", true)
 
   buttons = col.selectAll("button").data (d) -> d.value
   buttons.exit().remove()
@@ -84,7 +84,7 @@ addRow = (page, startTime) ->
       imageColumns.exit().remove()
       imageColumns.enter().append("div")
         .style
-          "height": "#{window.innerHeight * .7}px" # "500px"
+          "height": "#{window.innerHeight * .5}px" # "500px"
           "margin-top": "100px"
         .append("img")
         # .classed("center-block img-responsive", true)
@@ -123,6 +123,7 @@ updatePage = (page) ->
               userStartTime: userStartTime
             resolve obj
     if page.pageHook? then page.pageHook(page)
+    if page._pageHook? then page._pageHook(page)
 
 
 do initialize
