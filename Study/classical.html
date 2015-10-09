@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<link rel="stylesheet" type="text/css" href="../main.css"></link>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="../myscripts/util.js"></script>
+<script>
 var diameter = 750,
     radius = diameter / 2,
     innerRadius = radius - 120;
@@ -23,18 +32,18 @@ var maxDepth=0, numLeaf=0;
 var linkTree;
 var linkTree_selection;
 
-//var file = "../../data/0_RAF_Dot.json";
+//var file = "../data/0_RAF_Dot.json";
 
-//var file = "../../data/1_Activation of Pro-caspase 8 Pathway.json";
-//var file = "../../data/2_ERBB2 Pathway.json";
-//var file = "../../data/3_Signaling to GPCR Pathway.json";
-var file = "../../data/flare package.json";
-//var file = "../../data/carnivoraWithRelationships.json";
-//var file = "../../data/mammalsWithRelationships.json";
+//var file = "../data/1_Activation of Pro-caspase 8 Pathway.json";
+//var file = "../data/2_ERBB2 Pathway.json";
+var file = "../data/3_Signaling to GPCR Pathway.json";
+//var file = "../data/flare package.json";
+//var file = "../data/carnivoraWithRelationships.json";
+//var file = "../data/mammalsWithRelationships.json";
 
-//var file = "../../data/1_RAF-Cascade Pathway.json";
-//var file = "../../data/54_DAG Pathway.json";
-//var file = "../../data/3_NGF Pathway.json";
+//var file = "../data/1_RAF-Cascade Pathway.json";
+//var file = "../data/54_DAG Pathway.json";
+//var file = "../data/3_NGF Pathway.json";
 
 var treeOnly = false;
 
@@ -205,6 +214,8 @@ function packageImports(nodes) {
 
   return imports;
 }
-
-
-
+</script>
+<body>
+    <div id="tree-container"></div>
+</body>
+</html>

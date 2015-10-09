@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="radial.css"></link>
+<link rel="stylesheet" type="text/css" href="../main.css"></link>
 
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -32,7 +32,7 @@ var svg = d3.select("body").append("svg")
 
 var g1 = svg.append('g');
 
-var link = g1.append("g").selectAll(".link"),
+var link = g1.append("g").selectAll(".linkTree"),
     node = g1.append("g").selectAll(".node");
       
 //var file = "../data/0_RAF_Dot.json";
@@ -63,11 +63,18 @@ d3.json(file, function(error, classes) {
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
   
-  var link4 = g1.selectAll("path.treelink")
+  var link4 = g1.selectAll(".linkTree")
       .data(cluster.links(nodes))
     .enter().append("svg:path")
-      .attr("class", "treelink")
+      .attr("class", "linkTree")
       .attr("d", diagonal)
+      .attr("fill", "none")
+      .attr("stroke", function(d) { 
+            if (d.source.name=="")
+                return "#ff0000";
+            else
+                return color(d.source);
+        })
       .style("stroke-width",  1);
 
   var node4 = g1.selectAll("g.node2")
