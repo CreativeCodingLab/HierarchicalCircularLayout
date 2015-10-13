@@ -41,7 +41,7 @@ app.use '/postData', bodyParser.json(), (request, response) ->
 
 app.get '/application', browserify('./application/main.coffee')
 
-port = process.env.PORT || 8080
+port = process.env.PORT || process.argv[2] || 8080
 ip = process.env.IP || '0.0.0.0'
 
 server.listen port, ->
