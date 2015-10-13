@@ -57,12 +57,22 @@ var setIntervalFunction;
 
 var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for nodes
 
-//var file = "data/1_Activation of Pro-caspase 8_Dot.json";
-//var file = "data/3-Rb-E2FpathwayReactome_Dot.json";
-//var file = "data/52_ERBB2_Dot.json";
+//var file = "data/0_RAF_Dot.json";
+
+//var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
+//var file = "data/2_ERBB2 Pathway.json";
+//var file = "data/3_Signaling to GPCR Pathway.json";
+//var file = "data/flare package.json";
 var file = "data/carnivoraWithRelationships.json";
 //var file = "data/mammalsWithRelationships.json";
-//var file = "data/flare_Dot.json";
+
+//var file = "data/1_RAF-Cascade Pathway.json";
+//var file = "data/54_DAG Pathway.json";
+//var file = "data/3_NGF Pathway.json";
+
+
+
+var treeOnly = false;
 
 d3.json(file, function(error, classes) {
 
@@ -89,10 +99,7 @@ d3.json(file, function(error, classes) {
     return b.order2 - a.order2;
   }
   
-  function nodeSize(d) {
-  return d.children ? Math.sqrt(d.children.length) // expanded package
-      : 1; // leaf node
-  }  
+  childDepth1(root); 
   count1 = childCount1(0, root); 
   count2 = childCount2(0, root);  // DFS id of nodes are also set in this function
   root.idDFS = nodeDFSCount++; 
@@ -111,6 +118,7 @@ d3.json(file, function(error, classes) {
   setupSliderScale(svg);
   setupSliderRadius(svg);
 
+/*
   svg.append("text")
         .attr("class", "nodeLegend3")
         .attr("x", width/2-86)
@@ -134,20 +142,16 @@ d3.json(file, function(error, classes) {
         .attr("font-size", "18px")
         .style("text-anchor", "middle")
         .style("fill", "#000");
-        //.style("font-weight", "bold");  
+        //.style("font-weight", "bold");  */
         
 });  
-
-
-
-
 
 function setupTree() {
   var disFactor = 2;
   var minY = height*100;   // used to compute the best scale for the input tree
   newNodes = treeLayout(root).map(function(d,i) {
     if (d.depth==0){
-       d.treeX = 600; 
+       d.treeX = 700; 
        d.treeY = height-getRadius(root)/1;
        d.alpha = -Math.PI/2; 
     }
@@ -222,11 +226,11 @@ function drawNodeAndLink() {
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y; })
     .style("stroke", function(d) { 
-        if (listSelected1[d.name] || listSelected2[d.name] )
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
                 return "#000";
       })        
       .style("stroke-width", function(d) { 
-        if (listSelected1[d.name] || listSelected2[d.name] )
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] )
                 return 1;        
     }); 
 
@@ -591,6 +595,7 @@ function mouseovered(d) {
       .style("fill", "#000")
       .style("font-weight", "bold");
    } 
+   console.log(d.name);
   //.classed("node--target", function(n) {   return n.target; })
   //.classed("node--source", function(n) { return n.source; });  
 }
