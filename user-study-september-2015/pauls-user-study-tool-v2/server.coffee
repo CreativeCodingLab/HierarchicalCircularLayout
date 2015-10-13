@@ -25,19 +25,16 @@ yearMonthDay = do ->
 
 outputFile = do ->
   path.resolve __dirname, 'static', 'output', "output-#{yearMonthDay}.txt"
-  #path.resolve "./", 'static', 'output', "output-#{yearMonthDay}.txt"
-  #path.resolve './', 'foo.txt'
-  
-console.log outputFile
 
 writeData = (data) ->
   string = "#{JSON.stringify(data)},\n"
   fs.appendFile outputFile, string, (err) ->
-    if (err) 
-      console.error "there was an error trying to write to the file"
+    if (err)
+      console.error "There was an error trying to write to the file."
       throw err
 
 app.use '/postData', bodyParser.json(), (request, response) ->
+  console.log "[#{new Date()}] Data received:"
   console.log request.body
   writeData request.body
   response.end()
