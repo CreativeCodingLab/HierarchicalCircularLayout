@@ -63,8 +63,8 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/2_ERBB2 Pathway.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
 //var file = "data/flare package.json";
-var file = "data/carnivoraWithRelationships.json";
-//var file = "data/mammalsWithRelationships.json";
+//var file = "data/carnivoraWithRelationships.json";
+var file = "data/mammalsWithRelationships.json";
 
 //var file = "data/1_RAF-Cascade Pathway.json";
 //var file = "data/54_DAG Pathway.json";

@@ -7,7 +7,19 @@ An important consideration in visualizing biological pathways is clearly showing
 This technique supports a range of interactions on this representation, such as collapsing or expanding of node in the hierarchy to simplify or or to fully explore its structure, selecting a connection between two nodes, and highlighting relationships involving an selected item in the hierarchy.
 
 
-![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/TeaserHCL.png)
+
+![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image1-Activation of Pro-caspase 8 Pathway.png)
+
+![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image2-ERBB2 Pathway.png)
+
+![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image3-Signaling to GPCR Pathway.png)
+
+![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image4-NGF Pathway.png)
+
+![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image5-Carnivora.png)
+
+![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image6-Mammals.png)
+
 
 Hierarchical Circular Layouts is implemented in D3 (index.html in this folder) as well as in Processing available at: https://github.com/CreativeCodingLab/PathwayViewer.
 
