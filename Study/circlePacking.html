@@ -55,22 +55,19 @@ d3.json(file, function(error, classes) {
 
   root = packageHierarchy(classes);
   
-  pack.nodes(root).forEach(function(node) {
-    node["value"] = node["size"];
-  });
+  root = {
+        "name":"AAAAA", "children": [
+            {"name":"BBB", value:"10"},
+            {"name":"CCC", value:"10" }
+        ]
+    }  
+
+  pack.nodes(root);
 
   
  nodes = pack.nodes(root);
 //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
 //nodes[0].depth=0;
- nodes.forEach(function(d) { 
-  d.depth--;
-      if (d.depth>maxDepth)
-          maxDepth = d.depth;
-      if (!d.children)
-          numLeaf++;
-  });
-
  
 
   svg.selectAll(".node")
@@ -79,7 +76,9 @@ d3.json(file, function(error, classes) {
       .attr("class", "node")
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
-      .attr("r", function(d) { return d.r; })
+      .attr("r", function(d) { 
+console.log("r="+d.r);
+      	return d.r; })
       .style("fill", function(d) { 
         return color(d); })
       .style("stroke", function(d) { 
