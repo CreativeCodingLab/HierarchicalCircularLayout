@@ -7,7 +7,7 @@ An important consideration in visualizing biological pathways is clearly showing
 This technique supports a range of interactions on this representation, such as collapsing or expanding of node in the hierarchy to simplify or or to fully explore its structure, selecting a connection between two nodes, and highlighting relationships involving an selected item in the hierarchy.
 
 
-
+The following figure shows HCL visualization technique for the Activation of Pro-caspase 8 pathway. Blue (leaf) nodes are biochemical reactions within this pathway. Gray nodes are sub-pathways which are stacked directly on the top of parent pathway. We use red links to indicate the causal relationships between nodes (biochemical reactions). Connections of nodes in different sub-trees are wired through the center of their closest common ancestor. This common ancestor for a given set of nodes may be several levels higher than the leaf nodes themselves. In this case, the connections are wired through these intermediate nodes. The idea is similar to threading though the holes (centers) of a chain of buttons (intermediate nodes) to connect two leaf nodes. 
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image1-Activation of Pro-caspase 8 Pathway.png)
 
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image2-ERBB2 Pathway.png)
