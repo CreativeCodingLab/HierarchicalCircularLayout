@@ -13,7 +13,7 @@ The following figure shows HCL visualization technique for the Activation of Pro
 The following figure shows causal relationships of biochemical reactions in the ERBB2 pathway which are structured in HCL. The data can be found on Reactome: http://www.reactome.org/PathwayBrowser/#/R-HSA-1227986
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image2-ERBB2 Pathway.png)
 
-The following figure shows another example of HCL (tree structure) and edge bundling (red links) of 292 biochemical reactions in the Signaling by GPCR pathway. The data can be found on Reactome:
+The following figure shows another example of HCL (tree structure) and edge bundling (red links) of 292 biochemical reactions in the Signaling by GPCR pathway. The pathway data can be found on Reactome:
 http://www.reactome.org/PathwayBrowser/#/R-HSA-372790&PATH=R-HSA-162582
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image3-Signaling to GPCR Pathway.png)
 
@@ -21,10 +21,10 @@ The following figure shows strong causal relationships between 116 biochemical r
 http://www.reactome.org/PathwayBrowser/#/R-HSA-166520
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image4-NGF Pathway.png)
 
-HCL has applications on many other domains such as security visualization and biodiversity. The following figure shows prey-predator relationships between meat-eating animals in the Carnivora tree. The image of each animal is attached on where it appears in the tree.
+HCL has applications on many other domains such as security visualization and biodiversity. The following figure shows prey-predator relationships between meat-eating animals in the Carnivora tree. The image of each animal is attached directly to where it appears in the tree.
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image5-Carnivora.png)
 
-The following figure shows a more complicated example of the entire mammal tree. A red link connect from predator to a prey. The mammal data is extracted from [OneZoom](http://www.onezoom.org/)
+The following figure shows a more complicated example of the entire mammal tree. The leaf nodes (mammals) become to small to be view without zooming in. A red link connects from predator to a prey. The mammal data is extracted from [OneZoom](http://www.onezoom.org/).
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image6-Mammals.png)
 
 
