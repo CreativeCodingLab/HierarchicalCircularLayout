@@ -13,7 +13,8 @@ The following figure shows HCL visualization technique for the Activation of Pro
 The following figure shows causal relationships of biochemical reactions in the ERBB2 pathway which are structured in HCL. The data can be found on Reactome: http://www.reactome.org/PathwayBrowser/#/R-HSA-1227986
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image2-ERBB2 Pathway.png)
 
-The following figure shows another example of HCL (tree structure) and edge bundling (red links) of biochemical reactions in the Signaling by GPCR pathway. 
+The following figure shows another example of HCL (tree structure) and edge bundling (red links) of 292 biochemical reactions in the Signaling by GPCR pathway. The data can be found on Reactome:
+http://www.reactome.org/PathwayBrowser/#/R-HSA-372790&PATH=R-HSA-162582
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image3-Signaling to GPCR Pathway.png)
 
 The following figure shows strong causal relationships between 116 biochemical reactions in the NGF Pathway. The data can be found on Reactome:
