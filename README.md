@@ -21,8 +21,10 @@ The following figure shows strong causal relationships between 116 biochemical r
 http://www.reactome.org/PathwayBrowser/#/R-HSA-166520
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image4-NGF Pathway.png)
 
+HCL has applications on many other domains such as security visualization and biodiversity. The following figure shows prey-predator relationships between meat-eating animals in the Carnivora tree. The image of each animal is attached on where it appears in the tree.
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image5-Carnivora.png)
 
+The following figure shows a more complicated example of the entire mammal tree. A red link connect from predator to a prey. The mammal data is extracted from [Euler/X](https://github.com/EulerProject/EulerX)
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image6-Mammals.png)
 
 
