@@ -24,7 +24,7 @@ http://www.reactome.org/PathwayBrowser/#/R-HSA-166520
 HCL has applications on many other domains such as security visualization and biodiversity. The following figure shows prey-predator relationships between meat-eating animals in the Carnivora tree. The image of each animal is attached directly to where it appears in the tree.
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image5-Carnivora.png)
 
-The following figure shows a more complicated example of the entire mammal tree. The leaf nodes (mammals) become to small to be view without zooming in. A red link connects from predator to a prey. The mammal data is extracted from [OneZoom](http://www.onezoom.org/).
+The following figure shows a more complicated example of the entire mammal tree. The leaf nodes (mammals) become too small to be view without zooming in. A red link connects from predator to a prey. The mammal data is extracted from [OneZoom](http://www.onezoom.org/).
 ![ScreenShot](http://www.cs.uic.edu/~tdang/HCL/Image6-Mammals.png)
 
 
