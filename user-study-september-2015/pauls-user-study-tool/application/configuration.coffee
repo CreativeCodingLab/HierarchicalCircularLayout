@@ -21,7 +21,7 @@ module.exports = ->
   object.study_outro_pages = [
     {
       name: "outro"
-      text: "Thank you."
+      text: "<h1>Thank you!</h1>"
     }
   ]
 
@@ -68,6 +68,8 @@ module.exports = ->
       imagesFunction: defaultImageFunction
       pageHook: (page) ->
         console.log page
+        #d3.select(".text").style
+          #height: "150px"
       intro_pages: [
         {
           name: "intro"
@@ -80,8 +82,10 @@ module.exports = ->
             d3.selectAll(".image").style
               "height": "800px"
               margin: 0
-            d3.select(".text").style
-              height: "150px"
+            #d3.select(".text").style
+              #height: "100px"
+            d3.select(".buttons").style
+              "margin-bottom": "100px"
         }
         # {
         #   text: "height and degree intro 2"
@@ -113,7 +117,7 @@ module.exports = ->
       ]
       pageHook: (page) ->
         if page.questionName is "subtree?"
-          d3.selectAll("img").style("max-height", "60%")
+          d3.selectAll("img").style("max-height", "90%")
       intro_pages: [
         {
           name: "intro"
@@ -125,7 +129,7 @@ module.exports = ->
               "height": "1100px"
               margin: 0
             d3.select(".text").style
-              height: "150px"
+              height: "100px"
             d3.select(".buttons").style
               "margin-bottom": "100px"
         }
@@ -141,8 +145,8 @@ module.exports = ->
       question_pages: [
         {
           questionName: "subtree?"
-          text: "How many copies of the tree on the left exist in the tree
-          on the right?"
+          text: "<p>How many copies of the tree on the <b>left</b> exist in the tree
+          on the <b>right</b>?</p>"
           options: options_a
         }
       ]
@@ -178,7 +182,7 @@ module.exports = ->
         #   options: continue_button
         # }
       ]
-      pageHook: (page) -> d3.select(".text").style("height", "100px")
+      #pageHook: (page) -> d3.select(".text").style("height", "100px")
       question_pages: [
         {
           questionName: "hops?"
@@ -221,6 +225,9 @@ module.exports = ->
           "
           images: [ "Study2.2/introImage/intro.png"]
           options: continue_button
+          _pageHook: (page) -> 
+            d3.select(".buttons").style
+              "margin-bottom": "100px"
         }
       ]
       question_pages: [

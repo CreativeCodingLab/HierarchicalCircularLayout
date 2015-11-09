@@ -24,7 +24,7 @@ initialize = ->
     .enter().append("body")
     .append("div").classed("container", true)
     .append("div").classed("row", true)
-    .append("main").classed("col-xs-10 col-xs-offset-1", true)
+    .append("main").classed("col-xs-12 col-xs-offset-1", true)
 
 showRows = ["text", "options", "images"]
 
@@ -35,7 +35,8 @@ addText = (row) ->
     .style
       display: "flex"
       "align-items": "center"
-      height: "250px"
+      #height: "100px"
+      margin: "10px 0 10px 0"
   col.html (d) -> "#{d.value}"
 
 addButtons = (row) ->
@@ -84,8 +85,8 @@ addRow = (page, startTime) ->
       imageColumns.exit().remove()
       imageColumns.enter().append("div")
         .style
-          "height": "#{window.innerHeight * .5}px" # "500px"
-          "margin-top": "100px"
+          "height": "#{window.innerHeight * .7}px" # "500px"
+          "margin-top": "20px"
         .append("img")
         # .classed("center-block img-responsive", true)
         .classed("center-block", true)
