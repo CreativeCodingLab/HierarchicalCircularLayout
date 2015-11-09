@@ -1,0 +1,10 @@
+{
+  "logFile": "./forever.log",
+  "outFile": "./stdout.log",
+  "uid": "tuan-user-study",
+  "script": "server.coffee",
+  "killSignal": "SIGTERM",
+  "fifo": true,
+  "append": true,
+  "command": "nodemon --exitcrash --ignore *.log"
+}

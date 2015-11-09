@@ -7,7 +7,7 @@ var diameter = 1000,
  var listSelected2 = {}
  var listSelected3 = {}
   
-  
+  /*
 // RAF
   //listSelected1["flare.ERK activation.ERK2 activation"] = 1;
   //listSelected2["flare.MEK activation.RAF phosphorylates MEK"] = 1;
@@ -40,7 +40,7 @@ var diameter = 1000,
   // Carnivora
   //listSelected1["carnivora.0.0.0.0.0.0.0.0.0.0.0"] = 1;
   //listSelected2["carnivora.0.0.0.1.0.0.0"] = 1;
-  listSelected3["carnivora.0.0.0.0.0.0.1.0.0"] = 1;
+  listSelected3["carnivora.0.0.0.0.0.0.1.0.0"] = 1;*/
   
 
 function drawColorLegend() {
@@ -107,7 +107,7 @@ function removeColorLegend() {
 }
 
 function color(d) {
-  var minSat = 80;
+  var minSat = 0;
   var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
