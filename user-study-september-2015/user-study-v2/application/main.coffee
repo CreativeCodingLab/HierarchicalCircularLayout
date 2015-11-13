@@ -1,5 +1,7 @@
 # coffeelint: disable=no_debugger
 
+d3 = require 'd3'
+
 postData = (data) ->
   d3.xhr("postData")
     .header("Content-Type", "application/json")
@@ -52,15 +54,15 @@ addButtons = (row) ->
       "border": "1px solid #aaa"
     )
   buttons.text (d) -> d
-  
+
 addRow = (page, startTime) ->
   return (d) ->
     row = d3.select this
-  
+
     row.selectAll("div").remove()
-  
+
     if d.key is "text" then row.call addText
-  
+
     #if d.key is "options"
       #row.call addButtons
         #.selectAll "button"
@@ -73,7 +75,7 @@ addRow = (page, startTime) ->
             #responseTime: new Date().getTime() - startTime
             #userStartTime: userStartTime
           #resolve obj
-  
+
     if d.key is "images"
       # row.style "height": "500px"
       images = d.value
@@ -96,7 +98,7 @@ addRow = (page, startTime) ->
         .attr("class", "col-xs-#{colWidth} image") # Override old classes!
         .select("img")
         .attr "src", (d) -> d
-            
+
 updatePage = (page) ->
   return new Promise (resolve) ->
     startTime = new Date().getTime()
