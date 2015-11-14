@@ -1,7 +1,7 @@
 {
   "logFile": "./forever.log",
   "outFile": "./stdout.log",
-  "uid": "tuan-user-study",
+  "uid": "tuan-user-study-v2",
   "script": "server.coffee",
   "killSignal": "SIGTERM",
   "fifo": true,

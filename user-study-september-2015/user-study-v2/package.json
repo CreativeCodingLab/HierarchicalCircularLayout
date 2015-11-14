@@ -4,10 +4,13 @@
     "body-parser": "^1.14.1",
     "browserify-middleware": "^7.0.0",
     "coffeeify": "^1.1.0",
+    "d3": "^3.5.6",
     "express": "^4.13.3",
+    "paul-serve": "file:../paul-serve",
     "serve-index": "^1.7.2"
   },
   "scripts": {
-    "start": "forever start forever-config.json"
+    "start-forever": "forever start forever-config.json",
+    "start": "nodemon server.coffee 9876"
   }
 }

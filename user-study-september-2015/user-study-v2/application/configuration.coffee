@@ -76,7 +76,7 @@ module.exports = ->
           # options: continue_button
           images: [ "Study1.1-2/introImage/intro.png" ]
           options: continue_button
-          _pageHook: (page) -> 
+          _pageHook: (page) ->
             d3.selectAll(".image").style
               "height": "800px"
               margin: 0
@@ -120,7 +120,7 @@ module.exports = ->
           text: "<h3>Study 1.3</h3>"
           images: [ "Study1.3/introImage/intro.png"]
           options: continue_button
-          _pageHook: (page) -> 
+          _pageHook: (page) ->
             d3.selectAll(".image").style
               "height": "1100px"
               margin: 0
@@ -159,12 +159,12 @@ module.exports = ->
           text: "
           <div>
           <h3>Study 2.1</h3>
-          <p>In this study, we will be asking questions related to the 
+          <p>In this study, we will be asking questions related to the
           connectivity between nodes.</p>
           <p>
-          The examples below show the same dataset using seven different 
+          The examples below show the same dataset using seven different
           visualization techniques.<br>
-          In these examples, there are <b>four hops</b> from the 
+          In these examples, there are <b>four hops</b> from the
           <span style='color: #dd0'> yellow </span> node to
           the <span style='color: #0d0'> green</span> node.</p>
           <p>
@@ -203,11 +203,11 @@ module.exports = ->
           text: "
           <div>
           <h3>Study 2.2</h3>
-          <p>In this study, we will be asking questions related to the 
-          connectivity of leaf nodes associated with a given 
+          <p>In this study, we will be asking questions related to the
+          connectivity of leaf nodes associated with a given
           <span style='color: #F090F0'> parent </span> node.</p>
           <p>
-          The examples below show the same dataset using seven different 
+          The examples below show the same dataset using seven different
           visualization techniques.<br>
           In these examples, the <span style='color: #00f'>blue leaf nodes</span>
           within the selected parent
@@ -231,14 +231,14 @@ module.exports = ->
           <h5>Connectivity within a parent node</h5>
           <ol>
           <li style='color: #000'>
-          Are any <span style='color: #00f'> blue </span> (leaf) nodes 
-          in the selected <span style='color: #F090F0'> parent </span> 
+          Are any <span style='color: #00f'> blue </span> (leaf) nodes
+          in the selected <span style='color: #F090F0'> parent </span>
           connected to their <span style='color: #00f'> sibling leaf nodes</span>?
           </li>
           <li style='color: #ddd'>
           Are any blue (leaf) nodes
           in the selected parent
-          connected to any <b>non-sibling descendants</b> 
+          connected to any <b>non-sibling descendants</b>
           of the parent?
           </li>
           <li style='color: #ddd'>
@@ -258,14 +258,14 @@ module.exports = ->
           <h5>Connectivity within a parent node</h5>
           <ol>
           <li style='color: #ddd'>
-          Are any blue (leaf) nodes 
+          Are any blue (leaf) nodes
           in the selected parent
           connected to their sibling leaf nodes?
           </li>
           <li style='color: #000'>
           Are any <span style='color: #00f'> blue </span> (leaf) nodes
           in the selected <span style='color: #F090F0'> parent </span>
-          connected to any <b>non-sibling descendants</b> 
+          connected to any <b>non-sibling descendants</b>
           of the <span style='color: #F090F0'> parent</span>?
           </li>
           <li style='color: #ddd'>
@@ -285,14 +285,14 @@ module.exports = ->
           <h5>Connectivity within a parent node</h5>
           <ol>
           <li style='color: #ddd'>
-          Are any blue (leaf) nodes 
+          Are any blue (leaf) nodes
           in the selected parent
           connected to their sibling leaf nodes?
           </li>
           <li style='color: #ddd'>
           Are any blue (leaf) nodes
           in the selected parent
-          connected to any <b>non-sibling descendants</b> 
+          connected to any <b>non-sibling descendants</b>
           of the parent?
           </li>
           <li style='color: #000'>
@@ -308,7 +308,7 @@ module.exports = ->
       ]
     }
   ]
-  
+
   #object.task_blocks = [object.task_blocks[1]]
 
   return object
