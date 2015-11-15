@@ -1,8 +1,5 @@
 
-var cluster = d3.layout.cluster()
-    .size([360, innerRadius])
-    .sort(null)
-    .value(function(d) { return d.size; });
+innerRadius = 10
 
 var bundle = d3.layout.bundle();
 
@@ -74,7 +71,14 @@ var file = "data/flare package.json";
 
 var treeOnly = false;
 
+
+
 d3.json(file, function(error, classes) {
+  
+  var cluster = d3.layout.cluster()
+    .size([360, innerRadius])
+    .sort(null)
+    .value(function(d) { return d.size; });
 
   nodes = cluster.nodes(packageHierarchy(classes));
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
