@@ -3,9 +3,10 @@
 window.ccl = window.ccl || {};
 
 ccl.hcl = function() {
-  var ANGLE_CAPACITY = Math.PI * 1;
   var size = [1,1];
   var radiusScale = 0.8;
+  var leafSize = 1;
+  var branchingRange = Math.PI * 1.3;
   
   function _hcl(root) {
     var treeLayout = d3.layout.hierarchy();
@@ -51,14 +52,14 @@ ccl.hcl = function() {
       }
       if (d.children){
         var angleSum = d.angleSum;
-        var begin = d.alpha - ANGLE_CAPACITY/2;
+        var begin = d.alpha - branchingRange / 2;
         
         d.children.forEach(function(child) {
           var parent = child.parent;
-          var radius = parent.radius; // + child.radius/2;
+          var radius = parent.radius + child.radius/2;
   
           var angle = child.branchingAngle;
-          var additional = ANGLE_CAPACITY * angle/angleSum;
+          var additional = branchingRange * angle / angleSum;
           
           child.alpha = begin + additional/2;
           child.treeX = parent.treeX + radius * Math.sin(child.alpha); 
@@ -69,40 +70,11 @@ ccl.hcl = function() {
       }
     });
     
-    // (function scaleNodes(nodes) {
-    //   var xExtent = d3.extent(nodes, function(d) { return d.treeX; });
-    //   var yExtent = d3.extent(nodes, function(d) { return d.treeY; });
-    //   console.log(xExtent, yExtent);
-
-    //   var ratio = [xExtent, yExtent]
-    //     .map(function(e) { return e[1] - e[0]; })
-    //     .reduce(function(x, y) { return x/y; });
-        
-    //   size[1] -= root.radius
-        
-    //   var range = [-1, 1]
-    //     .map(function(d) { return d * size[1]*ratio/2; })
-    //     .map(function(d) { return d + size[0]/2; });
-
-    //   var x = d3.scale.linear()
-    //     .domain(xExtent)
-    //     .range([0, size[1]*ratio]);
-        
-    //   var y = d3.scale.linear()
-    //     .domain(yExtent)
-    //     .range([0, size[1]]);
-      
-    //   // nodes.forEach(function(node) {
-    //   //   node.treeX = x(node.treeX);
-    //   //   node.treeY = y(node.treeY);
-    //   // });
-    // }(nodes));
-    
     return nodes;
   }
   
   function getRadius(d) {
-    return d.children ? Math.pow(d.numDescendants, radiusScale) : 1;
+    return d.children ? Math.pow(d.numDescendants, radiusScale) : leafSize;
   }
   
   function orderChildren(n) {
@@ -157,18 +129,60 @@ ccl.hcl = function() {
    
   var isUndefined = function(d) { return typeof d === 'undefined'; };
   
-  _hcl.size = function(x) {
-    if (!arguments.length) return size;
-    size = x;
-    return _hcl;
-  };
-  
   _hcl.radiusScale = function(x) {
     if (!arguments.length) return size;
     radiusScale = x;
     return _hcl;
   };
   
+  _hcl.leafSize = function(x) {
+    if (!arguments.length) return size;
+    leafSize = x;
+    return _hcl;
+  };
+  
+  _hcl.branchingRange = function(x) {
+    if (!arguments.length) return size;
+    branchingRange = x;
+    return _hcl;
+  };
+  
   
   return _hcl;
 };
+
+
+  // _hcl.size = function(x) {
+  //   if (!arguments.length) return size;
+  //   size = x;
+  //   return _hcl;
+  // };
+    
+    // (function scaleNodes(nodes) {
+    //   var xExtent = d3.extent(nodes, function(d) { return d.treeX; });
+    //   var yExtent = d3.extent(nodes, function(d) { return d.treeY; });
+    //   console.log(xExtent, yExtent);
+
+    //   var ratio = [xExtent, yExtent]
+    //     .map(function(e) { return e[1] - e[0]; })
+    //     .reduce(function(x, y) { return x/y; });
+        
+    //   size[1] -= root.radius
+        
+    //   var range = [-1, 1]
+    //     .map(function(d) { return d * size[1]*ratio/2; })
+    //     .map(function(d) { return d + size[0]/2; });
+
+    //   var x = d3.scale.linear()
+    //     .domain(xExtent)
+    //     .range([0, size[1]*ratio]);
+        
+    //   var y = d3.scale.linear()
+    //     .domain(yExtent)
+    //     .range([0, size[1]]);
+      
+    //   // nodes.forEach(function(node) {
+    //   //   node.treeX = x(node.treeX);
+    //   //   node.treeY = y(node.treeY);
+    //   // });
+    // }(nodes));

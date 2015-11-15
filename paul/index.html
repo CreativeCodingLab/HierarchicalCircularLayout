@@ -34,25 +34,21 @@
         var treeData = stream.fromCallback(d3.json)("flare.json")
           .map(function(a) { return a[1]; });
           
-        var size = {
-          width: 400, height: 400
-        };
+        // var size = {
+        //   width: 400, height: 400
+        // };
           
         var svg = d3.select("body").append("svg")
           .attr("width", "100%")
           .attr("height", "100%")
         .append("g")
           .attr({
-            transform: "translate(" + 400 + "," + 300 + ")"
+            transform: "translate(" + window.innerWidth/2 + "," + (100 + window.innerHeight/2) + ")"
           });
           
-        svg.append("rect")
-          .attr(size)
-          .style({ stroke: 'grey', fill: 'none' });
-          
         var hcl = ccl.hcl();
-        hcl.size([size.width, size.height])
-            .radiusScale(1);
+        hcl.radiusScale(0.95)
+            .leafSize(2);
           
         stream.fromCallback(d3.json)("flare.json")
           .map(function(a) { return a[1]; })
