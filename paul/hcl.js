@@ -2,36 +2,32 @@
 
 var stream = Rx.Observable;
 
-var scaleCircle = 1;
 var scaleRadius = 0.8; 
 var maxDepth=1;
   
 var treeData = stream.fromCallback(d3.json)("flare.json")
-  .map(function(a) { return a[1]; })
-  
-var nodeDFSCount = 0;
+  .map(function(a) { return a[1]; });
   
 treeData
   .subscribe(function(root) { 
     
-    var treeLayout = d3.layout.tree();
+    var treeLayout = d3.layout.hierarchy();
+    
+    // Set a depth value for each node
+    treeLayout(root);
+    
+    // Find the maximum descendant node depth for each node
+    setMaxDepth(root);
+
+    // Count the descendants of each node
+    descendants(root);
+    
+    childCount2(root);
     
     treeLayout.sort(function(a, b) {
       if (typeof b.order2 == 'undefined') throw 'no order2';
       return b.order2 - a.order2;
     });
-    
-    var hierarchy = d3.layout.hierarchy();
-    
-    // This sets a depth value for each node
-    hierarchy(root);
-    
-    // Find the maximum descendant node depth for each node
-    setMaxDepth(root);
-
-    childCount(root); 
-    // childCount1(0, root); 
-    childCount2(0, root);
     
     setupTree(200, treeLayout, root);
     
@@ -54,10 +50,7 @@ treeData
 var diameter = 500;
 
 var tree = d3.layout.tree()
-    .size([360, diameter / 2 - 120])
-   
-var diagonal = d3.svg.diagonal.radial()
-    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+    .size([360, diameter / 2 - 120]);
 
 var svg = d3.select("body").append("svg")
     .attr("width", "100%")
@@ -108,66 +101,47 @@ var setupTree = function(height, treeLayout, root) {
     
 }  
 
-function childCount2(level, n) {
+var DEPTH_FACTOR = 100
+
+function childCount2(n) {
     var arr = n.children || [];
     arr.sort(function(a,b) { 
-      if (!a.maxDepth) console.error('no maxDepth');
-      if (typeof a.childCount1 == 'undefined') throw 'no childCount1';
-      return (a.maxDepth*100+a.childCount1) - (b.maxDepth*100+b.childCount1) } 
+      if (isUndefined(a.maxDepth)) throw 'no maxDepth';
+      if (isUndefined(a.numDescendants)) throw 'no numDescendants';
+      return (a.maxDepth*100 + a.numDescendants) - (b.maxDepth*100 + b.numDescendants) } 
     );
     var arr2 = [];
-    arr.forEach(function(d, i) {
-        d.order1 = i;
+    arr.forEach(function(d) {
         arr2.splice(arr2.length/2, 0, d);
     });
     arr2.forEach(function(d, i) {
         d.order2 = i;
-        childCount2(level + 1, d);
-        d.idDFS = nodeDFSCount++;   // this set DFS id for nodes
+        childCount2(d);
     });
 
-};
+}
 
-function childCount(node) {
-    count = 0;
-    var children = node.children;
-    if(children && children.length > 0) {
-      count += children.length;
-      children.forEach(function(d) {
-        count += childCount(d);
+function descendants(node) {
+  var children = node.children;
+  if (children && children.length > 0) {
+    var ds = children
+      .map(function(child) {
+        return descendants(child);
+      })
+      .reduce(function(a,b) { 
+        return a + b; 
       });
-      // n.children.map(function(child) {
-      //   return childCount(++level, chil)
-      // })
-      return node.childCount1 = count;
-    }
-    else {
-       return node.childCount1 = 0;
-    }
-};
-
-function childCount1(level, n) {
-    count = 0;
-    if(n.children && n.children.length > 0) {
-      count += n.children.length;
-      n.children.forEach(function(d) {
-        count += childCount1(level + 1, d);
-      });
-      // n.children.map(function(child) {
-      //   return childCount(++level, chil)
-      // })
-      return n.childCount1 = count;
-    }
-    else {
-       return n.childCount1 = 0;
-    }
-};
+    return node.numDescendants = ds + children.length;
+  } else {
+    return node.numDescendants = 0;
+  }
+}
 
 // The height of a node is the number of edges 
 // on the longest path from the node to a leaf.
 
 function setMaxDepth(node) {
-  var children = node.children
+  var children = node.children;
   if (children && children.length > 0) {
     var depths = children.map(setMaxDepth);
     return node.maxDepth = Math.max.apply(null, depths);
@@ -178,7 +152,7 @@ function setMaxDepth(node) {
 }
 
 function getRadius(d) {
-  return d.children ? Math.pow(d.childCount1, scaleRadius) : 1;
+  return d.children ? Math.pow(d.numDescendants, scaleRadius) : 1;
 }
 
 function getBranchingAngle1(radius3, numChild) {
