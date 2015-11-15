@@ -3,6 +3,7 @@
 var stream = Rx.Observable;
 
 var scaleRadius = 0.8; 
+var SCALE_RADIUS = 0.8;
 var maxDepth=1;
   
 var treeData = stream.fromCallback(d3.json)("flare.json")
@@ -22,14 +23,17 @@ treeData
     // Count the descendants of each node
     descendants(root);
     
-    childCount2(root);
+    // Recursively sort children
+    orderChildren(root);
     
     treeLayout.sort(function(a, b) {
-      if (typeof b.order2 == 'undefined') throw 'no order2';
-      return b.order2 - a.order2;
+      if (typeof b.order == 'undefined') throw 'no order';
+      return b.order - a.order;
     });
     
-    setupTree(200, treeLayout, root);
+    var _nodes = treeLayout(root);
+    
+    setupTree(200, treeLayout, root, _nodes);
     
     var nodes = tree.nodes(root);
   
@@ -57,68 +61,59 @@ var svg = d3.select("body").append("svg")
     .attr("height", "500")
   .append("g")
     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+    
+var TOTAL_ANGLE = Math.PI * 1.2;
 
-var setupTree = function(height, treeLayout, root) {
+var setupTree = function(height, treeLayout, root, nodes) {
   var disFactor = 2;
-  var minY = height*100;
-  treeLayout(root).map(function(d) {
-    if (d.depth==0){
-       d.treeX = 100; 
-       d.treeY = height-getRadius(root)/1;
-       d.alpha = -Math.PI/2; 
+  nodes.map(function(d) {
+    if (d.depth === 0) {
+       d.treeX = 0; 
+       d.treeY = 0;
+       d.alpha = 0;
     }
     if (d.children){
-      var totalRadius = 0;
-      var totalAngle = Math.PI*1.2;
+      var totalAngle = TOTAL_ANGLE;
       var numChild =  d.children.length;
-      d.children.forEach(function(child) {
-        totalRadius+=getBranchingAngle1(getRadius(child), numChild);
-      });  
+      
+      var totalRadius = d.children.map(function(child) {
+        var radius = getRadius(child);
+        return getBranchingAngle1(radius, numChild);
+      }).reduce(function(a, b) { return a + b; });
 
       var begin=d.alpha-totalAngle/2;
-      d.children.forEach(function(child,i2) {
-        xC =  d.treeX;
-        yC =  d.treeY;
-        rC = getRadius(d)+getRadius(child)/disFactor;
+      d.children.forEach(function(child) {
+        var xC =  d.treeX;
+        var yC =  d.treeY;
+        var rC = getRadius(d)+getRadius(child)/disFactor;
 
         var additional = totalAngle*getBranchingAngle1(getRadius(child), numChild)/totalRadius;
         child.alpha = begin+additional/2;
         child.treeX = xC+rC*Math.cos(child.alpha); 
         child.treeY = yC+rC*Math.sin(child.alpha); 
-        
-        if (child.treeY-rC<minY) {
-          minY = child.treeY-rC;
-        };
-        if (child.depth>maxDepth){
-          maxDepth = child.depth;
-        }
+
         begin +=additional;
       });
     }
-
-    return d;
   });
-    
-}  
+};
 
-var DEPTH_FACTOR = 100
-
-function childCount2(n) {
+function orderChildren(n) {
     var arr = n.children || [];
+    // Sort small to large
     arr.sort(function(a,b) { 
       if (isUndefined(a.maxDepth)) throw 'no maxDepth';
       if (isUndefined(a.numDescendants)) throw 'no numDescendants';
-      return (a.maxDepth*100 + a.numDescendants) - (b.maxDepth*100 + b.numDescendants) } 
-    );
+      return (a.maxDepth + a.numDescendants) - (b.maxDepth + b.numDescendants); 
+    });
     var arr2 = [];
     arr.forEach(function(d) {
         arr2.splice(arr2.length/2, 0, d);
     });
     arr2.forEach(function(d, i) {
-        d.order2 = i;
-        childCount2(d);
+        d.order = i;
+        orderChildren(d);
     });
-
 }
 
 function descendants(node) {
@@ -152,15 +147,12 @@ function setMaxDepth(node) {
 }
 
 function getRadius(d) {
-  return d.children ? Math.pow(d.numDescendants, scaleRadius) : 1;
+  return d.children ? Math.pow(d.numDescendants, SCALE_RADIUS) : 1;
 }
 
-function getBranchingAngle1(radius3, numChild) {
-  if (numChild<=2){
-    return Math.pow(radius3,2);
-  }  
-  else
-    return Math.pow(radius3,0.9);
- } 
+function getBranchingAngle1(radius, numChild) {
+  if (numChild <= 2) return Math.pow(radius,2);
+  return Math.pow(radius,0.9);
+} 
  
 var isUndefined = function(d) { return typeof d === 'undefined'; };
