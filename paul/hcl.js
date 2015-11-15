@@ -1,104 +1,104 @@
-/* global d3, Rx */
+/* global d3, ccl */
 
-var stream = Rx.Observable;
+window.ccl = window.ccl || {};
 
-var scaleRadius = 0.8; 
-var SCALE_RADIUS = 0.8;
-var maxDepth=1;
+ccl.hcl = function() {
+  var SCALE_RADIUS = 0.8;
+  var ANGLE_CAPACITY = Math.PI * 1.2;
+  var size = [1,1];
   
-var treeData = stream.fromCallback(d3.json)("flare.json")
-  .map(function(a) { return a[1]; });
-  
-treeData
-  .subscribe(function(root) { 
-    
+  function _hcl(root) {
     var treeLayout = d3.layout.hierarchy();
     
-    // Set a depth value for each node
-    treeLayout(root);
+    treeLayout(root); // Set a depth value for each node
+    setMaxDepth(root); // Find the maximum descendant depth
+    descendants(root); // count the descendants of each node
+    orderChildren(root); // Recursively sort children
     
-    // Find the maximum descendant node depth for each node
-    setMaxDepth(root);
-
-    // Count the descendants of each node
-    descendants(root);
-    
-    // Recursively sort children
-    orderChildren(root);
-    
+    // Set the sort function
     treeLayout.sort(function(a, b) {
       if (typeof b.order == 'undefined') throw 'no order';
       return b.order - a.order;
     });
     
-    var _nodes = treeLayout(root);
+    var nodes = treeLayout(root); // Re-sort the nodes
     
-    setupTree(200, treeLayout, root, _nodes);
+    (function setRadius(node) {
+      node.radius = getRadius(node);
+      if (node.children) node.children.forEach(setRadius);
+    }(root));
     
-    var nodes = tree.nodes(root);
-  
-    var node = svg.selectAll(".node")
-        .data(nodes)
-      .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) { 
-          // return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; 
-          return "translate(" + d.treeX + "," + d.treeY + ")";
+    (function setBranching(node) {
+      var children = node.children;
+      if (children) {
+        var numChild = children.length;
+        children.forEach(function(child) {
+          child.branchingAngle = getBranchingAngle(child.radius, numChild);
+          setBranching(child);
         });
-  
-    node.append("circle")
-        .attr("r", 2);
-  
-  });
-
-var diameter = 500;
-
-var tree = d3.layout.tree()
-    .size([360, diameter / 2 - 120]);
-
-var svg = d3.select("body").append("svg")
-    .attr("width", "100%")
-    .attr("height", "500")
-  .append("g")
-    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+        node.angleSum = children
+          .map(function(c) { return c.branchingAngle; })
+          .reduce(function(a, b) { return a + b; });
+      }
+    }(root));
     
-var TOTAL_ANGLE = Math.PI * 1.2;
+    nodes.forEach(function(d) {
+      if (d.depth === 0) {
+         d.treeX = 0; 
+         d.treeY = 0;
+         d.alpha = 0;
+      }
+      if (d.children){
+        var angleSum = d.angleSum;
+        var begin = d.alpha - ANGLE_CAPACITY/2;
+        
+        d.children.forEach(function(child) {
+          var parent = child.parent;
+          var radius = parent.radius + child.radius/2;
+  
+          var angle = child.branchingAngle;
+          var additional = ANGLE_CAPACITY * angle/angleSum;
+          
+          child.alpha = begin + additional/2;
+          child.treeX = parent.treeX + radius * Math.sin(child.alpha); 
+          child.treeY = parent.treeY - radius * Math.cos(child.alpha); 
+  
+          begin += additional;
+        });
+      }
+    });
+    
+    (function scaleNodes(nodes) {
+      var xExtent = d3.extent(nodes, function(d) { return d.treeX; });
+      var yExtent = d3.extent(nodes, function(d) { return d.treeY; });
+      console.log(xExtent, yExtent);
+      var ratio = [xExtent, yExtent]
+        .map(function(e) { return e[1] - e[0]; })
+        .reduce(function(x, y) { return x/y; });
+        
+      var range = [-1, 1]
+        .map(function(d) { return d * size[1]*ratio/2; })
+        .map(function(d) { return d + size[0]/2; });
 
-var setupTree = function(height, treeLayout, root, nodes) {
-  var disFactor = 2;
-  nodes.map(function(d) {
-    if (d.depth === 0) {
-       d.treeX = 0; 
-       d.treeY = 0;
-       d.alpha = 0;
-    }
-    if (d.children){
-      var totalAngle = TOTAL_ANGLE;
-      var numChild =  d.children.length;
+      var x = d3.scale.linear()
+        .domain(xExtent)
+        .range(range);
+      var y = d3.scale.linear().domain(yExtent).range([0, size[1]]);
       
-      var totalRadius = d.children.map(function(child) {
-        var radius = getRadius(child);
-        return getBranchingAngle1(radius, numChild);
-      }).reduce(function(a, b) { return a + b; });
-
-      var begin=d.alpha-totalAngle/2;
-      d.children.forEach(function(child) {
-        var xC =  d.treeX;
-        var yC =  d.treeY;
-        var rC = getRadius(d)+getRadius(child)/disFactor;
-
-        var additional = totalAngle*getBranchingAngle1(getRadius(child), numChild)/totalRadius;
-        child.alpha = begin+additional/2;
-        child.treeX = xC+rC*Math.cos(child.alpha); 
-        child.treeY = yC+rC*Math.sin(child.alpha); 
-
-        begin +=additional;
+      nodes.forEach(function(node) {
+        node.treeX = x(node.treeX);
+        node.treeY = y(node.treeY);
       });
-    }
-  });
-};
-
-function orderChildren(n) {
+    }(nodes));
+    
+    return nodes;
+  }
+  
+  function getRadius(d) {
+    return d.children ? Math.pow(d.numDescendants, SCALE_RADIUS) : 1;
+  }
+  
+  function orderChildren(n) {
     var arr = n.children || [];
     // Sort small to large
     arr.sort(function(a,b) { 
@@ -114,45 +114,47 @@ function orderChildren(n) {
         d.order = i;
         orderChildren(d);
     });
-}
-
-function descendants(node) {
-  var children = node.children;
-  if (children && children.length > 0) {
-    var ds = children
-      .map(function(child) {
-        return descendants(child);
-      })
-      .reduce(function(a,b) { 
-        return a + b; 
-      });
-    return node.numDescendants = ds + children.length;
-  } else {
-    return node.numDescendants = 0;
   }
-}
-
-// The height of a node is the number of edges 
-// on the longest path from the node to a leaf.
-
-function setMaxDepth(node) {
-  var children = node.children;
-  if (children && children.length > 0) {
-    var depths = children.map(setMaxDepth);
-    return node.maxDepth = Math.max.apply(null, depths);
-  } else {
-    if (typeof node.depth == 'undefined') throw "no depth";
-    return node.maxDepth = node.depth;
+  
+  function descendants(node) {
+    var children = node.children;
+    if (children && children.length > 0) {
+      var ds = children
+        .map(function(child) {
+          return descendants(child);
+        })
+        .reduce(function(a,b) { 
+          return a + b; 
+        });
+      return node.numDescendants = ds + children.length;
+    } else {
+      return node.numDescendants = 0;
+    }
   }
-}
-
-function getRadius(d) {
-  return d.children ? Math.pow(d.numDescendants, SCALE_RADIUS) : 1;
-}
-
-function getBranchingAngle1(radius, numChild) {
-  if (numChild <= 2) return Math.pow(radius,2);
-  return Math.pow(radius,0.9);
-} 
- 
-var isUndefined = function(d) { return typeof d === 'undefined'; };
+  
+  function setMaxDepth(node) {
+    var children = node.children;
+    if (children && children.length > 0) {
+      var depths = children.map(setMaxDepth);
+      return node.maxDepth = Math.max.apply(null, depths);
+    } else {
+      if (typeof node.depth == 'undefined') throw "no depth";
+      return node.maxDepth = node.depth;
+    }
+  }
+  
+  function getBranchingAngle(radius, numChild) {
+    if (numChild <= 2) return Math.pow(radius, 2);
+    return Math.pow(radius, 0.9);
+  } 
+   
+  var isUndefined = function(d) { return typeof d === 'undefined'; };
+  
+  _hcl.size = function(x) {
+    if (!arguments.length) return size;
+    size = x;
+    return _hcl;
+  };
+  
+  return _hcl;
+};
