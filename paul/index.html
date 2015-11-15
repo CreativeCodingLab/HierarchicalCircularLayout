@@ -7,6 +7,11 @@
   /*stroke-width: 1.5px;*/
 }
 
+.node.internal circle {
+    fill: none;
+    stroke: #aaa;
+}
+
 .link {
   fill: none;
   stroke: #ccc;
@@ -30,7 +35,7 @@
           .map(function(a) { return a[1]; });
           
         var size = {
-          height: 400, width: 200
+          width: 400, height: 400
         };
           
         var svg = d3.select("body").append("svg")
@@ -38,7 +43,7 @@
           .attr("height", "100%")
         .append("g")
           .attr({
-            transform: "translate(" + 200 + "," + 200 + ")"
+            transform: "translate(" + 400 + "," + 300 + ")"
           });
           
         svg.append("rect")
@@ -46,7 +51,8 @@
           .style({ stroke: 'grey', fill: 'none' });
           
         var hcl = ccl.hcl();
-        hcl.size([size.width, size.height]);
+        hcl.size([size.width, size.height])
+            .radiusScale(1);
           
         stream.fromCallback(d3.json)("flare.json")
           .map(function(a) { return a[1]; })
@@ -56,12 +62,14 @@
             var node = svg.selectAll(".node")
                 .data(nodes)
               .enter().append("g")
-                .attr("class", "node")
+                .classed('node', true)
+                .classed('internal', function(d) { return d.children })
                 .attr("transform", function(d) { 
                   return "translate(" + d.treeX + "," + d.treeY + ")";
                 });
           
-            node.append("circle").attr("r", 2);
+            node.append("circle")
+                .attr("r", function(d) { return d.radius });
           });
     </script>
 </body>
