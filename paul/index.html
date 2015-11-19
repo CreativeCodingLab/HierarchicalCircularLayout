@@ -2,7 +2,8 @@
 <style>
 
 .node circle {
-  fill: #aaa;
+  fill: #1128FF;
+  fill-opacity: 1;
   stroke: none;
   /*stroke-width: 1.5px;*/
 }
@@ -10,6 +11,7 @@
 .node.internal circle {
     fill: none;
     stroke: #aaa;
+    stroke-opacity: 0.5;
 }
 
 .link {
@@ -30,13 +32,6 @@
         /* global d3, ccl, Rx */
         
         var stream = Rx.Observable;
-        
-        var treeData = stream.fromCallback(d3.json)("flare.json")
-          .map(function(a) { return a[1]; });
-          
-        // var size = {
-        //   width: 400, height: 400
-        // };
           
         var svg = d3.select("body").append("svg")
           .attr("width", "100%")
@@ -48,7 +43,8 @@
           
         var hcl = ccl.hcl();
         hcl.radiusScale(0.95)
-            .leafSize(2);
+            .leafSize(1)
+            .branchingRange(Math.PI * 1.4);
           
         stream.fromCallback(d3.json)("flare.json")
           .map(function(a) { return a[1]; })

@@ -4,9 +4,9 @@ window.ccl = window.ccl || {};
 
 ccl.hcl = function() {
   var size = [1,1];
-  var radiusScale = 0.8;
+  var radiusScale = 0.9;
   var leafSize = 1;
-  var branchingRange = Math.PI * 1.3;
+  var branchingRange = Math.PI * 1.2;
   
   function _hcl(root) {
     var treeLayout = d3.layout.hierarchy();
@@ -26,7 +26,6 @@ ccl.hcl = function() {
     
     (function setRadius(node) {
       node.radius = getRadius(node);
-      console.log(node.radius);
       if (node.children) node.children.forEach(setRadius);
     }(root));
     
