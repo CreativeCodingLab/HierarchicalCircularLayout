@@ -25,7 +25,6 @@
 
 <body>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.8/d3.min.js'></script>
-    <script src='https://rawgit.com/d3/d3-plugins/master/fisheye/fisheye.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.6/rx.all.min.js"></script>
     <script src='hcl.js'></script>
     <script>
@@ -44,7 +43,7 @@
         var hcl = ccl.hcl();
         hcl.radiusScale(0.95)
             .leafSize(1)
-            .branchingRange(Math.PI * 1.4);
+            .branchingRange(Math.PI * 1.2);
           
         stream.fromCallback(d3.json)("flare.json")
           .map(function(a) { return a[1]; })
