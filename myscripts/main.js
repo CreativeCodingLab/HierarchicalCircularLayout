@@ -59,13 +59,18 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
 //var file = "data/2_ERBB2 Pathway.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
-var file = "data/flare package.json";
+//var file = "data/flare package.json";
 //var file = "data/carnivoraWithRelationships.json";
 //var file = "data/mammalsWithRelationships.json";
 
 //var file = "data/1_RAF-Cascade Pathway.json";
 //var file = "data/54_DAG Pathway.json";
-//var file = "data/3_NGF Pathway.json";
+var file = "data/3_NGF Pathway.json";
+
+//var file = "data/HIV Infection_Dot.json";
+
+//var file = "data/3_Innate Immune System_Dot.json";
+
 
 
 
@@ -74,7 +79,6 @@ var treeOnly = false;
 
 
 d3.json(file, function(error, classes) {
-  
   var cluster = d3.layout.cluster()
     .size([360, innerRadius])
     .sort(null)
@@ -84,13 +88,43 @@ d3.json(file, function(error, classes) {
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
   linkTree = d3.layout.tree().links(nodes);
-  tree_nodes = d3.layout.tree().nodes(classes);
+  
+
+/*
+  var node0 = {};
+  node0.name = "Tuan";
+  node0.depth = 1;
+
+  var node1 = {};
+  node1.name = "Tuan1";
+  var node2 = {};
+  node2.name = "Tuan2";
+    
+
+  node0.children = [];
+  node0.children.push(node1);
+  node0.children.push(node2);
+
+  nodes = [];
+  nodes.push(node0);
+  nodes.push(node1);
+  nodes.push(node2);
+  link1 = {};
+  link1.source = node1;
+  link1.target = node2;
+  links = [];
+  links.push(link1);
+  linkTree = d3.layout.tree().links(nodes);*/
+  
+
+//  node1.depth = 1;
+
   nodes.forEach(function(d) {
     if (d.depth == 1){
       root = d;
     } 
   });
-  
+  debugger;
 
 /* force
     .nodes(nodes)
@@ -226,15 +260,14 @@ function drawNodeAndLink() {
   nodeEnter.append("circle")
     .attr("class", "node1")
     .attr("id", function(d) { return d.idDFS; })
-    .attr("r", getRadius)
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y; })
     .style("stroke", function(d) { 
-        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
                 return "#000";
       })        
       .style("stroke-width", function(d) { 
-        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] )
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
                 return 1;        
     }); 
 
@@ -289,7 +322,13 @@ function update() {
         d.y = d.treeY ; })
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
-      .attr("r", getRadius)
+      .attr("r", function(d){ 
+      if ((listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
+        && !d.children)
+        return 2*getRadius(d);
+      else
+         return getRadius(d);
+      })
       .style("fill", function(d) { 
         var defs = svg.append("defs").attr("id", "imgdefs")
         var catpattern = defs.append("pattern")
@@ -611,9 +650,6 @@ function mouseouted(d) {
       .classed("link--source", false);
 
   d3.selectAll(".node1")
-      .attr("r", function(d){ 
-        return getRadius(d);
-       })
       .style("fill" , function(n) {   
           if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked)
             return color(n);

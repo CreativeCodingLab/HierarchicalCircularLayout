@@ -6,7 +6,30 @@ var diameter = 1000,
  var listSelected1 = {}
  var listSelected2 = {}
  var listSelected3 = {}
+ var listSelected4 = {}
   
+  
+  /*listSelected1["Signaling by GPCR.Gastrin-CREB signalling pathway via PKC and MAPK"] =1;
+  listSelected2["Signaling by GPCR.GPCR downstream signaling.G-protein beta:gamma signalling"] =1;
+  listSelected3["Signaling by GPCR.Opioid Signalling.Opioid dissociates from MOR"] =1;
+  listSelected4["Signaling by GPCR.Opioid Signalling.Opioid binds MOR"] =1;
+  */
+  //listSelected3["Signaling by GPCR.Opioid Signalling.DARPP-32 events.cAMP induces dissociation of inactive PKA tetramers"] =1;
+  //listSelected3["Signaling by GPCR.Opioid Signalling.DARPP-32 events.PKA phosphorylates DARPP-32 on Thr34"] =1;
+
+
+  // HIV
+  //listSelected1["HIV Life Cycle.Late Phase of HIV Life Cycle.Assembly Of The HIV Virion.Packaging of HIV virion on the host cell plasma membrane"] =1;
+  //listSelected2["HIV Life Cycle.Early Phase of HIV Life Cycle.Integration of provirus.Formation of Pre-Integration Complex (PIC)"] =1;
+  
+
+
+  // Example for Steve
+  listSelected1["flare.PI3K/AKT activation"] =1;
+  listSelected2["flare.Activation of TRKA receptors"] =1;
+  listSelected3["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.TRKA recruits RIT and RIN"] =1;
+  listSelected4["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.RAF/MAP kinase cascade.ERK activation.ERK1 activation.MEK1 binds ERK-1"] =1;
+    
   /*
 // RAF
   //listSelected1["flare.ERK activation.ERK2 activation"] = 1;
@@ -111,12 +134,10 @@ function color(d) {
   var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
-  if (listSelected1[d.name])
+  if (listSelected1[d.name] || listSelected2[d.name])
     return "#77ff77";
-  else if (listSelected2[d.name])
+  else if (listSelected3[d.name] || listSelected4[d.name])
     return "#ffff66";
-  else if (listSelected3[d.name])
-    return "#ffaaff";
   
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
@@ -125,7 +146,7 @@ function color(d) {
 }
 
 function colorFaded(d) {
-  var minSat = 80;
+  var minSat = 0;
   var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
@@ -142,7 +163,7 @@ function getBranchingAngle1(radius3, numChild) {
     return Math.pow(radius3,2);
   }  
   else
-    return Math.pow(radius3,0.9);
+    return Math.pow(radius3,0.85);
  } 
 
 function getRadius(d) {

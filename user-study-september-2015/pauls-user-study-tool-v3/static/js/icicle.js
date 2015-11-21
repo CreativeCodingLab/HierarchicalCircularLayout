@@ -4,6 +4,11 @@ var width, height,
   nodes, links, bundle, maxDepth, numLeaf,
   treeOnly;
 
+
+//var something = d3.select("body").append("div");
+//icicle(file, something);
+
+
 function icicle(file, container) {
   // fit visualization to container
   width = parseInt(container.style('width'), 10);
