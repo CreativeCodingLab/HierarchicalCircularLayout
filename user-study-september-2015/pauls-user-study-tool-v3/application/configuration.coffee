@@ -12,6 +12,7 @@ module.exports = ->
       .append('div').classed('frame', true)
       .style width: "100%", height: "70vh", border: "1px solid #ccc"
       .call (frame) ->
+        debugger
         window[layout](data, frame, treeOnly)
   
   addContinue = (main) ->
