@@ -174,7 +174,6 @@ function childDepth1(n) {
       n.maxDepth = 0;
       n.children.forEach(function(d) {
         var childrenDeep = childDepth1(d);
-        console.log(" childrenDeep="+childrenDeep);
         if (childrenDeep>n.maxDepth)
           n.maxDepth = childrenDeep;
       });

@@ -45,7 +45,7 @@ var diagonal;
 
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
-var scaleRate;
+var scaleRate=1;
 var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
@@ -223,7 +223,8 @@ function setupTree() {
       });
     }
     scaleRate = height/(height-minY);
-  //  console.log(" minY = "+minY +"  "+scaleRate);
+    debugger;
+    console.log(" minY = "+minY +"  "+scaleRate);
    // console.log("maxDepth = "+maxDepth);
     return d;
   });

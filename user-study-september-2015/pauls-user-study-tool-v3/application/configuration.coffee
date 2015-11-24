@@ -35,7 +35,7 @@ module.exports = ->
   
   layouts = [
   	#'circlePacking',
-  	#'hcl',
+  	'hcl',
   	'classical',
   	'icicle',
   	'radial',
