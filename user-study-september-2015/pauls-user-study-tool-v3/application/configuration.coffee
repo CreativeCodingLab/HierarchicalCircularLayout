@@ -12,7 +12,6 @@ module.exports = ->
       .append('div').classed('frame', true)
       .style width: "100%", height: "70vh", border: "1px solid #ccc"
       .call (frame) ->
-        debugger
         window[layout](data, frame, treeOnly)
   
   addContinue = (main) ->
@@ -56,6 +55,10 @@ module.exports = ->
   	#"3_NGF Pathway.json"
   ].map (d) -> "#{dataPath}#{d}"
   
+  seed = 1000;
+  randomList = [1000];
+  
+
   addText = (main, text) ->
     main.append('div').classed 'row', true
       .append('div').classed 'col-xs-12', true
@@ -64,7 +67,7 @@ module.exports = ->
       .style margin: '10px 0'
   
   part_1 = layouts.map (layout, li) ->
-    datasets.map (data, di) ->
+    randomList.map (data, di) ->
       return [
         {
           name: "part_1_#{li}_#{di}_a"

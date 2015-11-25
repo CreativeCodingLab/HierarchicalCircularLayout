@@ -3,12 +3,39 @@ var nodeDFSCount = 0;
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
-var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.75;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
 
+// Random number generator
+var seed1 = 1111;
+function random() {
+    var x = Math.sin(seed1++) * 1000;
+    return Math.floor((x-Math.floor(x))*1000);
+}
+
+var nodes, links, linkTree;
+
+
+
+
 function hcl(file, container, treeOnly) {
+
+console.log("file="+file);
+  seed1 = file;
+  //seed1 =12444;  // Set the seed so this is not effected by other viz
+  nodes = [];
+  links = [];
+  generateRandomTree(8,10); 
+  nodes.forEach(function(child) { 
+    if (child.depth>maxDepth){
+        maxDepth = child.depth;
+    }
+  });        
+  linkTree = d3.layout.tree().links(nodes);
+
+
 var cluster = d3.layout.cluster()
     .size([360, innerRadius])
     .sort(null)
@@ -43,7 +70,6 @@ var linkTree_selection = svg.selectAll(".link"),
     node_selection = svg.selectAll(".node1"); // Empty selection at first
   
 var nodeEnter;
-var nodes
 var time = 0;
 var newNodes; 
 
@@ -56,6 +82,8 @@ var diagonal;
 
 
 
+//console.log("random()1="+random());
+//console.log("random()2="+random());
 
 
 
@@ -76,29 +104,35 @@ var diagonal;
 
 
 
+
+
+
 var treeOnly = false;
 
-d3.json(file, function(error, classes) {
 
-  nodes = cluster.nodes(packageHierarchy(classes));
-  nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
-  links = packageImports(nodes);
-  linkTree = d3.layout.tree().links(nodes);
-  tree_nodes = d3.layout.tree().nodes(classes);
+
+  
+
+
+    
+
+
+
+//d3.json(file, function(error, classes) {
+
+  //nodes = cluster.nodes(packageHierarchy(classes));
+  //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
+  //links = packageImports(nodes);
+  //linkTree = d3.layout.tree().links(nodes);
+  
   nodes.forEach(function(d) {
     if (d.depth == 1){
       root = d;
     } 
   });
   
-
-/* force
-    .nodes(nodes)
-    .links(linkTree)
-    .start();*/
-
-  treeLayout.sort(comparator);
-  
+ 
+  treeLayout.sort(comparator); 
   function comparator(a, b) {
     return b.order2 - a.order2;
   }
@@ -113,17 +147,14 @@ d3.json(file, function(error, classes) {
   nodes.forEach(function(d,i) {
     d.id =i;
   });
- // dfs(root);
-
+ 
   scaleCircle =1;
   setupTree();
-  console.log("scaleCircle1="+scaleCircle)
   scaleCircle = scaleRate;
   setupTree();
-  console.log("scaleCircle2="+scaleCircle)
   drawNodeAndLink();
   update();
-});  
+//});  
 
 function setupTree() {
   var disFactor = 2;
@@ -131,12 +162,12 @@ function setupTree() {
   newNodes = treeLayout(root).map(function(d,i) {
     if (d.depth==0){
        d.treeX = width/2-10; 
-       d.treeY = height-getRadius(root)/1;
+       d.treeY = height-getRadius(root)-10;
        d.alpha = -Math.PI/2; 
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1.2;
+      var totalAngle = Math.PI*1.1;
       var numChild =  d.children.length;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle1(getRadius(child), numChild);
@@ -157,9 +188,6 @@ function setupTree() {
         if (child.treeY-rC<minY) {
           minY = child.treeY-rC;
         };
-        if (child.depth>maxDepth){
-          maxDepth = child.depth;
-        }
         begin +=additional;
       });
     }
@@ -235,24 +263,6 @@ function update() {
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius)
       .style("fill", color);
-
-   /* d3.selectAll(".nodeText")
-      .attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y; })
-      .text(function(d) {   
-        if (d.key=="0" || d.key=="1")
-              return "";
-        else 
-          return d.key; 
-      });*/
-/*
-    d3.selectAll(".nodeImage3").each(function(d) {
-         })
-     .attr("x", function(d) { return d.x; })
-     .attr("y", function(d) { return d.y; })
-     .attr("height", getRadius)
-     .attr("width", getRadius)
-     .attr("xlink:href", function(d) { return d.image; });*/
       
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
@@ -453,12 +463,7 @@ function mouseouted(d) {
       .attr("r", function(d){ 
         return getRadius(d);
        })
-      .style("fill" , function(n) {   
-          if (n.key=="0" || n.key=="1" || n.depth<1)
-            return color(n);
-          else
-            return "url(#catpattern"+n.key+")"; 
-       })
+      .style("fill" , color)
       .style("fill-opacity", 1);
 
   svg.selectAll(".nodeTextBrushing").remove();  

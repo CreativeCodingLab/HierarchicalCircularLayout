@@ -9,6 +9,16 @@ var diameter, radius, innerRadius,
   treeOnly;
 
 function classical(file, container, treeOnly) {
+  nodes = [];
+  links = [];
+  generateRandomTree(8,10); 
+  nodes.forEach(function(child) { 
+    if (child.depth>maxDepth){
+        maxDepth = child.depth;
+    }
+  });        
+  linkTree = d3.layout.tree().links(nodes);
+
   // fit visualization to container
   var width =  parseInt(container.style('width'), 10);
   var height =  parseInt(container.style('height'), 10);
@@ -57,7 +67,7 @@ function classical(file, container, treeOnly) {
 
   // treeOnly = false;
 
-  d3.json(file, function(error, classes) {
+  //d3.json(file, function(error, classes) {
     _svg = container.append('svg')
       .attr({
         width: "100%",
@@ -73,7 +83,7 @@ function classical(file, container, treeOnly) {
     
      var tree = d3.layout.tree().size([s.width,s.height]);
      
-      nodes = tree(packageHierarchy(classes));
+    // nodes = tree(packageHierarchy(classes));
       nodes.forEach(function(d) { 
           if (d.depth>maxDepth)
               maxDepth = d.depth;
@@ -86,7 +96,7 @@ function classical(file, container, treeOnly) {
       // }); 
 
      /// Hierarchical links
-      linkTree = d3.layout.tree().links(nodes);
+    //  linkTree = d3.layout.tree().links(nodes);
       linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
       linkTree_selection.append("line")
         .attr("class", "linkTree")
@@ -112,7 +122,7 @@ function classical(file, container, treeOnly) {
         .attr("y2", function(d) { return Math.round(d.target.y); });
 
 
-     links = packageImports(nodes);
+   //  links = packageImports(nodes);
 
      // debugger
       
@@ -185,5 +195,5 @@ function classical(file, container, treeOnly) {
           .style("text-anchor", "middle")
           .style("fill", "#000");
           //.style("font-weight", "bold");  */
-  });
+ // });
 }

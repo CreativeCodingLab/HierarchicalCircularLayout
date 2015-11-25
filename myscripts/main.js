@@ -115,7 +115,7 @@ d3.json(file, function(error, classes) {
   links = [];
   links.push(link1);
   linkTree = d3.layout.tree().links(nodes);*/
-  
+
 
 //  node1.depth = 1;
 

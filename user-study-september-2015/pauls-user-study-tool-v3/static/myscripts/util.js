@@ -142,17 +142,50 @@ function getBranchingAngle1(radius3, numChild) {
     return Math.pow(radius3,2);
   }  
   else
-    return Math.pow(radius3,0.9);
+    return Math.pow(radius3,0.8);
  } 
 
 function getRadius(d) {
  // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*0.75;
+      : scaleCircle*1;
      // : 1; // leaf node
 }
 
+
+function generateRandomTree(treeHeight,degree) {
+    root = {};
+    root.name = "root";
+    root.depth = 1;
+    root.children = createChildren(root.depth);
+    nodes.push(root);
+    
+    function createChildren(depth) {
+      var children = [];
+      var rand =random()%degree+1;
+      var numSubtree =0;
+      for (var i=0; i<rand; i++){
+        var node1 = {};
+        node1.name = ""+seed1;
+        node1.depth = depth+1;
+        var rand2 =random()%8;
+        //console.log("rand2="+rand2+"  "+node1.depth+" treeHeight="+treeHeight);
+        if (((rand2<3 && node1.depth<treeHeight)
+            || (node1.depth<treeHeight && i>=rand-1 && numSubtree<1)) && numSubtree<3 ){
+          //console.log("HERE="+node1.depth);
+          node1.children = createChildren(node1.depth);
+          numSubtree++;
+        }
+
+
+        children.push(node1);
+        nodes.push(node1);
+      }
+       
+      return children;
+    }  
+  }
 
 function childCount1(level, n) {
     count = 0;
