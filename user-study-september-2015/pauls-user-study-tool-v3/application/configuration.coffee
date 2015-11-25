@@ -5,14 +5,14 @@ module.exports = ->
 
   continue_button = ["Continue"]
   
-  addVis = (main, layout, data, treeOnly) ->
+  addVis = (main, layout, queryData, randomSeed, height, degree, treeOnly) ->
     v = main.selectAll('.row.vis').data(Array(1))
     v.enter().append('div').classed('row vis', true)
       .append('div').classed('col-xs-12', true)
       .append('div').classed('frame', true)
       .style width: "100%", height: "70vh", border: "1px solid #ccc"
       .call (frame) ->
-        window[layout](data, frame, treeOnly)
+        window[layout](queryData, randomSeed, height, degree, frame, treeOnly)
   
   addContinue = (main) ->
     c = main.append('div').classed('row', true)
@@ -42,13 +42,13 @@ module.exports = ->
   	'treeMap'
   ];
   dataPath = 'data/';
-  datasets = [
+  queryDatasets = [
   	#"0_RAF_Dot.json",
   	"1_Activation of Pro-caspase 8 Pathway.json",
   	"2_ERBB2 Pathway.json",
   	"3_Signaling to GPCR Pathway.json",
   	"flare package.json",
-  	"carnivoraWithRelationships.json",
+  	#"carnivoraWithRelationships.json",
   	#"mammalsWithRelationships.json",
   	#"1_RAF-Cascade Pathway.json",
   	#"54_DAG Pathway.json",
@@ -56,7 +56,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [1000];
+  randomList = [1001,1211,1234];
   
 
   addText = (main, text) ->
@@ -67,29 +67,19 @@ module.exports = ->
       .style margin: '10px 0'
   
   part_1 = layouts.map (layout, li) ->
-    randomList.map (data, di) ->
-      return [
-        {
-          name: "part_1_#{li}_#{di}_a"
-          layout: layout
-          data: data
-          func: (main) ->
-            text = "What is the height of this tree?"
-            addText main, text
-            addVis main, layout, data, true
-            return addContinue main
-        }
-        {
-          name: "part_1_#{li}_#{di}_b"
-          layout: layout
-          data: data
-          func: (main) ->
-            text = "Please select the node with the highest degree."
-            addText main, text
-            addVis main, layout, data, true
-            return addContinue main
-        }
-      ]
+      randomList.map (randomSeed, di) ->
+        return [
+          {
+            name: "part_1_#{li}_#{di}_a"
+            layout: layout
+            data: randomSeed
+            func: (main) ->
+              text = "What is the height of this tree?"
+              addText main, text
+              addVis main, layout, queryDatasets[0], randomSeed, 7, 7, true
+              return addContinue main
+          }
+        ]
   .reduce (a, b) -> return a.concat b
   .reduce (a, b) -> return a.concat b
       

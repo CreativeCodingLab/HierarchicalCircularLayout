@@ -3,7 +3,7 @@ var nodeDFSCount = 0;
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
-var scaleRadius = 0.75;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
@@ -20,14 +20,13 @@ var nodes, links, linkTree;
 
 
 
-function hcl(file, container, treeOnly) {
+function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
 
-console.log("file="+file);
-  seed1 = file;
-  //seed1 =12444;  // Set the seed so this is not effected by other viz
+  seed1 = randomSeed;
   nodes = [];
   links = [];
-  generateRandomTree(8,10); 
+  generateRandomTree(height,degree); 
+
   nodes.forEach(function(child) { 
     if (child.depth>maxDepth){
         maxDepth = child.depth;
@@ -35,12 +34,8 @@ console.log("file="+file);
   });        
   linkTree = d3.layout.tree().links(nodes);
 
-
-var cluster = d3.layout.cluster()
-    .size([360, innerRadius])
-    .sort(null)
-    .value(function(d) { return d.size; });
-
+ 
+// Define the layout ********************************************
 var bundle = d3.layout.bundle();
 
 var lineBundle = d3.svg.line()
@@ -49,7 +44,6 @@ var lineBundle = d3.svg.line()
       .x(function(d) { return d.x; })
       .y(function(d) { return d.y; });
 
-var root;
 var width = parseInt(container.style('width'), 10);
 var height = parseInt(container.style('height'), 10);
 
@@ -79,54 +73,12 @@ var i = 0,
     rootSearch;
 var treeSearch;
 var diagonal;
-
-
-
-//console.log("random()1="+random());
-//console.log("random()2="+random());
-
-
-
-  // this global variable is used to set the DFS ids for nodes
-
-//var file = "data/0_RAF_Dot.json";
-
-//var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
-//var file = "data/2_ERBB2 Pathway.json";
-//var file = "data/3_Signaling to GPCR Pathway.json";
-//var file = "data/flare package.json";
-//var file = "data/carnivoraWithRelationships.json";
-//var file = "data/mammalsWithRelationships.json";
-
-//var file = "data/1_RAF-Cascade Pathway.json";
-//var file = "data/54_DAG Pathway.json";
-//var file = "data/3_NGF Pathway.json";
-
-
-
-
-
-
-var treeOnly = false;
-
-
-
   
 
 
-    
 
-
-
-//d3.json(file, function(error, classes) {
-
-  //nodes = cluster.nodes(packageHierarchy(classes));
-  //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
-  //links = packageImports(nodes);
-  //linkTree = d3.layout.tree().links(nodes);
-  
   nodes.forEach(function(d) {
-    if (d.depth == 1){
+    if (d.depth == 0){
       root = d;
     } 
   });
@@ -136,6 +88,8 @@ var treeOnly = false;
   function comparator(a, b) {
     return b.order2 - a.order2;
   }
+
+
   
   childDepth1(root); 
   count1 = childCount1(0, root); 
@@ -147,7 +101,8 @@ var treeOnly = false;
   nodes.forEach(function(d,i) {
     d.id =i;
   });
- 
+  nodes.reverse();
+
   scaleCircle =1;
   setupTree();
   scaleCircle = scaleRate;
@@ -167,7 +122,7 @@ function setupTree() {
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1.1;
+      var totalAngle = Math.PI*1.2;
       var numChild =  d.children.length;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle1(getRadius(child), numChild);
@@ -235,7 +190,8 @@ function drawNodeAndLink() {
     }); 
   
 
- /* nodeEnter.append("text")
+/*
+  nodeEnter.append("text")
     .attr("class", "nodeText")
     .attr("x", function(d) { return d.treeX; })
     .attr("y", function(d) { return d.treeY; })
@@ -263,7 +219,13 @@ function update() {
       .attr("cy", function(d) { return d.y; })
       .attr("r", getRadius)
       .style("fill", color);
-      
+
+      d3.selectAll(".nodeText")
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y; })
+      .text(function(d) {   
+          return d.name; 
+      });
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
       .attr("x2", function(d) { return d.target.x; })

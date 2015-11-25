@@ -8,10 +8,11 @@ var diameter, radius, innerRadius,
   linkTree_selection,
   treeOnly;
 
-function classical(file, container, treeOnly) {
+function classical(randomSeed, height, degree, container, treeOnly) {
+  seed1 = randomSeed;
   nodes = [];
   links = [];
-  generateRandomTree(8,10); 
+  generateRandomTree(height,degree); 
   nodes.forEach(function(child) { 
     if (child.depth>maxDepth){
         maxDepth = child.depth;
@@ -66,8 +67,9 @@ function classical(file, container, treeOnly) {
 //  linkTree_selection;
 
   // treeOnly = false;
+//var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
 
-  //d3.json(file, function(error, classes) {
+//  d3.json(file, function(error, classes) {
     _svg = container.append('svg')
       .attr({
         width: "100%",
@@ -78,25 +80,30 @@ function classical(file, container, treeOnly) {
       
     var svg = _svg.append('g')
       .attr("transform", "translate(" + (width-s.width)/2 + "," + (height-s.height)/2 + ")")
-      
-    // var tree = d3.layout.tree().size([diameter,diameter]);
-    
-     var tree = d3.layout.tree().size([s.width,s.height]);
+       
      
-    // nodes = tree(packageHierarchy(classes));
-      nodes.forEach(function(d) { 
+     nodes.forEach(function(d) { 
           if (d.depth>maxDepth)
               maxDepth = d.depth;
           if (!d.children)
               numLeaf++;
+          if (d.depth==0)
+            root =d;
       });
+      var root;
+
+     
+      var tree = d3.layout.tree().size([s.width,s.height]);
+      nodes = tree(root);
+     
+     debugger;
       // var sub_y = nodes[1].y;
       // nodes.forEach(function(d) { 
       //     d.y = d.y-sub_y+20;
       // }); 
 
      /// Hierarchical links
-    //  linkTree = d3.layout.tree().links(nodes);
+      linkTree = d3.layout.tree().links(nodes);
       linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
       linkTree_selection.append("line")
         .attr("class", "linkTree")
@@ -124,7 +131,6 @@ function classical(file, container, treeOnly) {
 
    //  links = packageImports(nodes);
 
-     // debugger
       
      var _line = d3.svg.line()
       .interpolate("bundle")
@@ -139,7 +145,7 @@ function classical(file, container, treeOnly) {
               r: function(d) { 
                   if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
                       return diameter*2/numLeaf;
-                  return diameter*0.5/numLeaf; },
+                  return diameter*0.8/numLeaf; },
               cx: function(d) { return d.x },
               cy: function(d) { return d.y }
           })
@@ -149,7 +155,7 @@ function classical(file, container, treeOnly) {
           return color(d); 
       })
        .style("stroke", function(d) { 
-          if (listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || d.depth<=1)
+          if (listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || d.depth==0)
                   return "#000";
       })
        .style("stroke-width",  function(d){ 
@@ -195,5 +201,5 @@ function classical(file, container, treeOnly) {
           .style("text-anchor", "middle")
           .style("fill", "#000");
           //.style("font-weight", "bold");  */
- // });
+// });
 }

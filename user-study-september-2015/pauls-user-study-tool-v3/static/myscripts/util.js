@@ -142,14 +142,14 @@ function getBranchingAngle1(radius3, numChild) {
     return Math.pow(radius3,2);
   }  
   else
-    return Math.pow(radius3,0.8);
+    return Math.pow(radius3,0.7);
  } 
 
 function getRadius(d) {
  // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*1;
+      : scaleCircle*1.1;
      // : 1; // leaf node
 }
 
@@ -157,10 +157,11 @@ return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapse
 function generateRandomTree(treeHeight,degree) {
     root = {};
     root.name = "root";
-    root.depth = 1;
+    root.depth = 0;
     root.children = createChildren(root.depth);
     nodes.push(root);
     
+
     function createChildren(depth) {
       var children = [];
       var rand =random()%degree+1;
@@ -169,10 +170,12 @@ function generateRandomTree(treeHeight,degree) {
         var node1 = {};
         node1.name = ""+seed1;
         node1.depth = depth+1;
-        var rand2 =random()%8;
+        var rand2 =random()%degree;
         //console.log("rand2="+rand2+"  "+node1.depth+" treeHeight="+treeHeight);
-        if (((rand2<3 && node1.depth<treeHeight)
-            || (node1.depth<treeHeight && i>=rand-1 && numSubtree<1)) && numSubtree<3 ){
+        if (((rand2<degree/2 && node1.depth<treeHeight)
+            || (node1.depth<treeHeight && i>=rand-1 && numSubtree<1)) && numSubtree<degree/2){
+        //  if (node1.depth<treeHeight ){
+        
           //console.log("HERE="+node1.depth);
           node1.children = createChildren(node1.depth);
           numSubtree++;
@@ -186,6 +189,23 @@ function generateRandomTree(treeHeight,degree) {
       return children;
     }  
   }
+
+function read() {
+
+    d3.json("data/0_RAF_Dot.json", function(error, classes) {
+      var cluster = d3.layout.cluster()
+        .size([360, innerRadius])
+        .sort(null)
+        .value(function(d) { return d.size; });
+
+      nodes = cluster.nodes(packageHierarchy(classes));
+      //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
+      links = packageImports(nodes);
+      linkTree = d3.layout.tree().links(nodes);
+    //  debugger;
+    console.log("aaaaa");
+    });
+}  
 
 function childCount1(level, n) {
     count = 0;
