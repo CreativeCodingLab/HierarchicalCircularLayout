@@ -20,9 +20,7 @@ function random() {
 
 var nodes, links, linkTree, root;
 
-var qnodes, qlinkTree, qroot;
-var maxX = 0;
-var minX = 10000;
+var qnodes, qlinkTree, qroot, qmaxDepth=1;;
 
 function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
   seed1 = randomSeed;
@@ -98,24 +96,27 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
           .value(function(d) { return d.size; });
 
         qnodes = cluster.nodes(packageHierarchy(classes));
-        //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
+        //qnodes.splice(0, 1);  // remove the first element (which is created by the reading process)
         qnodes.forEach(function(d) {
           if (d.depth == 0){
             qroot = d;
           } 
+        });  
+        qnodes.forEach(function(child) { 
+          if (child.depth>qmaxDepth){
+              qmaxDepth = child.depth;
+          }
         });    
         childDepth1(qroot); 
         count1 = childCount1(0, qroot); 
         count2 = childCount2(0, qroot);  // DFS id of nodes are also set in this function
         scaleCircleQ =1;
-        setupTreeQ(qroot, 200,200);
+        setupTreeQ(qroot, queryH,queryH);
         scaleCircleQ = scaleRateQ;
-        setupTreeQ(qroot, 200,200);
+        setupTreeQ(qroot, queryH,queryH);
         
         qlinkTree = d3.layout.tree().links(nodes);
-
-    
-      main();
+        main();
      });
    } 
    else
@@ -141,14 +142,14 @@ function setupTree(rootTree, h, w) {
   var minY = 10000;   // used to compute the best scale for the input tree
   treeLayout(rootTree).map(function(d,i) {
     if (d.depth==0){
-       d.treeX = w/2-10; 
+       d.treeX = w/2+queryH/2; 
        d.treeY = h-getRadius(rootTree)-10;
        d.treeR = getRadius(rootTree);
        d.alpha = -Math.PI/2; 
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1.2;
+      var totalAngle = Math.PI*1.1;
       var numChild =  d.children.length;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle1(getRadius(child), numChild);
@@ -172,12 +173,6 @@ function setupTree(rootTree, h, w) {
         if (child.treeY-rC<minY) {
           minY = child.treeY-rC;
         };
-        if (child.treeX>maxX) {
-          maxX = child.treeX;
-        } 
-        if (child.treeX<minX) {
-          minX = child.treeX;
-        }  
         begin +=additional;
       });
     }
@@ -191,13 +186,13 @@ function setupTreeQ(rootTree, h, w) {
   treeLayout(rootTree).map(function(d,i) {
     if (d.depth==0){
        d.treeX = w/2-10; 
-       d.treeY = h-getRadiusQ(rootTree)-10;
+       d.treeY = height-getRadiusQ(rootTree)-10;
        d.treeR = getRadiusQ(rootTree);
        d.alpha = -Math.PI/2; 
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1.2;
+      var totalAngle = Math.PI*1.1;
       var numChild =  d.children.length;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle1(getRadiusQ(child), numChild);
@@ -221,16 +216,10 @@ function setupTreeQ(rootTree, h, w) {
         if (child.treeY-rC<minY) {
           minY = child.treeY-rC;
         };
-        if (child.treeX>maxX) {
-          maxX = child.treeX;
-        } 
-        if (child.treeX<minX) {
-          minX = child.treeX;
-        }  
         begin +=additional;
       });
     }
-    scaleRateQ = h/(h-minY);
+    scaleRateQ = 0.5*height/(height-minY);
     console.log("scaleRateQ="+scaleRateQ);
     return d;
   });
@@ -240,7 +229,7 @@ function setupTreeQ(rootTree, h, w) {
 function getRadius(d) {
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*1.1;
+      : scaleCircle;
 }
 
 function getRadiusQ(d) {
@@ -248,8 +237,10 @@ function getRadiusQ(d) {
     
 return d._children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircleQ*1.1;
+      : scaleCircleQ;
 }
+
+
 
 
 function drawNodeAndLink() {
@@ -317,6 +308,7 @@ function draw_qTree() {
     .attr("r", function(d) { return d.treeR; })
     .attr("cx", function(d) { return d.treeX; })
     .attr("cy", function(d) { return d.treeY; })
+    .style("fill" , colorQ)
     .style("stroke", function(d) { 
         if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
                 return "#000";

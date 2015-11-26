@@ -2,6 +2,10 @@ var diameter = 1000,
     radius = diameter / 2,
     innerRadius = radius - 120;
 
+var queryH = 300;
+var minSat = 50;
+var maxSat = 230;
+  
   // Add color legend
  var listSelected1 = {}
  var listSelected2 = {}
@@ -107,8 +111,6 @@ function removeColorLegend() {
 }
 
 function color(d) {
-  var minSat = 0;
-  var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
   if (listSelected1[d.name])
@@ -124,9 +126,15 @@ function color(d) {
     : "#77f"; // leaf node
 }
 
+function colorQ(d) {
+  var step = (maxSat-minSat)/qmaxDepth;
+  var sat = Math.round(maxSat-d.depth*step);
+  return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
+    : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
+    : "#77f"; // leaf node
+}
+
 function colorFaded(d) {
-  var minSat = 80;
-  var maxSat = 230;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
  
@@ -142,7 +150,7 @@ function getBranchingAngle1(radius3, numChild) {
     return Math.pow(radius3,2);
   }  
   else
-    return Math.pow(radius3,0.9);
+    return Math.pow(radius3,0.8);
  } 
 
 

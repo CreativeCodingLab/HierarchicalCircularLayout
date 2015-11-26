@@ -76,7 +76,7 @@ module.exports = ->
             func: (main) ->
               text = "What is the height of this tree?"
               addText main, text
-              addVis main, layout, queryDatasets[0], randomSeed, 7, 7, true
+              addVis main, layout, queryDatasets[0], randomSeed, 6, 6, true
               return addContinue main
           }
         ]

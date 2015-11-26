@@ -8,7 +8,7 @@ var diameter, radius, innerRadius,
   linkTree_selection,
   treeOnly;
 
-function classical(randomSeed, height, degree, container, treeOnly) {
+function classical(queryData, randomSeed, height, degree, container, treeOnly) {
   seed1 = randomSeed;
   nodes = [];
   links = [];
@@ -145,7 +145,7 @@ function classical(randomSeed, height, degree, container, treeOnly) {
               r: function(d) { 
                   if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
                       return diameter*2/numLeaf;
-                  return diameter*0.8/numLeaf; },
+                  return diameter*0.75/numLeaf; },
               cx: function(d) { return d.x },
               cy: function(d) { return d.y }
           })
