@@ -142,16 +142,9 @@ function getBranchingAngle1(radius3, numChild) {
     return Math.pow(radius3,2);
   }  
   else
-    return Math.pow(radius3,0.7);
+    return Math.pow(radius3,0.9);
  } 
 
-function getRadius(d) {
- // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
-return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
-      : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*1.1;
-     // : 1; // leaf node
-}
 
 
 function generateRandomTree(treeHeight,degree) {
@@ -191,20 +184,7 @@ function generateRandomTree(treeHeight,degree) {
   }
 
 function read() {
-
-    d3.json("data/0_RAF_Dot.json", function(error, classes) {
-      var cluster = d3.layout.cluster()
-        .size([360, innerRadius])
-        .sort(null)
-        .value(function(d) { return d.size; });
-
-      nodes = cluster.nodes(packageHierarchy(classes));
-      //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
-      links = packageImports(nodes);
-      linkTree = d3.layout.tree().links(nodes);
-    //  debugger;
-    console.log("aaaaa");
-    });
+    
 }  
 
 function childCount1(level, n) {

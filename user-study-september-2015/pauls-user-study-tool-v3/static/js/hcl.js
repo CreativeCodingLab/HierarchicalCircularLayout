@@ -2,9 +2,12 @@ var nodeDFSCount = 0;
 
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
+var scaleCircleQ = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
+var scaleRateQ;   // For the query tree
 var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
- 
+var disFactor = 2;  // Distance from the center of the parent.
+  
 var maxDepth=1;
 var setIntervalFunction;
 
@@ -15,13 +18,13 @@ function random() {
     return Math.floor((x-Math.floor(x))*1000);
 }
 
-var nodes, links, linkTree;
+var nodes, links, linkTree, root;
 
-
-
+var qnodes, qlinkTree, qroot;
+var maxX = 0;
+var minX = 10000;
 
 function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
-
   seed1 = randomSeed;
   nodes = [];
   links = [];
@@ -31,93 +34,116 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
     if (child.depth>maxDepth){
         maxDepth = child.depth;
     }
-  });        
+  });  
+  nodes.forEach(function(d) {
+      if (d.depth == 0){
+        root = d;
+      } 
+    });      
+
   linkTree = d3.layout.tree().links(nodes);
 
- 
-// Define the layout ********************************************
-var bundle = d3.layout.bundle();
 
-var lineBundle = d3.svg.line()
-      .interpolate("bundle")
-      .tension(0.97)
-      .x(function(d) { return d.x; })
-      .y(function(d) { return d.y; });
+  var bundle = d3.layout.bundle();
 
-var width = parseInt(container.style('width'), 10);
-var height = parseInt(container.style('height'), 10);
+    var lineBundle = d3.svg.line()
+          .interpolate("bundle")
+          .tension(0.97)
+          .x(function(d) { return d.x; })
+          .y(function(d) { return d.y; });
 
-//debugger;
-/*var force = d3.layout.force()
-    .linkDistance(50)
-    .charge(-120)
-    .gravity(.15)
-    .size([width, height])
-    .on("tick", tick);*/
-     
-var svg = container.append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    var width = parseInt(container.style('width'), 10);
+    var height = parseInt(container.style('height'), 10);
+         
+    var svg = container.append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
-var relationship_selection = svg.selectAll(".link");
-var linkTree_selection = svg.selectAll(".link"),
-    node_selection = svg.selectAll(".node1"); // Empty selection at first
+    var relationship_selection = svg.selectAll(".link");
+    var linkTree_selection = svg.selectAll(".link"),
+        node_selection = svg.selectAll(".node1"); // Empty selection at first
+      
+    var nodeEnter;
+    var time = 0;
+   
+
+    var i = 0,
+        duration = 750,
+        rootSearch;
+    var treeSearch;
+    var diagonal;
+    
+   treeLayout.sort(comparator); 
+    function comparator(a, b) {
+      return b.order2 - a.order2;
+    }
+
+    childDepth1(root); 
+    count1 = childCount1(0, root); 
+    count2 = childCount2(0, root);  // DFS id of nodes are also set in this function
+    root.idDFS = nodeDFSCount++; 
+    root.order1 =0;
+
+    //Assign id to each node, root id = 0
+    nodes.forEach(function(d,i) {
+      d.id =i;
+    });
+    nodes.reverse();
+
+   if (queryData){
+      d3.json(queryData, function(error, classes) {
+        var cluster = d3.layout.cluster()
+          .size([360, innerRadius])
+          .sort(null)
+          .value(function(d) { return d.size; });
+
+        qnodes = cluster.nodes(packageHierarchy(classes));
+        //nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
+        qnodes.forEach(function(d) {
+          if (d.depth == 0){
+            qroot = d;
+          } 
+        });    
+        childDepth1(qroot); 
+        count1 = childCount1(0, qroot); 
+        count2 = childCount2(0, qroot);  // DFS id of nodes are also set in this function
+        scaleCircleQ =1;
+        setupTreeQ(qroot, 200,200);
+        scaleCircleQ = scaleRateQ;
+        setupTreeQ(qroot, 200,200);
+        
+        qlinkTree = d3.layout.tree().links(nodes);
+
+    
+      main();
+     });
+   } 
+   else
+      main();
   
-var nodeEnter;
-var time = 0;
-var newNodes; 
+
+  // Define the layout ********************************************
+  function main(){   
+    scaleCircle =1;
+    setupTree(root,  height, width);
+    scaleCircle = scaleRate;
+    setupTree(root, height, width);
+
+    drawNodeAndLink();
+    //update();
+
+    draw_qTree();
+
+ }// End of main() ********************************************************************************
 
 
-var i = 0,
-    duration = 750,
-    rootSearch;
-var treeSearch;
-var diagonal;
-  
-
-
-
-  nodes.forEach(function(d) {
-    if (d.depth == 0){
-      root = d;
-    } 
-  });
-  
- 
-  treeLayout.sort(comparator); 
-  function comparator(a, b) {
-    return b.order2 - a.order2;
-  }
-
-
-  
-  childDepth1(root); 
-  count1 = childCount1(0, root); 
-  count2 = childCount2(0, root);  // DFS id of nodes are also set in this function
-  root.idDFS = nodeDFSCount++; 
-  root.order1 =0;
-
-  //Assign id to each node, root id = 0
-  nodes.forEach(function(d,i) {
-    d.id =i;
-  });
-  nodes.reverse();
-
-  scaleCircle =1;
-  setupTree();
-  scaleCircle = scaleRate;
-  setupTree();
-  drawNodeAndLink();
-  update();
-//});  
-
-function setupTree() {
-  var disFactor = 2;
+function setupTree(rootTree, h, w) {
   var minY = 10000;   // used to compute the best scale for the input tree
-  newNodes = treeLayout(root).map(function(d,i) {
+  treeLayout(rootTree).map(function(d,i) {
     if (d.depth==0){
-       d.treeX = width/2-10; 
-       d.treeY = height-getRadius(root)-10;
+       d.treeX = w/2-10; 
+       d.treeY = h-getRadius(rootTree)-10;
+       d.treeR = getRadius(rootTree);
        d.alpha = -Math.PI/2; 
     }
     if (d.children){
@@ -139,21 +165,91 @@ function setupTree() {
         child.alpha = begin+additional/2;
         child.treeX = xC+rC*Math.cos(child.alpha); 
         child.treeY = yC+rC*Math.sin(child.alpha); 
+        child.treeR = getRadius(child);
+      
         
+        // find scales
         if (child.treeY-rC<minY) {
           minY = child.treeY-rC;
         };
+        if (child.treeX>maxX) {
+          maxX = child.treeX;
+        } 
+        if (child.treeX<minX) {
+          minX = child.treeX;
+        }  
         begin +=additional;
       });
     }
-    scaleRate = height/(height-minY);
+    scaleRate = h/(h-minY);
+    return d;
+  });
+}  
+
+function setupTreeQ(rootTree, h, w) {
+  var minY = 10000;   // used to compute the best scale for the input tree
+  treeLayout(rootTree).map(function(d,i) {
+    if (d.depth==0){
+       d.treeX = w/2-10; 
+       d.treeY = h-getRadiusQ(rootTree)-10;
+       d.treeR = getRadiusQ(rootTree);
+       d.alpha = -Math.PI/2; 
+    }
+    if (d.children){
+      var totalRadius = 0;
+      var totalAngle = Math.PI*1.2;
+      var numChild =  d.children.length;
+      d.children.forEach(function(child) {
+        totalRadius+=getBranchingAngle1(getRadiusQ(child), numChild);
+      });  
+
+      var begin=d.alpha-totalAngle/2;
+      d.children.forEach(function(child,i2) {
+        xC =  d.treeX;
+        yC =  d.treeY;
+        rC = getRadiusQ(d)+getRadiusQ(child)/disFactor;
+        child.treeRC = rC;
+
+        var additional = totalAngle*getBranchingAngle1(getRadiusQ(child), numChild)/totalRadius;
+        child.alpha = begin+additional/2;
+        child.treeX = xC+rC*Math.cos(child.alpha); 
+        child.treeY = yC+rC*Math.sin(child.alpha); 
+        child.treeR = getRadiusQ(child);
+      
+        
+        // find scales
+        if (child.treeY-rC<minY) {
+          minY = child.treeY-rC;
+        };
+        if (child.treeX>maxX) {
+          maxX = child.treeX;
+        } 
+        if (child.treeX<minX) {
+          minX = child.treeX;
+        }  
+        begin +=additional;
+      });
+    }
+    scaleRateQ = h/(h-minY);
+    console.log("scaleRateQ="+scaleRateQ);
     return d;
   });
 }  
 
 
+function getRadius(d) {
+return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
+      : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
+      : scaleCircle*1.1;
+}
 
-
+function getRadiusQ(d) {
+  console.log("scaleRateQ2="+scaleRateQ);
+    
+return d._children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius)// collapsed package
+      : d.children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius) // expanded package
+      : scaleCircleQ*1.1;
+}
 
 
 function drawNodeAndLink() {
@@ -175,10 +271,9 @@ function drawNodeAndLink() {
   // Draw nodes *****************************************************
   nodeEnter.append("circle")
     .attr("class", "node1")
-    .attr("id", function(d) { return d.idDFS; })
-    .attr("r", getRadius)
-    .attr("cx", function(d) { 
-      return d.treeX; })
+    .style("fill" , color)
+    .attr("r", function(d) { return d.treeR; })
+    .attr("cx", function(d) { return d.treeX; })
     .attr("cy", function(d) { return d.treeY; })
     .style("stroke", function(d) { 
         if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
@@ -188,8 +283,6 @@ function drawNodeAndLink() {
         if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] )
                 return 1;        
     }); 
-  
-
 /*
   nodeEnter.append("text")
     .attr("class", "nodeText")
@@ -207,10 +300,38 @@ function drawNodeAndLink() {
 
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
+}
+
+function draw_qTree() {
+// Update links of hierarchy.
+  svg.selectAll(".nodeQ").remove();
+  node_selectionQ = svg.selectAll(".nodeQ").data(qnodes);
+  nodeEnterQ = node_selectionQ.enter().append("g")
+    .attr("class", "nodeQ")
+    .on("click", click);
+  
+
+  // Draw nodes *****************************************************
+  nodeEnterQ.append("circle")
+    .attr("class", "nodeQ")
+    .attr("r", function(d) { return d.treeR; })
+    .attr("cx", function(d) { return d.treeX; })
+    .attr("cy", function(d) { return d.treeY; })
+    .style("stroke", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
+                return "#000";
+      })        
+      .style("stroke-width", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] )
+                return 1;        
+    }); 
+
+   nodeEnterQ.on('mouseover', mouseovered)
+      .on("mouseout", mouseouted);
 
 }
 
-
+/*
 function update() {
     d3.selectAll(".node1").each(function(d) {
         d.x = (d.treeX ); //*event.alpha;
@@ -246,91 +367,9 @@ function update() {
       .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
       .attr("d", lineBundle);
   
-}
-
-// Collision ***********************************************************
-var currentNode=1;
-function startCollisionTimer() {
-  setIntervalFunction = setInterval(function () {
-    console.log("currentNode**** "+currentNode);
-    // Compute collision
-    var results = getCollisionOfSubtree(nodes[currentNode],0);
-    var sumOverlapWithGreaterDFSid=results[1];
-    var sumOverlapWithSmallerDFSid=results[0];
-     
-    //console.log("current="+currentNode+"  Smaller = "+sumOverlapWithSmallerDFSid
-    //  +"  Greater = "+sumOverlapWithGreaterDFSid);
-   
-
-    d3.selectAll(".node1").each(function(d) {
-        if (d.parent && d.treeRC){
-          if (d.id==currentNode){
-            if (sumOverlapWithGreaterDFSid>sumOverlapWithSmallerDFSid)
-              d.alpha += 0.05;
-            if (sumOverlapWithGreaterDFSid<sumOverlapWithSmallerDFSid)
-              d.alpha -= 0.05;
-          }  
-          d.treeX = d.parent.treeX+d.treeRC*Math.cos(d.alpha); 
-          d.treeY = d.parent.treeY+d.treeRC*Math.sin(d.alpha); 
-          d.x = d.treeX; 
-          d.y = d.treeY; 
-        }
-      })
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .attr("r", getRadius)
-      .style("fill", color)
-      ;
-
-    currentNode++;
-    if (currentNode==nodes.length)
-      currentNode=1;
-    while (!nodes[currentNode].children){   // skip all leaf nodes
-      currentNode++;
-      if (currentNode==nodes.length)
-        currentNode=1;
-    }
-  }, 1);
-} 
-
-function getCollisionOfSubtree(node1, deep) {
-  var results = getCollisionOfNode(node1);
-  if (node1.children && deep<0) {  // do not go more than 10 levels
-    for (var i=0; i<node1.children.length; i++){
-      var results2 = getCollisionOfSubtree(node1.children[i],deep+1)
-      results[0] += results2[0];
-      results[1] += results2[1];
-    }
-  }
-  return results;
-}
+}*/
 
 
-function getCollisionOfNode(node1) {
-  var results = new Array(2);
-  var x1 = node1.x; 
-  var y1 = node1.y; 
-  var r1 = getRadius(node1);
-  var sumOverlapWithGreaterDFSid=0;
-  var sumOverlapWithSmallerDFSid=0;
-  for (var i=0; i<nodes.length;i++){
-    if (nodes[i]==node1 || nodes[i]==node1.parent || isAChildOf(nodes[i], node1)) continue;
-    var x2 = nodes[i].x; 
-    var y2 = nodes[i].y; 
-    var r2 = getRadius(nodes[i]); 
-    var dis = (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
-    dis = Math.sqrt(dis);
-    if (dis<r1+r2){
-      if (nodes[i].idDFS>node1.idDFS)
-        sumOverlapWithGreaterDFSid += (r1+r2)-dis;
-      else 
-        sumOverlapWithSmallerDFSid += (r1+r2)-dis;
-    }   
-  }
-  results[0] = sumOverlapWithSmallerDFSid;
-  results[1] = sumOverlapWithGreaterDFSid;
-  return results;
-}
 
 function isAChildOf(node1, node2) {
   if (!node2.children) return false;
@@ -343,31 +382,9 @@ function isAChildOf(node1, node2) {
 
 
 
-// Fisheye Lensing ************************************************
-// var fisheye = d3.fisheye.circular()
-//       .radius(200);
 
-svg.on("mousemove", function() {
-  //  force.stop();
-
-
-
-
-  
-   svg.selectAll("path.link")
-      .each(function(d) { })
-      .attr("d", lineBundle); 
-  
-  var force_influence = 0.5;
-  node_selection
-    .each(function(d) {
-      d.x += (d.treeX - d.x) * (force_influence); //*event.alpha;
-      d.y += (d.treeY - d.y) * (force_influence); //*event.alpha;
-    });
-});
 
 function mouseovered(d) {
-
   if (!d.children){
     node_selection
        .each(function(n) { n.target = n.source = false; });
@@ -398,6 +415,7 @@ function mouseovered(d) {
            
   }    
   else{
+    /*
     svg.append("text")
       .attr("class", "nodeTextBrushing")
       .attr("x", d.x)
@@ -408,32 +426,23 @@ function mouseovered(d) {
       .attr("font-size", "10px")
       .style("text-anchor", "middle")
       .style("fill", "#000")
-      .style("font-weight", "bold");
+      .style("font-weight", "bold");*/
    } 
-   console.log(d.name);
-  //.classed("node--target", function(n) {   return n.target; })
-  //.classed("node--source", function(n) { return n.source; });  
-}
+  }
 
-function mouseouted(d) {
-  svg.selectAll("path.link")
-      .classed("link--faded", false)
-      .classed("link--target", false)
-      .classed("link--source", false);
+  function mouseouted(d) {
+    svg.selectAll("path.link")
+        .classed("link--faded", false)
+        .classed("link--target", false)
+        .classed("link--source", false);
 
-  d3.selectAll(".node1")
-      .attr("r", function(d){ 
-        return getRadius(d);
-       })
-      .style("fill" , color)
-      .style("fill-opacity", 1);
+    d3.selectAll(".node1")
+        .attr("r", function(d){ return d.treeR; })
+        .style("fill" , color)
+        .style("fill-opacity", 1);
 
-  svg.selectAll(".nodeTextBrushing").remove();  
-  
-  //node_selection
-  //    .classed("node--target", false)
-  //    .classed("node--source", false);
-}  
+    svg.selectAll(".nodeTextBrushing").remove();    
+  }  
 }
 
 
