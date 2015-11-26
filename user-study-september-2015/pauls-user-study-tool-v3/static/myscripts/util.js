@@ -6,6 +6,12 @@ var queryH = 300;
 var minSat = 50;
 var maxSat = 230;
   
+var seed1 = 1111;
+function random() {
+    var x = Math.sin(seed1++) * 1000;
+    return Math.floor((x-Math.floor(x))*1000);
+}
+
   // Add color legend
  var listSelected1 = {}
  var listSelected2 = {}
@@ -113,14 +119,16 @@ function removeColorLegend() {
 function color(d) {
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
-  if (listSelected1[d.name])
+  if (d.name.indexOf("query")>-1){
+   return d.children ? "rgb("+maxSat+", "+sat+", "+sat+")" // expanded package
+    : "#77f"; 
+  }
+  else if (listSelected1[d.name])
     return "#77ff77";
   else if (listSelected2[d.name])
     return "#ffff66";
   else if (listSelected3[d.name])
     return "#ffaaff";
-  
-  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#77f"; // leaf node
@@ -129,6 +137,7 @@ function color(d) {
 function colorQ(d) {
   var step = (maxSat-minSat)/qmaxDepth;
   var sat = Math.round(maxSat-d.depth*step);
+  
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#77f"; // leaf node

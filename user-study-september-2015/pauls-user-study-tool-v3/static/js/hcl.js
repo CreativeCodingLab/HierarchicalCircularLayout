@@ -12,11 +12,6 @@ var maxDepth=1;
 var setIntervalFunction;
 
 // Random number generator
-var seed1 = 1111;
-function random() {
-    var x = Math.sin(seed1++) * 1000;
-    return Math.floor((x-Math.floor(x))*1000);
-}
 
 var nodes, links, linkTree, root;
 
@@ -44,43 +39,34 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
 
   var bundle = d3.layout.bundle();
 
-    var lineBundle = d3.svg.line()
-          .interpolate("bundle")
-          .tension(0.97)
-          .x(function(d) { return d.x; })
-          .y(function(d) { return d.y; });
+  var lineBundle = d3.svg.line()
+        .interpolate("bundle")
+        .tension(0.97)
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; });
 
-    var width = parseInt(container.style('width'), 10);
-    var height = parseInt(container.style('height'), 10);
-         
-    var svg = container.append("svg")
-        .attr("width", width)
-        .attr("height", height);
+  var width = parseInt(container.style('width'), 10);
+  var height = parseInt(container.style('height'), 10);
+       
+  var svg = container.append("svg")
+      .attr("width", width)
+      .attr("height", height);
 
-    var relationship_selection = svg.selectAll(".link");
-    var linkTree_selection = svg.selectAll(".link"),
-        node_selection = svg.selectAll(".node1"); // Empty selection at first
-      
-    var nodeEnter;
-    var time = 0;
-   
-
-    var i = 0,
-        duration = 750,
-        rootSearch;
-    var treeSearch;
-    var diagonal;
+  var relationship_selection = svg.selectAll(".link");
+  var linkTree_selection = svg.selectAll(".link"),
+      node_selection = svg.selectAll(".node1"); // Empty selection at first
     
-   treeLayout.sort(comparator); 
-    function comparator(a, b) {
-      return b.order2 - a.order2;
-    }
+  var nodeEnter;
+  var time = 0;
+ 
 
-    childDepth1(root); 
-    count1 = childCount1(0, root); 
-    count2 = childCount2(0, root);  // DFS id of nodes are also set in this function
-    root.idDFS = nodeDFSCount++; 
-    root.order1 =0;
+  var i = 0,
+      duration = 750,
+      rootSearch;
+  var treeSearch;
+  var diagonal;
+    
+   
 
     //Assign id to each node, root id = 0
     nodes.forEach(function(d,i) {
@@ -114,8 +100,40 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
         setupTreeQ(qroot, queryH,queryH);
         scaleCircleQ = scaleRateQ;
         setupTreeQ(qroot, queryH,queryH);
+        qlinkTree = d3.layout.tree().links(qnodes);
+
+        var a =  random()%nodes.length;
+        while (nodes[a].depth>=maxDepth-qmaxDepth || nodes[a].depth<1){
+          a =  random()%nodes.length;
+        }
+
+        if (!nodes[a].children)
+          nodes[a].children = [];
+        nodes[a].childCount1++;
+        var node2 = copyNode(qroot,nodes[a].depth);
+        //node2.name = "query";
+        //console.log("a="+a);
         
-        qlinkTree = d3.layout.tree().links(nodes);
+        function copyNode(n1, depth){
+          var n2 = {};
+          n2.name = "query"+n1.name;
+          n2.depth = depth+1;
+          
+          if (n1.children){
+            n2.children =[];
+            for (var i=0;i<n1.children.length;i++){
+              var child1 = n1.children[i];
+              var child2 = copyNode(child1, depth+1);
+              n2.children.push(child2);
+            }
+          }
+          nodes.push(n2);
+          return n2;
+        }
+
+        nodes[a].children.push(node2);
+        
+
         main();
      });
    } 
@@ -125,6 +143,17 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly) {
 
   // Define the layout ********************************************
   function main(){   
+    treeLayout.sort(comparator); 
+    function comparator(a, b) {
+      return b.order2 - a.order2;
+    }
+
+    childDepth1(root); 
+    count1 = childCount1(0, root); 
+    count2 = childCount2(0, root);  // DFS id of nodes are also set in this function
+    root.idDFS = nodeDFSCount++; 
+    root.order1 =0;
+
     scaleCircle =1;
     setupTree(root,  height, width);
     scaleCircle = scaleRate;
@@ -149,7 +178,7 @@ function setupTree(rootTree, h, w) {
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1.1;
+      var totalAngle = Math.PI*1;
       var numChild =  d.children.length;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle1(getRadius(child), numChild);
@@ -192,7 +221,7 @@ function setupTreeQ(rootTree, h, w) {
     }
     if (d.children){
       var totalRadius = 0;
-      var totalAngle = Math.PI*1.1;
+      var totalAngle = Math.PI*1;
       var numChild =  d.children.length;
       d.children.forEach(function(child) {
         totalRadius+=getBranchingAngle1(getRadiusQ(child), numChild);
@@ -232,9 +261,7 @@ return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapse
       : scaleCircle;
 }
 
-function getRadiusQ(d) {
-  console.log("scaleRateQ2="+scaleRateQ);
-    
+function getRadiusQ(d) {    
 return d._children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius) // expanded package
       : scaleCircleQ;
@@ -420,6 +447,7 @@ function mouseovered(d) {
       .style("fill", "#000")
       .style("font-weight", "bold");*/
    } 
+   console.log("node name="+d.name);
   }
 
   function mouseouted(d) {
