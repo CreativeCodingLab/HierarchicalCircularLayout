@@ -26,7 +26,8 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
   // fit visualization to container
   width = parseInt(container.style('width'), 10);
   height = parseInt(container.style('height'), 10);
-
+  queryH = width*0.3;
+  
 
 //  svg = d3.select("body").append("svg")
   svg = container.append('svg')
@@ -178,7 +179,6 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
         .enter().append("rect")
         .attr("class", "qnode")
         .attr("x", function(d) { 
-          console.log(d.x+" "+d.dx);
           return d.x-d.dx/2; })
         .attr("y", function(d) { return d.y; })
         .attr("width", function(d) { return d.dx; })
@@ -210,7 +210,7 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
     //debugger;
     nodes = partition.nodes(root);
     nodes.forEach(function(d) {
-      d.x = d.x+d.dx/2 + queryH+(width-queryH)*0.06;
+      d.x = d.x+d.dx/2 + queryH+(width-queryH)*0.075;
       d.y = d.y  + height*0.05;
     });
 

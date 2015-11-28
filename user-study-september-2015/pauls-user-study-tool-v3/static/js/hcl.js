@@ -56,6 +56,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
 
   var width = parseInt(container.style('width'), 10);
   var height = parseInt(container.style('height'), 10);
+  queryH = width*0.3;
        
   var svg = container.append("svg")
       .attr("width", width)

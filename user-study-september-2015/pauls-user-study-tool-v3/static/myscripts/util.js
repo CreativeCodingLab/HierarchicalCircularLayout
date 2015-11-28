@@ -2,7 +2,7 @@ var diameter = 1000,
     radius = diameter / 2,
     innerRadius = radius - 120;
 
-var queryH = 300;
+var queryH ;
 var minSat = 50;
 var maxSat = 230;
   

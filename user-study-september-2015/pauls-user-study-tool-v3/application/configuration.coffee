@@ -33,11 +33,11 @@ module.exports = ->
   }
   
   layouts = [
-  	#'circlePacking',
-  	#'hcl',
-  	#'classical',
+  	       #'circlePacking', # not used for the study any longer
+  	'hcl',
+  	'classical',
   	'icicle',
-  	'radial',
+  	       #'radial', #This is for edge bundling only
   	'radialInsideTree',
   	'treeMap'
   ];
@@ -74,7 +74,7 @@ module.exports = ->
             layout: layout
             data: randomSeed
             func: (main) ->
-              text = "What is the height of this tree?"
+              text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
               addVis main, layout, queryDatasets[0], randomSeed, 6, 6, true, true, true
               return addContinue main

@@ -29,6 +29,8 @@ function classical(queryData, randomSeed, heightTree, degreeTree, container, tre
   // fit visualization to container
   var width =  parseInt(container.style('width'), 10);
   var height =  parseInt(container.style('height'), 10);
+  queryH = width*0.3;
+  
   diameter = parseInt(container.style('height'), 10),
   radius = diameter / 2;
   

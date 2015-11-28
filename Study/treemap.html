@@ -74,6 +74,7 @@ d3.json(file, function(error, classes) {
       .attr("width", function(d) { return d.dx; })
       .attr("height", function(d) { return d.dy; })
       //.style("fill", function(d) { return d.children ? color(d.name) : null; })
+      .style("stroke-width", function(d) { return 0.5; })
       .style("fill", function(d) { 
          return color(d); 
     });
