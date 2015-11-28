@@ -5,14 +5,14 @@ module.exports = ->
 
   continue_button = ["Continue"]
   
-  addVis = (main, layout, queryData, randomSeed, height, degree, treeOnly) ->
+  addVis = (main, layout, queryData, randomSeed, height, degree, treeOnly, hasSubtree, showSubtree) ->
     v = main.selectAll('.row.vis').data(Array(1))
     v.enter().append('div').classed('row vis', true)
       .append('div').classed('col-xs-12', true)
       .append('div').classed('frame', true)
       .style width: "100%", height: "70vh", border: "1px solid #ccc"
       .call (frame) ->
-        window[layout](queryData, randomSeed, height, degree, frame, treeOnly)
+        window[layout](queryData, randomSeed, height, degree, frame, treeOnly, hasSubtree, showSubtree)
   
   addContinue = (main) ->
     c = main.append('div').classed('row', true)
@@ -34,8 +34,8 @@ module.exports = ->
   
   layouts = [
   	#'circlePacking',
-  	'hcl',
-  	'classical',
+  	#'hcl',
+  	#'classical',
   	'icicle',
   	'radial',
   	'radialInsideTree',
@@ -43,7 +43,7 @@ module.exports = ->
   ];
   dataPath = 'data/';
   queryDatasets = [
-  	#"0_RAF_Dot.json",
+  	"0_RAF_Dot.json",
   	"1_Activation of Pro-caspase 8 Pathway.json",
   	"2_ERBB2 Pathway.json",
   	"3_Signaling to GPCR Pathway.json",
@@ -56,7 +56,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [1001,1211,1234];
+  randomList = [1021,1311,2522,3422];
   
 
   addText = (main, text) ->
@@ -76,7 +76,7 @@ module.exports = ->
             func: (main) ->
               text = "What is the height of this tree?"
               addText main, text
-              addVis main, layout, queryDatasets[0], randomSeed, 6, 6, true
+              addVis main, layout, queryDatasets[0], randomSeed, 6, 6, true, true, true
               return addContinue main
           }
         ]

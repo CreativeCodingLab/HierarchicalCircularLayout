@@ -117,12 +117,18 @@ function removeColorLegend() {
 }
 
 function color(d) {
+  // /console.log(d.name+showSubtree);
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
-  if (d.name.indexOf("query")>-1){
-   return d.children ? "rgb("+maxSat+", "+sat+", "+sat+")" // expanded package
+  
+  if (showSubtree && d.name.indexOf("query tree")>-1){
+   return d.children ? "rgb("+sat+", "+maxSat+", "+sat+")" // expanded package
     : "#77f"; 
   }
+  else if (d.name.indexOf("found subtree by scanning")>-1){
+    return d.children ? "rgb("+maxSat+", "+0+", "+0+")" // expanded package
+    : "#77f"; 
+  }    
   else if (listSelected1[d.name])
     return "#77ff77";
   else if (listSelected2[d.name])
@@ -182,11 +188,11 @@ function generateRandomTree(treeHeight,degree) {
         node1.depth = depth+1;
         var rand2 =random()%degree;
         //console.log("rand2="+rand2+"  "+node1.depth+" treeHeight="+treeHeight);
-        if (((rand2<degree/2 && node1.depth<treeHeight)
-            || (node1.depth<treeHeight && i>=rand-1 && numSubtree<1)) && numSubtree<degree/2){
+        var rand3 =random()%4;
+        if (((rand2<degree/2 && node1.depth<treeHeight-rand3)
+            || (node1.depth<treeHeight-rand3 && i>=rand-1 && numSubtree<1)) && numSubtree<(degree)/2){
         //  if (node1.depth<treeHeight ){
         
-          //console.log("HERE="+node1.depth);
           node1.children = createChildren(node1.depth);
           numSubtree++;
         }
