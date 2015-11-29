@@ -117,7 +117,7 @@ function removeColorLegend() {
 }
 
 function color(d) {
-  // /console.log(d.name+showSubtree);
+  //console.log(d.name+" "+d.depth+" maxDepth="+maxDepth);
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
   
