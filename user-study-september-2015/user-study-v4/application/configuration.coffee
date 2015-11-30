@@ -1,7 +1,6 @@
 # coffeelint: disable=no_debugger
 
 module.exports = ->
-  pages = []
 
   continue_button = ["Continue"]
   
@@ -13,24 +12,21 @@ module.exports = ->
       .style width: "100%", height: "70vh", border: "1px solid #ccc"
       .call (frame) ->
         window[layout](queryData, randomSeed, height, degree, frame, treeOnly, hasSubtree, showSubtree)
-  
+        
+  addSubTreeQuestion = (main) ->
+    
   addContinue = (main) ->
-    c = main.append('div').classed('row', true)
+    # c = main.append('div').classed('row', true)
+    c = main.insert('div', '.vis').classed('row', true)
       .append('div').classed('col-xs-12', true)
+      .append('div').classed('btn-group', true)
       .append('button').classed('btn btn-secondary', true)
       .text('continue')
     return new Promise (resolve) -> 
       c.on 'click', ->
         main.html ''
         resolve {}
-  
-  pages.push {
-    name: 'part_1_intro',
-    func: (main) ->
-      main.append 'h1'
-        .text 'Part 1'
-      return addContinue main
-  }
+
   
   layouts = [
   	       #'circlePacking', # not used for the study any longer
@@ -39,7 +35,7 @@ module.exports = ->
   	'treeMap',
            #'radial', #This is for edge bundling only
   	'radialInsideTree',
-  	'ballon',
+  # 	'ballon',
     'hcl'
   ];
   dataPath = 'data/';
@@ -59,29 +55,44 @@ module.exports = ->
   seed = 1000;
   randomList = [1021,1311,2522,3422];
   
-  addText = (main, text) ->
+  addHtml = (main, html) ->
     main.append('div').classed 'row', true
       .append('div').classed 'col-xs-12', true
       .append 'p'
-      .text text
+      .html html
       .style margin: '10px 0'
   
-  part_1 = layouts.map (layout, li) ->
-      randomList.map (randomSeed, di) ->
+  part_1_nested = queryDatasets.map (data, di) ->
+    layouts.map (layout, li) ->
+      randomList.map (randomSeed, si) ->
         return [
           {
-            name: "part_1_layout_#{li}_data_#{di}_a"
-            layout: layout
-            data: randomSeed
+            name: "part_1_layout_#{li}_data_#{di}_seed_#{si}_a"
             func: (main) ->
-              text = "Can you find the subtree (left) in the tree (right)?"
-              addText main, text
-              addVis main, layout, queryDatasets[1], randomSeed, 6, 6, true, true, true
+              startTime = new Date().getTime()
+              console.info "data", data
+              console.info "layout", layout
+              console.info "randomSeed", randomSeed
+              
+              html = "How many times does the subtree on the right appear in the tree on the left?"
+              addHtml main, html
+              # addVis main, layout, queryDatasets[1], randomSeed, 6, 6, true, true, true
+              addVis main, layout, data, randomSeed, 6, 6, true, true, true
               return addContinue main
           }
         ]
-  .reduce (a, b) -> return a.concat b
-  .reduce (a, b) -> return a.concat b
+
+  part_1 = _.flatten part_1_nested
+  
+  pages = []
+  
+  pages.push {
+    name: 'part_1_intro',
+    func: (main) ->
+      main.append 'h1'
+        .text 'Part 1'
+      return addContinue main
+  }
       
   pages = pages.concat part_1
   

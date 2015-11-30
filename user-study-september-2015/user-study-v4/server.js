@@ -39,7 +39,7 @@
   yearMonthDay = (function() {
     var d;
     d = new Date();
-    return (d.getFullYear()) + "-" + (d.getMonth()) + "-" + (d.getDay());
+    return (d.getFullYear()) + "-" + (d.getMonth() + 1) + "-" + (d.getDay());
   })();
 
   outputFile = (function() {
