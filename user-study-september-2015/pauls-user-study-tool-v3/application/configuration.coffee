@@ -49,11 +49,15 @@ module.exports = ->
     "0_RAF_Dot.json",
   	"1_Activation of Pro-caspase 8 Pathway.json",
     "2_ERBB2 Pathway.json",
+    "3_Signaling to GPCR Subtree.json",
+    "3_Signaling to GPCR Subtree2.json",
     "54_DAG Pathway.json",
+    "flare subtree1.json"
+    "flare subtree2.json"
+    "carnivoraWithRelationships subtree.json",
     
-    "3_Signaling to GPCR Pathway.json",
-  	"flare package.json"
-  	#"carnivoraWithRelationships.json",
+    #"flare package.json"
+    #"carnivoraWithRelationships.json",
   	#"mammalsWithRelationships.json",
   	
     #"3_NGF Pathway.json",  // too complicatied 
@@ -80,7 +84,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[0], randomSeed, 6, 6, true, true, true
+              addVis main, layout, queryDatasets[9], randomSeed, 6, 6, true, true, true
               return addContinue main
           }
         ]
