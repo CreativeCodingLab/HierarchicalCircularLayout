@@ -34,7 +34,8 @@ module.exports = ->
   
   layouts = [
   	       #'circlePacking', # not used for the study any longer
-  	'classical',
+  	'hcl',
+    'classical',
   	'icicle',
   	'treeMap',
            #'radial', #This is for edge bundling only
@@ -46,14 +47,16 @@ module.exports = ->
   queryDatasets = [
   	"0_RAF_Dot.json",
   	"1_Activation of Pro-caspase 8 Pathway.json",
-  	"2_ERBB2 Pathway.json",
-  	"3_Signaling to GPCR Pathway.json",
-  	"flare package.json",
+    "2_ERBB2 Pathway.json",
+    "54_DAG Pathway.json",
+    
+    "3_Signaling to GPCR Pathway.json",
+  	"flare package.json"
   	#"carnivoraWithRelationships.json",
   	#"mammalsWithRelationships.json",
-  	#"1_RAF-Cascade Pathway.json",
-  	#"54_DAG Pathway.json",
-  	#"3_NGF Pathway.json"
+  	
+    #"3_NGF Pathway.json",  // too complicatied 
+    
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
@@ -76,7 +79,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[1], randomSeed, 6, 6, true, true, true
+              addVis main, layout, queryDatasets[2], randomSeed, 6, 6, true, true, true
               return addContinue main
           }
         ]
