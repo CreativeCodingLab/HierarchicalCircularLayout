@@ -1,5 +1,88 @@
 /* global _, d3 */
 
+pages = [];
+
+pages.push({
+  name: 'part_1_intro_1',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('In this study, we will show you several different <b>tree layouts</b>.');
+    instruct.append('p')
+      .html("Each tree will be shown next to a smaller <b>subtree</b>, to the left.");
+    addVis(
+      main, 
+      'classical', 
+      'data/0_introTree.json', 
+      4562, 5, 5, true, true, true
+    );
+    d3.select('.frame').style({ border: null });
+    return addContinue(main);
+  }
+});
+
+pages.push({
+  name: 'part_1_intro_2',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('You need to determine <b>if the subtree exists in the larger tree</b> on the right.');
+    instruct.append('p')
+      .html('In this example, the subtree <b>is</b> in the larger tree to the right.');
+    instruct.append('p')
+      .html("Here, you can see the subtree highlighted in <span style='color: green'>green</span>.");
+    addVis(
+      main, 
+      'classical', 
+      'data/0_introTree.json', 
+      4562, 5, 5, true, true, true
+    );
+    d3.select('.frame').style({ border: null });
+    return addContinue(main);
+  }
+});
+
+pages.push({
+  name: 'part_1_intro_3',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('Here is an example where the subtree <b>does not exist</b> in the larger tree to the right.');
+    addVis(
+      main, 
+      'classical', 
+      'data/0_introTree.json', 
+      5234, 5, 6, true, false, false
+    );
+    d3.select('.frame').style({ border: null });
+    return addContinue(main);
+  }
+});
+
+pages.push({
+  name: 'part_1_intro_4',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('You should try to answer <b>quickly</b> and <b>accurately</b>.');
+    instruct.append('p')
+      .html('When you are ready to begin, click Continue.');
+    return addContinue(main);
+  }
+});
+
 var addContinue, addHtml, addVis, continue_button, dataPath, layouts, pages, 
 part_1, part_1_nested, queryDatasets, randomList, seed, subtreeQuestion;
 continue_button = ["Continue"];
@@ -182,31 +265,9 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
   };
 });
 
-pages = [];
-
-var nodes = [];
-var root = {};
-
-pages.push({
-  name: 'part_1_intro',
-  func: function(opts) {
-    var main = opts.main;
-    
-    var instruct = main.append('div').classed('row', true)
-      .style('margin-top', '2rem')
-      .append('div').classed('col-xs-6 col-xs-offset-3', true)
-      .append('div').classed('page-header', true);
-      
-    instruct.append('h1').text('Finding Subtrees');
-    
-    var vis = main.append('div')
-      .classed('vis', true)
-      .style({ height: '40vh' });
-
-    return addContinue(main);
-  }
-});
+d3.shuffle(part_1);
 
 pages = pages.concat(part_1);
 
 window.pages = pages;
+
