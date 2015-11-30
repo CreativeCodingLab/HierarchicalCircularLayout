@@ -192,18 +192,21 @@ pages.push({
     var main = opts.main;
     // main.append('h1').text('Part 1');
     
-    generateRandomTree(4,4);
+    // generateRandomTree(4,4);
     
-    debugger
+    // debugger
     
     var instruct = main.append('div').classed('row', true)
       .style('margin-top', '2rem')
       .append('div').classed('col-xs-6 col-xs-offset-3', true)
       .append('div').classed('page-header', true);
+      
     instruct.append('h1').text('Finding Subtrees');
+    
     var vis = main.append('div').classed('vis', true)
-      .style({ height: '40vh' })
-    classical(root, vis);
+      .style({ height: '40vh' });
+      
+    // classical(root, vis);
 
     return addContinue(main);
   }
@@ -211,79 +214,143 @@ pages.push({
 
 window.pages = pages = pages.concat(part_1);
 
+// function classical(file, container, treeOnly) {
+//   // fit visualization to container
+//   var width =  parseInt(container.style('width'), 10);
+//   var height =  parseInt(container.style('height'), 10);
+//   diameter = parseInt(container.style('height'), 10),
+//   radius = diameter / 2,
+//   // innerRadius = radius - 120;
+//   innerRadius = radius * 0.2;
+  
+//   var treeSize = {
+//     width: width * 0.9,
+//     height: height * 0.9
+//   }
 
+//   cluster = d3.layout.cluster()
+//     .size([360, innerRadius])
+//     .sort(null)
+//     .value(function(d) { return d.size; });
 
-function classical(root, container) {
-  // fit visualization to container
-  var diameter = parseInt(container.style('height'), 10),
-  radius = diameter / 2,
-  innerRadius = radius - 120;
+// //  svg = d3.select("#tree-container").append("svg");
+//   // var svg = container.append('svg')
+//   // g1 = svg.append('g');
+//   // link = g1.append("g").selectAll(".link"),
+//   // node = g1.append("g").selectAll(".node");
+//   bundle = d3.layout.bundle();
 
-  var cluster = d3.layout.cluster()
-    .size([360, innerRadius])
-    .sort(null)
-    .value(function(d) { return d.size; });
- 
-  // var g1 = svg.append('g');
-  // var link = g1.append("g").selectAll(".link");
-  // var node = g1.append("g").selectAll(".node");
-  // var bundle = d3.layout.bundle();
+// //  line;
+// //  nodes;
+// //  links;
+//   maxDepth=0, numLeaf=0;
 
-  var maxDepth=0, numLeaf=0;
+// //  linkTree;
+// //  linkTree_selection;
 
-  var treeOnly = false;
+//   // treeOnly = false;
 
-  // d3.json(file, function(error, classes) {
-  var svg = container.append('svg')
-      .attr("width", diameter)
-      .attr("height", diameter+300).append('g');
+//   d3.json(file, function(error, classes) {
+//     _svg = container.append('svg')
+//       .attr({
+//         width: "100%",
+//         height: "100%"
+//       })
       
-     var tree = d3.layout.tree().size([diameter,diameter]);
-      // var nodes = tree(packageHierarchy(classes));
-      var nodes = tree(root);
-      nodes.forEach(function(d) { 
-          if (d.depth>maxDepth)
-              maxDepth = d.depth;
-          if (!d.children)
-              numLeaf++;
-      });
-      var sub_y = nodes[1].y;
-      nodes.forEach(function(d) { 
-          d.y = d.y-sub_y+20;
-      }); 
+//     var s = treeSize;
       
-     var _line = d3.svg.line()
-      .interpolate("bundle")
-      .tension(0.97)
-      .x(function(d) { return d.x })
-      .y(function(d) { return d.y })
+//     var svg = _svg.append('g')
+//       .attr("transform", "translate(" + (width-s.width)/2 + "," + (height-s.height)/2 + ")")
+      
+//     // var tree = d3.layout.tree().size([diameter,diameter]);
+    
+//     var tree = d3.layout.tree().size([s.width,s.height]);
+     
+//       nodes = tree(packageHierarchy(classes));
+//       nodes.forEach(function(d) { 
+//           if (d.depth>maxDepth)
+//               maxDepth = d.depth;
+//           if (!d.children)
+//               numLeaf++;
+//       });
+//       // var sub_y = nodes[1].y;
+//       // nodes.forEach(function(d) { 
+//       //     d.y = d.y-sub_y+20;
+//       // }); 
+
+//     /// Hierarchical links
+//       linkTree = d3.layout.tree().links(nodes);
+//       linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
+//       linkTree_selection.append("line")
+//         .attr("class", "linkTree")
+//         .attr("stroke", function(d) { 
+//               if (d.source.name=="")
+//                   return "#ff0000";
+//               else
+//                   return color(d.source);
+//           })
+//         .attr("stroke-width", function(d) { 
+//               if (d.source.name=="")
+//                   return 0;           // remove root link
+//               else{
+//                   if (treeOnly)
+//                     return 1;
+//                   else
+//                     return 0.6;
+//               }    
+//           })
+//         .attr("x1", function(d) { return d.source.x; })
+//         .attr("y1", function(d) { return Math.round(d.source.y); })
+//         .attr("x2", function(d) { return d.target.x; })
+//         .attr("y2", function(d) { return Math.round(d.target.y); });
+
+
+//     links = packageImports(nodes);
+
+//     // debugger
+      
+//     var _line = d3.svg.line()
+//       .interpolate("bundle")
+//       .tension(0.97)
+//       .x(function(d) { return d.x })
+//       .y(function(d) { return d.y })
 
     
-       svg.append("g").selectAll(".node").data(nodes).enter()
-          .append("circle")
-          .attr({
-              r: function(d) { 
-                  if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
-                      return diameter*2/numLeaf;
-                  return diameter*0.5/numLeaf; },
-              cx: function(d) { return d.x },
-              cy: function(d) { return d.y }
-          })
-      // .style("fill", function(d) { 
-      //     if (d.depth==0)
-      //         return "#fff";// Disable root node
-      //     // return color(d); 
-      // })
-       .style("stroke", function(d) { 
-          if (listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || d.depth<=1)
-                  return "#000";
-      })
-       .style("stroke-width",  function(d){ 
-        if (d.depth<=1) return 2 ;
-           else return 1.5 ; })
-        ;
-   var node = svg.append("g").selectAll(".node");
-     var link = svg.append("g").selectAll(".link");
+//       svg.append("g").selectAll(".node").data(nodes).enter()
+//           .append("circle")
+//           .attr({
+//               r: function(d) { 
+//                   if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
+//                       return diameter*2/numLeaf;
+//                   return diameter*0.5/numLeaf; },
+//               cx: function(d) { return d.x },
+//               cy: function(d) { return d.y }
+//           })
+//       .style("fill", function(d) { 
+//           if (d.depth==0)
+//               return "#fff";// Disable root node
+//           return color(d); 
+//       })
+//       .style("stroke", function(d) { 
+//           if (listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || d.depth<=1)
+//                   return "#000";
+//       })
+//       .style("stroke-width",  function(d){ 
+//         if (d.depth<=1) return 2 ;
+//           else return 1.5 ; })
+//         ;
+//   node = svg.append("g").selectAll(".node");
+//       link = svg.append("g").selectAll(".link");
      
-  // });
-}
+//   if (!treeOnly){
+//       link = link
+//           .data(bundle(links))
+//         .enter().append("path")
+//           .attr("class", "link")
+//           .attr("d", function(d) {
+//             return _line(d)
+//           })
+//     }    
+
+//   });
+// }
