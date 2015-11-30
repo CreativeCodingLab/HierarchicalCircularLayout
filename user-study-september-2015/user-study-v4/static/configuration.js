@@ -208,15 +208,28 @@ layouts = [
   'hcl',
 ];
 dataPath = 'data/';
+// queryDatasets = [
+//   "0_RAF_Dot.json", 
+//   "1_Activation of Pro-caspase 8 Pathway.json", 
+//   "2_ERBB2 Pathway.json", 
+//   "3_Signaling to GPCR Pathway.json", 
+//   "flare package.json",
+//   "1_RAF-Cascade Pathway.json",
+//   "54_DAG Pathway.json",
+//   "3_NGF Pathway.json",
+//   "3_Signaling to GPCR Subtree2.json",
+  
 queryDatasets = [
-  "0_RAF_Dot.json", 
-  "1_Activation of Pro-caspase 8 Pathway.json", 
-  "2_ERBB2 Pathway.json", 
-  "3_Signaling to GPCR Pathway.json", 
-  "flare package.json",
-  "1_RAF-Cascade Pathway.json",
-  "54_DAG Pathway.json",
-  "3_NGF Pathway.json"
+  "0_RAF_Dot.json",
+  	"1_Activation of Pro-caspase 8 Pathway.json",
+    "2_ERBB2 Pathway.json",
+    "3_Signaling to GPCR Subtree.json",
+    "3_Signaling to GPCR Subtree2.json",
+    "54_DAG Pathway.json",
+    "flare subtree1.json",
+    "flare subtree2.json",
+    "carnivoraWithRelationships subtree.json",
+    "carnivoraWithRelationships subtree2.json"
 ].map(function(d) {
     return "" + dataPath + d;
   });
