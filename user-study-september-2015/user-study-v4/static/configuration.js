@@ -58,16 +58,22 @@ subtreeQuestion = function(pageOptions) {
           return document.createTextNode(d);
         });
       });
-    confirm = main.insert('div', '.vis').classed('row', true).append('div').classed('col-xs-12', true).append('button').classed('btn btn-lg btn-secondary', true).style({
-      'margin-bottom': '0.5rem'
-    }).attr({
-      disabled: true
-    }).text('confirm selection');
-    choices.on('click', function() {
-      return confirm.attr({
-        disabled: null
+    confirm = main
+      .insert('div', '.vis').classed('row', true)
+      .append('div').classed('col-xs-12', true)
+      .append('button').classed('btn btn-lg btn-secondary', true)
+      .style({
+        'margin-bottom': '0.5rem'
+      }).attr({
+        disabled: true
+      }).text('confirm selection');
+      
+      choices.on('click', function() {
+        confirm.attr({
+          disabled: null
+        });
       });
-    });
+      
     return new Promise(function(resolve) {
       return confirm.on('click', function() {
         var data, response, time, timeTaken;
@@ -91,7 +97,13 @@ subtreeQuestion = function(pageOptions) {
 };
 addContinue = function(main) {
   var c;
-  c = main.insert('div', '.vis').classed('row', true).append('div').classed('col-xs-12', true).append('div').classed('btn-group', true).append('button').classed('btn btn-lg btn-secondary', true).text('continue');
+  c = main
+    .insert('div', '.vis').classed('row', true)
+    .append('div').classed('col-xs-12', true)
+    .append('div').classed('btn-group', true)
+    .append('button').classed('btn btn-lg btn-secondary', true)
+    .text('continue');
+    
   return new Promise(function(resolve) {
     return c.on('click', function() {
       main.html('');
@@ -101,9 +113,14 @@ addContinue = function(main) {
 };
 layouts = ['classical', 'icicle', 'treeMap', 'radialInsideTree', 'hcl'];
 dataPath = 'data/';
-queryDatasets = ["0_RAF_Dot.json", "1_Activation of Pro-caspase 8 Pathway.json", "2_ERBB2 Pathway.json", "3_Signaling to GPCR Pathway.json", "flare package.json"].map(function(d) {
-  return "" + dataPath + d;
-});
+queryDatasets = [
+  "0_RAF_Dot.json", 
+  "1_Activation of Pro-caspase 8 Pathway.json", 
+  "2_ERBB2 Pathway.json", 
+  "3_Signaling to GPCR Pathway.json", 
+  "flare package.json"].map(function(d) {
+    return "" + dataPath + d;
+  });
 seed = 1000;
 randomList = [1021, 1311, 2522, 3422];
 addHtml = function(main, html) {
