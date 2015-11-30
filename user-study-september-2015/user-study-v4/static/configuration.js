@@ -58,6 +58,7 @@ subtreeQuestion = function(pageOptions) {
           return document.createTextNode(d);
         });
       });
+      
     confirm = main
       .insert('div', '.vis').classed('row', true)
       .append('div').classed('col-xs-12', true)
@@ -68,7 +69,7 @@ subtreeQuestion = function(pageOptions) {
         disabled: true
       }).text('confirm selection');
       
-      choices.on('click', function() {
+    choices.on('click', function() {
         confirm.attr({
           disabled: null
         });
