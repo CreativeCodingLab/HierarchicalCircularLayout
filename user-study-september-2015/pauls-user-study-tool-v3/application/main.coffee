@@ -14,9 +14,10 @@ userStartTime = new Date().getTime()
 
 hash = window.location.hash.substring(1) || baseHash
 
-main = d3.select("html").selectAll("body").data([1])
-  .enter().append("body")
-  .append("div").classed("container", true)
+body = d3.select("html").selectAll("body").data([1])
+body.enter().append("body")
+
+main = body.append("div").classed("container", true)
   .append("div").classed("row", true)
   .append("main").classed("col-xs-10 col-xs-offset-1", true)
 

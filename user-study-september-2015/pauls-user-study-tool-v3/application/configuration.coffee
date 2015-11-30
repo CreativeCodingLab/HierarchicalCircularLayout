@@ -59,7 +59,6 @@ module.exports = ->
   seed = 1000;
   randomList = [1021,1311,2522,3422];
   
-
   addText = (main, text) ->
     main.append('div').classed 'row', true
       .append('div').classed 'col-xs-12', true
@@ -71,7 +70,7 @@ module.exports = ->
       randomList.map (randomSeed, di) ->
         return [
           {
-            name: "part_1_#{li}_#{di}_a"
+            name: "part_1_layout_#{li}_data_#{di}_a"
             layout: layout
             data: randomSeed
             func: (main) ->
