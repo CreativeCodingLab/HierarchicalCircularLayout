@@ -1,4 +1,4 @@
-/* global _ */
+/* global _, d3 */
 
 var addContinue, addHtml, addVis, continue_button, dataPath, layouts, pages, part_1, part_1_nested, queryDatasets, randomList, seed, subtreeQuestion;
 continue_button = ["Continue"];
@@ -22,9 +22,9 @@ subtreeQuestion = function(pageOptions) {
     queryData = pageOptions.queryData, layout = pageOptions.layout, randomSeed = pageOptions.randomSeed;
     buttons = [0, 1, 2, 3, 4];
     startTime = new Date().getTime();
-    console.info("data", queryData);
-    console.info("layout", layout);
-    console.info("randomSeed", randomSeed);
+    console.info("Data: %s", queryData);
+    console.info("Layout: %s", layout);
+    console.info("Seed: %s", randomSeed);
     html = "How many times does the subtree on the right appear in the tree on the left?";
     addHtml(main, html);
     addVis(main, layout, queryData, randomSeed, 6, 6, true, true, true);
@@ -59,21 +59,20 @@ subtreeQuestion = function(pageOptions) {
         var data, response, time, timeTaken;
         time = new Date().getTime();
         timeTaken = time - startTime;
-        console.info("Time: %o", timeTaken);
+        // console.info("Time: %o", timeTaken);
         response = choices.filter(function() {
           return d3.select(this).classed("active");
         }).datum();
-        console.info("Response: %o", response);
+        // console.info("Response: %o", response);
         data = Object.assign({}, pageOptions, {
           response: response,
           timeTaken: timeTaken
         });
-        console.info("Data: %o", data);
+        // console.info("Data: %o", data);
         main.html('');
         return resolve(data);
       });
     });
-    return addContinue(main);
   };
 };
 addContinue = function(main) {
@@ -94,18 +93,28 @@ queryDatasets = ["0_RAF_Dot.json", "1_Activation of Pro-caspase 8 Pathway.json",
 seed = 1000;
 randomList = [1021, 1311, 2522, 3422];
 addHtml = function(main, html) {
-  return main.append('div').classed('row', true).append('div').classed('col-xs-12', true).append('p').html(html).style({
-    margin: '10px 0'
-  });
+  return main.append('div')
+    .classed('row', true)
+    .append('div')
+    .classed('col-xs-12', true)
+    .append('p')
+    .html(html).style({
+      margin: '10px 0'
+    });
 };
+
+
 part_1_nested = queryDatasets.map(function(queryData, di) {
   return layouts.map(function(layout, li) {
     return randomList.map(function(randomSeed, si) {
       var pageOptions;
+      var pageName = "part_1_layout_" + li + "_data_" + di + "_seed_" + si + "_a";
       pageOptions = {
         queryData: queryData,
         layout: layout,
-        randomSeed: randomSeed
+        randomSeed: randomSeed,
+        pageName: pageName,
+        question: "subtree"
       };
       return [
         {

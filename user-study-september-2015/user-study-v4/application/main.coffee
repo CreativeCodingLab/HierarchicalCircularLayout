@@ -24,7 +24,7 @@ main = body.append("div").classed("container", true)
 updatePage = (page) ->
   return new Promise (resolve) ->
     startTime = new Date().getTime()
-    console.log "Page: %o", page.name
+    console.group "Page: %o", page.name
     opts = { main, userId, userStartTime }
     page.func(opts)
       .then resolve
@@ -33,6 +33,7 @@ pages.reduce (previous, current) ->
   previous.then ->
     updatePage current
       .then (resultData) ->
-        console.log "Result %o", resultData
+        console.info "Result %o", resultData
+        console.groupEnd()
         postData resultData
 , Promise.resolve()
