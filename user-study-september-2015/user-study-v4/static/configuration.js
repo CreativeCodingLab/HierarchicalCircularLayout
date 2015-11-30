@@ -118,7 +118,7 @@ subtreeQuestion = function(pageOptions) {
     html = "Is the subtree on the left in the tree on the right?";
     addHtml(main, html);
     // addVis(main, layout, queryData, randomSeed, 6, 6, true, true, true);
-    var hasSubtree = pageOptions.hasSubtree
+    var hasSubtree = pageOptions.hasSubtree;
     console.log(hasSubtree);
     addVis(main, layout, queryData, randomSeed, 6, 6, true, hasSubtree, false);
     
@@ -268,6 +268,20 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
 d3.shuffle(part_1);
 
 pages = pages.concat(part_1);
+
+pages.push({
+  name: 'part_1_outro',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('Thank you for your time.');
+    return Promise.resolve();
+  }
+});
+
 
 window.pages = pages;
 
