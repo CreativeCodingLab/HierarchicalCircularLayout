@@ -5,14 +5,14 @@ postData = (data) ->
     .header("Content-Type", "application/json")
     .post JSON.stringify data
 
-pages = require('./configuration')()
+# pages = require('./configuration')()
 
 console.log 'User Study application started.'
 
 baseHash = "user_#{new Date().getTime()}"
 userStartTime = new Date().getTime()
 
-hash = window.location.hash.substring(1) || baseHash
+userId = window.location.hash.substring(1) || baseHash
 
 body = d3.select("html").selectAll("body").data([1])
 body.enter().append("body")
@@ -25,7 +25,9 @@ updatePage = (page) ->
   return new Promise (resolve) ->
     startTime = new Date().getTime()
     console.log "Page: %o", page.name
-    page.func(main).then resolve
+    opts = { main, userId, userStartTime }
+    page.func(opts)
+      .then resolve
 
 pages.reduce (previous, current) ->
   previous.then ->

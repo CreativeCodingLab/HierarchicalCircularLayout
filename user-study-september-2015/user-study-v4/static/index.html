@@ -2,7 +2,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">-->
+  <link rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
   <link rel="stylesheet" href="layoutStyles.css">
 </head>
 
@@ -10,8 +11,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   <script src="d3-hierarchy/build/hierarchy.min.js"></script>
+  
   <script src="myscripts/input.js"></script>
   <script src="myscripts/util.js"></script>
+  
   <script src="js/circlePacking.js"></script>
   <script src="js/classical.js"></script>
   <script src="js/icicle.js"></script>
@@ -19,7 +22,48 @@
   <script src="js/radialInsideTree.js"></script>
   <script src="js/treeMap.js"></script>
   <script src="js/hcl.js"></script>
+  
+  <script src="configuration.js"></script>
   <script src="../application"></script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
+  
+  <script>
+    // Polyfill for Object.assign. From MDN.
+    if (!Object.assign) {
+      Object.defineProperty(Object, 'assign', {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: function(target) {
+          'use strict';
+          if (target === undefined || target === null) {
+            throw new TypeError('Cannot convert first argument to object');
+          }
+    
+          var to = Object(target);
+          for (var i = 1; i < arguments.length; i++) {
+            var nextSource = arguments[i];
+            if (nextSource === undefined || nextSource === null) {
+              continue;
+            }
+            nextSource = Object(nextSource);
+    
+            var keysArray = Object.keys(nextSource);
+            for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+              var nextKey = keysArray[nextIndex];
+              var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+              if (desc !== undefined && desc.enumerable) {
+                to[nextKey] = nextSource[nextKey];
+              }
+            }
+          }
+          return to;
+        }
+      });
+    }
+  </script>
 </body>
 
 
