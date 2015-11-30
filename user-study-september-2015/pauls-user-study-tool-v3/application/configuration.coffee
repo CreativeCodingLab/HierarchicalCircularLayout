@@ -45,7 +45,8 @@ module.exports = ->
   ];
   dataPath = 'data/';
   queryDatasets = [
-  	"0_RAF_Dot.json",
+  	"0_introTree.json",
+    "0_RAF_Dot.json",
   	"1_Activation of Pro-caspase 8 Pathway.json",
     "2_ERBB2 Pathway.json",
     "54_DAG Pathway.json",
@@ -79,7 +80,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[2], randomSeed, 6, 6, true, true, true
+              addVis main, layout, queryDatasets[0], randomSeed, 6, 6, true, true, true
               return addContinue main
           }
         ]
