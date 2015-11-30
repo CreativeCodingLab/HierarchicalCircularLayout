@@ -300,7 +300,7 @@ function setupTreeQ(rootTree, h, w) {
       });
     }
     scaleRateQ = 0.5*height/(height-minY);
-    console.log("scaleRateQ="+scaleRateQ);
+    // console.log("scaleRateQ="+scaleRateQ);
     return d;
   });
 }  
@@ -498,7 +498,7 @@ function mouseovered(d) {
       .style("fill", "#000")
       .style("font-weight", "bold");*/
    } 
-   console.log("node name="+d.name);
+  // console.log("node name="+d.name);
   }
 
   function mouseouted(d) {
