@@ -1,0 +1,8 @@
+{
+  "uid": "tuan-user-study-v3",
+  "script": "server.coffee",
+  "fifo": true,
+  "append": true,
+  "command": "coffee",
+  "args": ["9999"]
+}
