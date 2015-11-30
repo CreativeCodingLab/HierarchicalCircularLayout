@@ -1,0 +1,10 @@
+[
+{"name":"0.0.0.acinonyxjubatus","size":50,"imports":[]},
+{"name":"0.0.0.pumaconcolor","size":50,"imports":["carnivora.0.0.0.1.0.0.0.0.0.ursusamericanus","carnivora.0.0.1.0.vulpesvulpes","0.0.0.pumaconcolor"]},
+{"name":"0.0.lynxcanadensis","size":50,"imports":[]},
+{"name":"0.felissilvestris","size":50,"imports":["0.felissilvestris"]},
+{"name":"1.0.0.pantherapardus","size":50,"imports":["carnivora.0.0.0.1.0.0.melursusursinus"]},
+{"name":"1.0.0.unciauncia","size":50,"imports":[]},
+{"name":"1.0.pantheratigris","size":50,"imports":["1.0.0.pantherapardus","carnivora.0.0.0.1.0.0.melursusursinus"]},
+{"name":"1.neofelisnebulosa","size":50,"imports":[]}
+]

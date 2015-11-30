@@ -55,9 +55,10 @@ module.exports = ->
     "flare subtree1.json"
     "flare subtree2.json"
     "carnivoraWithRelationships subtree.json",
+    "carnivoraWithRelationships subtree2.json",
     
     #"flare package.json"
-    #"carnivoraWithRelationships.json",
+    "carnivoraWithRelationships.json",
   	#"mammalsWithRelationships.json",
   	
     #"3_NGF Pathway.json",  // too complicatied 
@@ -84,7 +85,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[9], randomSeed, 6, 6, true, true, true
+              addVis main, layout, queryDatasets[10], randomSeed, 6, 6, true, true, true
               return addContinue main
           }
         ]
