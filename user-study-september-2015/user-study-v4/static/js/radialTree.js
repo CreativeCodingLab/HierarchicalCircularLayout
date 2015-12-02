@@ -9,7 +9,7 @@ var diameter, radius, innerRadius,
 
 var numLeaf =0;
 
-function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, container, treeOnly, hasSubtree, showSubtree_) {
+function radialTree(queryData, randomSeed, heightTree, degreeTree, container, treeOnly, hasSubtree, showSubtree_) {
   showSubtree = showSubtree_;
   seed1 = randomSeed;
   nodes = [];

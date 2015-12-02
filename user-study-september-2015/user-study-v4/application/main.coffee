@@ -19,7 +19,7 @@ body.enter().append("body")
 
 main = body.append("div").classed("container", true)
   .append("div").classed("row", true)
-  .append("main").classed("col-xs-10 col-xs-offset-1", true)
+  .append("main").classed("col-xs-12", true)
 
 updatePage = (page) ->
   return new Promise (resolve) ->

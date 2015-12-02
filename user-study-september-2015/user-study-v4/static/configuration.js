@@ -207,7 +207,7 @@ layouts = [
   'classical', 
   'icicle', 
   'treeMap', 
-  'radialInsideTree', 
+  'radialTree', 
   'hcl',
 ];
 dataPath = 'data/';
@@ -250,7 +250,7 @@ part_1_nested = queryDatasets.map(function(queryData, di) {
       pageOptions = {
         queryData: queryData,
         layout: layout,
-        randomSeed: rand * 100, //randomSeed,
+        randomSeed: Math.floor((di + li) * 100), //randomSeed,
         pageName: pageName,
         question: "subtree",
         correctAnswer: answer,
@@ -270,7 +270,7 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
 
 d3.shuffle(part_1);
 
-// pages = pages.concat(part_1);
+pages = pages.concat(part_1);
 
 pages.push({
   name: 'part_1_outro',
@@ -307,7 +307,7 @@ var part_2_nested = connectivityDatasets.map(function(data, di) {
         layout: layout,
         randomSeed: rand * 100,
         pageName: pageName,
-        question: "subtree",
+        question: "connectivity",
         correctAnswer: answer,
         hasSubtree: hasSubtree
       };
