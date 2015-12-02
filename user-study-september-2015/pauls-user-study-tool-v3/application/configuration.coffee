@@ -36,7 +36,7 @@ module.exports = ->
   	       #'circlePacking', # not used for the study any longer
   	
     'hcl',
-    'radialInsideTree',
+    'radialTree',
     'treeMap',
     'icicle',
     'classical',
