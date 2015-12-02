@@ -554,10 +554,6 @@ var fisheye = d3.fisheye.circular()
       .radius(200);
 
 svg.on("mousemove", function() {
-  //  force.stop();
-
-
-
   if (document.getElementById("checkbox2").checked)
      fisheye.focus(d3.mouse(this));
   d3.selectAll(".node1").each(function(d) { d.fisheye = fisheye(d); })
