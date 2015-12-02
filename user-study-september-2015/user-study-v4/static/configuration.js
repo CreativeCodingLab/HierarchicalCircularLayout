@@ -273,7 +273,7 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
 
 d3.shuffle(part_1);
 
-// pages = pages.concat(part_1);
+pages = pages.concat(part_1);
 
 pages.push({
   name: 'part_1_outro',
@@ -284,6 +284,26 @@ pages.push({
       .append('div').classed('col-xs-12', true)
     instruct.append('p')
       .html('You have completed the first half of this study.');
+    return addContinue(main);
+  }
+});
+
+pages.push({
+  name: 'part_2_intro_1',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('In the second half of this study, we will show you tree layouts that include <b>additional connections between nodes</b>.');
+    addVis(
+      main, 
+      'classical', 
+      "data/3_NGF Pathway.json", 
+      4562, 4, 4, false, true, false
+    );
+    d3.select('.frame').style({ border: null });
     return addContinue(main);
   }
 });
@@ -308,7 +328,7 @@ var part_2_nested = connectivityDatasets.map(function(data, di) {
       pageOptions = {
         queryData: data,
         layout: layout,
-        randomSeed: rand * 100,
+        randomSeed: Math.floor((di + li) * 100), // rand * 100,
         pageName: pageName,
         question: "connectivity",
         correctAnswer: answer,
@@ -334,7 +354,7 @@ var connectivityQuestion = function(pageOptions) {
     console.info("Layout: %s", layout);
     console.info("Seed: %s", randomSeed);
     
-    html = "Is the subtree on the left in the tree on the right?";
+    html = "Are the two highlighted nodes connected?";
     addHtml(main, html);
     // addVis(main, layout, queryData, randomSeed, 6, 6, true, true, true);
     var hasSubtree = pageOptions.hasSubtree;
