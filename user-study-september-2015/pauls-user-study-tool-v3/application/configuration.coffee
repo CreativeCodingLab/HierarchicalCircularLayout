@@ -93,7 +93,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[12], randomSeed, 6, 6, false, true, true
+              addVis main, layout, queryDatasets[13], randomSeed, 6, 6, false, true, true
               return addContinue main
           }
         ]

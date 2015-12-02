@@ -347,6 +347,7 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
        
     var arcMin = radius*0.6;
         
+    
     var drawArc = d3.svg.arc()
         .innerRadius(function(d, i) {
           return d.r2 ;
@@ -356,10 +357,14 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
         })
         .startAngle( function(d, i) { 
           var alpha = d.numLeaf/ qroot.numLeaf;
+
           var start = Math.atan(d.y2/d.x2)-(alpha/2)*Math.PI*2-Math.PI/2;
           if (-d.x2<0) start+=Math.PI;
             
-
+          if (isNaN(start))
+            start = 0;
+          //console.log(d.r2+" d.x2="+d.x2+ " "+start);
+          
           return start;
          })
         .endAngle(function(d, i) {
@@ -368,9 +373,12 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
           var result =   Math.atan(d.y2/d.x2)+(alpha/2)*Math.PI*2-Math.PI/2;
           if (-d.x2<0) result+=Math.PI;
          
+          if (isNaN(result))
+            result = 0;
           return result;
           
         });
+
 
     // mirror tree    
     linkArcs = g2.append("g").selectAll("path")
