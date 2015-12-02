@@ -149,6 +149,8 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
       
       // Draw query tree nodes *************************************************************  
 
+      var listHighlighted =[] ;
+
       svg.selectAll(".qnode")
         .data(qnodes)
         .enter().append("rect")
@@ -161,6 +163,9 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
         .style("fill", function(d) { 
           return colorQ(d); })
         .style("stroke", function(d) { 
+          if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+              listHighlighted.push(d);
+          
           if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] )
                   return "#000";
           else
@@ -174,7 +179,24 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
       });
 
 
-      if (!treeOnly){   // Draw Edge bunding     
+      if (!treeOnly){   // Draw Edge bunding    
+        svg.selectAll(".hightlightedNode")
+          .data(listHighlighted)
+          .enter().append("rect")
+          .attr("class", "hightlightedNode")
+          .attr("x", function(d) { 
+            return d.x-d.dx/2; })
+          .attr("y", function(d) { return d.y; })
+          .attr("width", function(d) { return d.dx; })
+          .attr("height", function(d) { return d.dy; })
+          .style("fill", function(d) { 
+            return colorQ(d); })
+          .style("stroke", function(d) { 
+            return "#000";
+           })        
+          .style("stroke-width", function(d) { 
+                    return 1;     });
+
         var line = d3.svg.line()
         .interpolate("bundle")
         .tension(0.97)
@@ -228,15 +250,7 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
             return 0.5;        
       });
 
-        /*
-    svg.selectAll(".label")
-        .data(nodes.filter(function(d) { return d.dx > 6; }))
-      .enter().append("text")
-        .attr("class", "label")
-        .attr("dy", ".35em")
-        .attr("transform", function(d) { return "translate(" + (d.x + d.dx / 2) + "," + (d.y + d.dy / 2) + ")rotate(90)"; })
-        .text(function(d) { return d.name; });*/
-
+        
       if (!treeOnly){
         links = packageImports(nodes);
 

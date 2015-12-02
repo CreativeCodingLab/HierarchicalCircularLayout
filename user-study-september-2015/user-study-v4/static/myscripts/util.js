@@ -146,7 +146,7 @@ function color(d) {
     return "#ffaaff";
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#99f"; // leaf node
+    : "#77f"; // leaf node
 }
 
 function colorQ(d) {
@@ -158,14 +158,14 @@ function colorQ(d) {
    return "#f00"; 
   }
   else if (d.name.indexOf("ddd ")>-1){
-   return "#f00"; 
+   return "#0f0"; 
   }
   else if (d.name.indexOf("eee ")>-1){
-   return "#f00"; 
+   return "#0f0"; 
   }
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#99f"; // leaf node
+    : "#77f"; // leaf node
 }
 
 function colorFaded(d) {
@@ -242,8 +242,6 @@ function swapBranches(hasSubtree) {
     getFirstLevelParent(qnodes[b])==getFirstLevelParent(qnodes[c])
     || qnodes[b].parent== qnodes[c].parent){
     c =  random()%qnodes.length;
-    console.log("c="+c);
-  
   }
 
   

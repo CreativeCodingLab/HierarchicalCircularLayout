@@ -242,8 +242,6 @@ function swapBranches(hasSubtree) {
     getFirstLevelParent(qnodes[b])==getFirstLevelParent(qnodes[c])
     || qnodes[b].parent== qnodes[c].parent){
     c =  random()%qnodes.length;
-    console.log("c="+c);
-  
   }
 
   

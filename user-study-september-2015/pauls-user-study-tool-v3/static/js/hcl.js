@@ -460,8 +460,8 @@ return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapse
 function getRadiusQ(d) {    
 return d._children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : (d.name.indexOf("ddd ") >-1)? 2*scaleCircleQ
-      : (d.name.indexOf("eee ") >-1)? 2*scaleCircleQ
+      : (d.name.indexOf("ddd ") >-1)? 1.5*scaleCircleQ
+      : (d.name.indexOf("eee ") >-1)? 1.5*scaleCircleQ
       : scaleCircleQ;
 }
 
@@ -542,7 +542,7 @@ function draw_qTree() {
       })        
       .style("stroke-width", function(d) { 
         if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
-         return 1.2; 
+         return 1; 
         else  
                 return 0.3;        
     }); 

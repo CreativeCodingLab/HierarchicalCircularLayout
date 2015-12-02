@@ -331,11 +331,16 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
     links = qlinks;
     var nodeEnter = g2.selectAll("g.node").data(qnodes)
       .enter().append("circle")
-      .attr("class",  "node")
+      .attr("class",  function(d){
+        if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+                  return "hightlightedNode";
+            else
+                "qnode";
+      })
       .attr("cx", function(d) { return d.x2})
       .attr("cy", function(d) { return d.y2})
       .style("fill", function(d) { 
-        return color(d); })
+        return colorQ(d); })
       .attr("r", function(d) { 
         if (d.children)
           return (0)
@@ -343,6 +348,14 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
           return 30/Math.sqrt(qnodes.length);})
       ;
 
+      g2.selectAll(".hightlightedNode")
+       .style("fill" , colorQ)
+       .attr("r" , function(d) { 
+                  return 45/Math.sqrt(qnodes.length); })
+       .style("stroke", "#000")
+       .style("stroke-width", function(d) { 
+                    return 1;        
+        });
       
        
     var arcMin = radius*0.6;
@@ -363,7 +376,6 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
             
           if (isNaN(start))
             start = 0;
-          //console.log(d.r2+" d.x2="+d.x2+ " "+start);
           
           return start;
          })
@@ -373,10 +385,11 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
           var result =   Math.atan(d.y2/d.x2)+(alpha/2)*Math.PI*2-Math.PI/2;
           if (-d.x2<0) result+=Math.PI;
          
-          if (isNaN(result))
-            result = 0;
-          return result;
-          
+          if (isNaN(result)){
+             result = 0;
+           }
+           
+          return result;   
         });
 
 
@@ -386,11 +399,10 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
           .enter().append("path")
           .attr("class", "linkArc")
           .style("fill", function(d, i) {
-             return color(d);
+             return colorQ(d);
           })
           .style("stroke", function(d, i) {
-             if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
-                  return "#000";
+            if (d.children)
               return "#eeeeee";
           
           })

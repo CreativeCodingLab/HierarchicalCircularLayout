@@ -138,17 +138,41 @@ function treeMap(queryData, randomSeed, heightTree, degreeTree, container, treeO
           .attr("class", "cell")
           .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
+          var listHighlighted =[] ;
+
         cell.append("rect")
           .attr("width", function(d) { return d.dx; })
           .attr("height", function(d) { return d.dy; })
-          //.style("fill", function(d) { return d.children ? color(d.name) : null; })
-          .style("stroke", function(d) { return "#fff"; })
+          .style("stroke", function(d) { 
+            if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+              listHighlighted.push(d);
+            return "#fff"; })
           .style("stroke-width", function(d) { return 0.5; })
           .style("fill", function(d) { 
              return colorQ(d); 
         });
 
+
+
+
+         
         if (!treeOnly){   // Draw Edge bunding     
+          svg.selectAll(".hightlightedNode")
+              .data(listHighlighted)
+              .enter().append("rect")
+          .attr("class", "hightlightedNode")
+          .attr("x", function(d) { return d.x; })
+          .attr("y", function(d) { return d.y; })
+          
+          .attr("width", function(d) { return d.dx; })
+          .attr("height", function(d) { return d.dy; })
+          .style("stroke", function(d) { 
+            return "#000"; })
+          .style("stroke-width", function(d) { return 1; })
+          .style("fill", function(d) { 
+             return colorQ(d); 
+          }); 
+        
           var line = d3.svg.line()
           .interpolate("bundle")
           .tension(0.97)

@@ -143,7 +143,12 @@ function ballon(queryData, randomSeed, heightTree, degreeTree, container, treeOn
           .attr("class", "qnode");
        
       qnode.append("circle")
-          .attr("class","qnode")
+          .attr("class",  function(d){
+            if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+                      return "hightlightedNode";
+                else
+                    "qnode";
+          })
           .attr("r", function(d) { return d.r; })
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; })
@@ -155,6 +160,17 @@ function ballon(queryData, randomSeed, heightTree, degreeTree, container, treeOn
           .style("stroke-width", function(d) { 
            return 0.5;            
         });
+
+
+        vis1.selectAll(".hightlightedNode")
+         .attr("r" , function(d) { 
+                    return d.r*1.5; })
+         .style("stroke", "#000")
+         .style("stroke-width", function(d) { 
+                      return 1;        
+          });
+
+
 
         if (!treeOnly){   // Draw Edge bunding     
           var line = d3.svg.line()

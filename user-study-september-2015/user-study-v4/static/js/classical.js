@@ -158,7 +158,12 @@ function classical(queryData, randomSeed, heightTree, degreeTree, container, tre
       var qdisLeaf = computeDis(qroot);
       svg.selectAll(".qnode").data(qnodes).enter()
           .append("circle")
-          .attr("class", "qnode")
+          .attr("class", function(d) { 
+            if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+                  return "hightlightedNode";
+            else
+                "qnode";
+           })   
           .attr({
               r: function(d) { 
                   return qdisLeaf*0.4; },
@@ -168,14 +173,26 @@ function classical(queryData, randomSeed, heightTree, degreeTree, container, tre
        .style("fill", function(d) { 
           return colorQ(d); 
       })
-       .style("stroke", function(d) { 
-          if (listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || d.depth==0)
-                  return "#000";
-      })
-       .style("stroke-width",  function(d){ 
-        if (d.depth<=1) return 2 ;
-           else return 1.5 ; })
+        .style("fill" , colorQ)
+        .style("stroke", function(d) { 
+            return "#fff";
+          })        
+          .style("stroke-width", function(d) { 
+                    return 0.3;        
+      }); 
 
+      svg.selectAll(".hightlightedNode")
+       .style("fill" , colorQ)
+       .attr("r" , function(d) { 
+                  return qdisLeaf*0.6; })
+       .style("stroke", "#000")
+       .style("stroke-width", function(d) { 
+                    return 1;        
+        });
+           
+
+
+    
 
       if (!treeOnly){
         if (!treeOnly){   // Draw Edge bunding     
@@ -263,49 +280,9 @@ function classical(queryData, randomSeed, heightTree, degreeTree, container, tre
         if (d.depth<=1) return 2 ;
            else return 1.5 ; })
         ;
-        //  links = packageImports(nodes);
+        
       
-      /*
-     var _line = d3.svg.line()
-      .interpolate("bundle")
-      .tension(0.97)
-      .x(function(d) { return d.x })
-      .y(function(d) { return d.y })  
-     
-    if (!treeOnly){
-      link = link
-          .data(bundle(links))
-        .enter().append("path")
-          .attr("class", "link")
-          .attr("d", function(d) {
-            return _line(d)
-          })
-    }    */
-    /*    
-        svg.append("text")
-          .attr("class", "nodeLegend")
-          .attr("x", diameter/2)
-          .attr("y", diameter-50)
-          .text("Reingold–Tilford Tree")
-          .attr("dy", ".21em")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "20px")
-          .style("text-anchor", "middle")
-          .style("fill", "#000")
-          .style("font-weight", "bold");
-
-        var filename2 = file.split("/");
-        svg.append("text")
-          .attr("class", "nodeLegend")
-          .attr("x", diameter/2)
-          .attr("y", diameter-25)
-          .text("Data: "+filename2[filename2.length-1])
-          .attr("dy", ".21em")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "18px")
-          .style("text-anchor", "middle")
-          .style("fill", "#000");
-          //.style("font-weight", "bold");  */
+      
   }
   function computeDis(n1){
         if (n1.children){
