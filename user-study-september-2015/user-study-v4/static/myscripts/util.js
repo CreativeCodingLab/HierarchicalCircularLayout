@@ -158,14 +158,14 @@ function colorQ(d) {
    return "#f00"; 
   }
   else if (d.name.indexOf("ddd ")>-1){
-   return "#0f0"; 
+   return "#f00"; 
   }
   else if (d.name.indexOf("eee ")>-1){
-   return "#0f0"; 
+   return "#f00"; 
   }
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#77f"; // leaf node
+    : "#ddd"; // leaf node
 }
 
 function colorFaded(d) {

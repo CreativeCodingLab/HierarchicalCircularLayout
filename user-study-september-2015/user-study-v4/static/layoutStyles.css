@@ -47,7 +47,8 @@ line.linkTree {
 
 .link {
    fill: none;
-  stroke: #990000;
+  /*stroke: #990000;*/
+  stroke: #444;
   stroke-width: 0.5px;
   stroke-opacity: 0.9;
 }
