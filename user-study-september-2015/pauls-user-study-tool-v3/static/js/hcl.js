@@ -93,7 +93,9 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           if (d.depth == 0){
             qroot = d;
           } 
-        });  
+        }); 
+        qnodes = cluster.nodes(qroot);
+ 
         qnodes.forEach(function(child) { 
           if (child.depth>qmaxDepth){
               qmaxDepth = child.depth;
