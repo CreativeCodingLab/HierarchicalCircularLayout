@@ -60,6 +60,7 @@ module.exports = ->
     "carnivoraWithRelationships subtree.json",
     "carnivoraWithRelationships subtree2.json",
     
+    "HIV Infection_Dot.json",
     "2_ERBB2 Pathway orginal.json",
     "3_Signaling to GPCR Pathway.json",
     "flare package.json",
@@ -73,7 +74,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [2522,3422];
+  randomList = [1021,1311,2522,3422];
   
   addText = (main, text) ->
     main.append('div').classed 'row', true
@@ -92,7 +93,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[6], randomSeed, 6, 6, false, true, true
+              addVis main, layout, queryDatasets[13], randomSeed, 6, 6, false, true, true
               return addContinue main
           }
         ]

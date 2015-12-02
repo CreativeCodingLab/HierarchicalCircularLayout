@@ -65,9 +65,9 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 
 //var file = "data/1_RAF-Cascade Pathway.json";
 //var file = "data/54_DAG Pathway.json";
-var file = "data/3_NGF Pathway.json";
+//var file = "data/3_NGF Pathway.json";
 
-//var file = "data/HIV Infection_Dot.json";
+var file = "data/HIV Infection_Dot.json";
 
 //var file = "data/3_Innate Immune System_Dot.json";
 

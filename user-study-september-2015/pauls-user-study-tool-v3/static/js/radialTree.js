@@ -32,6 +32,8 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
     queryH = height;
  
   radius = Math.min(height/2, (width-queryH) / 2);
+  if (!treeOnly)
+    radius = height/2;
   
   cluster = d3.layout.cluster()
       .size([360, radius*0.8])
@@ -83,6 +85,8 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
             qroot = d;
           } 
         });  
+        qnodes = qcluster.nodes(qroot);
+
         
         qnodes.forEach(function(child) { 
           if (child.depth>qmaxDepth){
@@ -159,7 +163,7 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
           .style("fill", function(d) { return colorQ(d);}); 
       }  
       else{
-        drawMirrorTree();s
+        drawMirrorTree();
       }
 
 
@@ -326,24 +330,24 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
     
     links = qlinks;
     var nodeEnter = g2.selectAll("g.node").data(qnodes)
-          .enter().append("circle")
-          .attr("class",  "node")
-          .attr("cx", function(d) { return d.x2})
-          .attr("cy", function(d) { return d.y2})
-          .style("fill", function(d) { 
-            return color(d); })
-          .attr("r", function(d) { 
-            if (d.children)
-              return (0)
-            else 
-              return 30/Math.sqrt(qnodes.length);})
-          //.attr("transform", function(d) { return "rotate(" + (d.x-90) + ")translate(" + (d.y) + ")"; })
-          ;
+      .enter().append("circle")
+      .attr("class",  "node")
+      .attr("cx", function(d) { return d.x2})
+      .attr("cy", function(d) { return d.y2})
+      .style("fill", function(d) { 
+        return color(d); })
+      .attr("r", function(d) { 
+        if (d.children)
+          return (0)
+        else 
+          return 30/Math.sqrt(qnodes.length);})
+      ;
 
       
        
     var arcMin = radius*0.6;
         
+    
     var drawArc = d3.svg.arc()
         .innerRadius(function(d, i) {
           return d.r2 ;
@@ -353,10 +357,14 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
         })
         .startAngle( function(d, i) { 
           var alpha = d.numLeaf/ qroot.numLeaf;
+
           var start = Math.atan(d.y2/d.x2)-(alpha/2)*Math.PI*2-Math.PI/2;
           if (-d.x2<0) start+=Math.PI;
             
-
+          if (isNaN(start))
+            start = 0;
+          //console.log(d.r2+" d.x2="+d.x2+ " "+start);
+          
           return start;
          })
         .endAngle(function(d, i) {
@@ -365,9 +373,12 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
           var result =   Math.atan(d.y2/d.x2)+(alpha/2)*Math.PI*2-Math.PI/2;
           if (-d.x2<0) result+=Math.PI;
          
+          if (isNaN(result))
+            result = 0;
           return result;
           
         });
+
 
     // mirror tree    
     linkArcs = g2.append("g").selectAll("path")
@@ -386,7 +397,6 @@ function radialInsideTree(queryData, randomSeed, heightTree, degreeTree, contain
           .style("stroke-width", 1)
           .style("stroke-opacity", 0.8)
           .style("fill-opacity", 1)
-         // .attr("d", linkArc)
           .attr("d", drawArc) ; 
 
 
