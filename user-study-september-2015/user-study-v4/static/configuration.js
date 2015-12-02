@@ -97,6 +97,8 @@ addVis = function(main, layout, queryData, randomSeed, height, degree, treeOnly,
     .style({
       width: "100%",
       height: "70vh",
+      // width: "1500px",
+      // height: "700px",
       border: "1px solid #ccc"
     }).call(function(frame) {
       return window[layout](queryData, randomSeed, height, degree, frame, treeOnly, hasSubtree, showSubtree);
@@ -218,9 +220,10 @@ queryDatasets = [
     "2_ERBB2 Pathway.json",
     "3_Signaling to GPCR Subtree.json",
     "3_Signaling to GPCR Subtree2.json",
+    "3_NGF Pathway.json",
     "54_DAG Pathway.json",
     "flare subtree1.json",
-    "flare subtree2.json",
+    // "flare subtree2.json",
     "carnivoraWithRelationships subtree.json",
     "carnivoraWithRelationships subtree2.json"
 ].map(function(d) {

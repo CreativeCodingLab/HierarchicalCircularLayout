@@ -39,14 +39,14 @@
   yearMonthDay = (function() {
     var d;
     d = new Date();
-    return (d.getFullYear()) + "-" + (d.getMonth() + 1) + "-" + (d.getDay());
+    var file = (d.getFullYear()) + "-" + (d.getMonth() + 1) + "-" + (d.getDay());
+    console.log(file);
+    return file;
   })();
 
   outputFile = (function() {
     return path.resolve(__dirname, 'static', 'output', "output-" + yearMonthDay + ".txt");
   })();
-
-  console.log(outputFile);
 
   writeData = function(data) {
     var string;
