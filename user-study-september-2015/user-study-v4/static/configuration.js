@@ -273,7 +273,7 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
 
 d3.shuffle(part_1);
 
-pages = pages.concat(part_1);
+// pages = pages.concat(part_1);
 
 pages.push({
   name: 'part_1_outro',

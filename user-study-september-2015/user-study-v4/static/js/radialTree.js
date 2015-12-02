@@ -335,7 +335,7 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
       .attr("cx", function(d) { return d.x2})
       .attr("cy", function(d) { return d.y2})
       .style("fill", function(d) { 
-        return color(d); })
+        return colorQ(d); })
       .attr("r", function(d) { 
         if (d.children)
           return (0)
@@ -386,7 +386,7 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
           .enter().append("path")
           .attr("class", "linkArc")
           .style("fill", function(d, i) {
-             return color(d);
+             return colorQ(d);
           })
           .style("stroke", function(d, i) {
              if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
