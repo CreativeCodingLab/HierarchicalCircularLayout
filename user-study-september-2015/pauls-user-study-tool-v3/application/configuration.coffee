@@ -34,14 +34,16 @@ module.exports = ->
   
   layouts = [
   	       #'circlePacking', # not used for the study any longer
-  	'hcl',
+  	
+    'hcl',
+    'radialInsideTree',
+    'treeMap',
+    'icicle',
     'classical',
-  	'icicle',
-  	'treeMap',
+    'ballon',
            #'radial', #This is for edge bundling only
-  	'radialInsideTree',
-  	'ballon',
-    'hcl'
+  	
+  	
   ];
   dataPath = 'data/';
   queryDatasets = [
@@ -51,22 +53,27 @@ module.exports = ->
     "2_ERBB2 Pathway.json",
     "3_Signaling to GPCR Subtree.json",
     "3_Signaling to GPCR Subtree2.json",
+    "3-Rb-E2FpathwayReactome_Dot.json",
     "54_DAG Pathway.json",
     "flare subtree1.json"
     "flare subtree2.json"
     "carnivoraWithRelationships subtree.json",
     "carnivoraWithRelationships subtree2.json",
     
-    #"flare package.json"
+    "2_ERBB2 Pathway orginal.json",
+    "3_Signaling to GPCR Pathway.json",
+    "flare package.json",
     "carnivoraWithRelationships.json",
-  	#"mammalsWithRelationships.json",
-  	
-    #"3_NGF Pathway.json",  // too complicatied 
+    #"mammalsWithRelationships.json",
+
+    "3_NGF Pathway.json",  
+    
+     
     
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [1021,1311,2522,3422];
+  randomList = [2522,3422];
   
   addText = (main, text) ->
     main.append('div').classed 'row', true
@@ -85,7 +92,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[10], randomSeed, 6, 6, true, true, true
+              addVis main, layout, queryDatasets[6], randomSeed, 6, 6, false, true, true
               return addContinue main
           }
         ]

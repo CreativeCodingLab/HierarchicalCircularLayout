@@ -5,7 +5,7 @@ var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.j
 var scaleCircleQ = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate;
 var scaleRateQ;   // For the query tree
-var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.75;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
 var disFactor = 2;  // Distance from the center of the parent.
   
 var maxDepth=1;
@@ -15,8 +15,6 @@ var setIntervalFunction;
 
 var nodes, links, linkTree, root;
 
-var qnodes, qlinkTree, qroot, qmaxDepth=1;
-var showSubtree;
 
 
 
@@ -38,10 +36,10 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
       } 
     });   
 
-    treeLayout.sort(comparator); 
+  treeLayout.sort(comparator); 
     function comparator(a, b) {
-      return b.order2 - a.order2;
-    }   
+     return b.order2 - a.order2;
+  }   
 
   linkTree = d3.layout.tree().links(nodes);
 
@@ -57,7 +55,12 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
   var width = parseInt(container.style('width'), 10);
   var height = parseInt(container.style('height'), 10);
   queryH = width*0.3;
-       
+  queryW = width*0.3;
+  if (!treeOnly){
+    queryH = height;
+    queryW = width;
+  }
+  console.log("queryH="+queryH+"  width="+width+"  height="+height);  
   var svg = container.append("svg")
       .attr("width", width)
       .attr("height", height);
@@ -76,11 +79,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
   var treeSearch;
   var diagonal;
     
-   
-
-    
-
-   if (queryData){
+  if (queryData){
       d3.json(queryData, function(error, classes) {
         var cluster = d3.layout.cluster()
           .size([360, innerRadius])
@@ -101,15 +100,138 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           }
         });    
 
-  
+         
+        if (!treeOnly){  //randommize the tree
+          // Edge bundling links  
+          qlinks = packageImports(qnodes);
+          qnodes.forEach(function(d) {
+          //  d.name = "";
+          //  d.key = "";
+          }); 
+
+          var b =  random()%nodes.length;
+          while (qnodes[b].depth>=3 || qnodes[b].depth<1 || !qnodes[b].children){
+            b =  random()%qnodes.length;
+          }
+
+
+          var c =  random()%nodes.length;   
+          while (qnodes[c].depth>=3 || qnodes[c].depth<1 || !qnodes[c].children || 
+            getFirstLevelParent(qnodes[b])==getFirstLevelParent(qnodes[c])
+            || qnodes[b].parent== qnodes[c].parent){
+            c =  random()%qnodes.length;
+            console.log("c="+c);
+          
+          }
+
+          
+
+          function getFirstLevelParent(n1){
+            if (n1.depth==0){
+              return undefined;
+            }
+            else if (n1.depth==1){
+              return n1;
+            }
+            else {
+              return getFirstLevelParent(n1.parent);
+            }  
+          }
+
+          function getChildIndex(n1){
+            var index =-1;
+            for (var i=0; i<n1.parent.children.length;i++){
+              if (n1.parent.children[i]==n1)
+                index = i;
+            }
+            return index;
+          }
+
+
+          
+          var parentB = qnodes[b].parent;
+          var parentC = qnodes[c].parent;
+          var indexB = getChildIndex(qnodes[b]);
+          var indexC = getChildIndex(qnodes[c]);
+          
+          //console.log("b="+b+" c="+c+ " parentB"+parentB+ " parentC"+parentC);
+          //console.log("indexC="+indexB +" indexC="+indexC);
+          parentB.children.splice(indexB,1);
+          parentC.children.push(qnodes[b]);
+          
+          parentC.children.splice(indexC,1);
+          parentB.children.push(qnodes[c]);  
+
+          var leafNodes = qnodes.filter(function(d){
+            if (!d.children)
+              return d
+          });
+          
+         // if (showSubtree){  // if show subtree or connectivity
+            console.log("AAA");
+            var d =  random()%leafNodes.length;
+            var e =  -1;
+            if (hasSubtree){
+              var connectedNames = {};
+              while (!leafNodes[d].imports || leafNodes[d].imports.length<1){
+                d =  random()%leafNodes.length;
+              }
+              for (var i=0; i<leafNodes[d].imports.length;i++){
+                  connectedNames[leafNodes[d].imports[i]] = 1;   
+              }
+
+              for (var i=0; i<leafNodes.length;i++){
+                if (connectedNames[leafNodes[i].name]){
+                  e = i;
+                  break;
+                }   
+              }
+            }
+            else{
+              d = random()%leafNodes.length;
+              e = random()%leafNodes.length;
+              
+              var connectedNames = {};
+              console.log("BBB");
+              while (d==e || isConnected(d,e) || leafNodes[d].imports.length<1){// || leafNodes[e].imports.length<1){
+                  
+                 d = random()%leafNodes.length;
+                 e = random()%leafNodes.length;
+              }
+              function isConnected(n1, n2){
+                var connectedNames = {};
+                for (var i=0; i<leafNodes[n1].imports.length;i++){
+                  connectedNames[leafNodes[n1].imports[i]] = 1;   
+                }
+                if (connectedNames[leafNodes[i].name])
+                    return true;
+
+                connectedNames = {};
+                for (var i=0; i<leafNodes[n2].imports.length;i++){
+                  connectedNames[leafNodes[n2].imports[i]] = 1;   
+                }
+                if (connectedNames[leafNodes[1].name])
+                    return true;  
+                return false;  
+              }              
+            }
+            console.log("DDD");
+              
+
+            qnodes[b].name = "bbb "+qnodes[b].name;
+            qnodes[c].name = "ccc "+qnodes[c].name;
+            leafNodes[d].name = "ddd "+leafNodes[d].name;
+            leafNodes[e].name = "eee "+leafNodes[e].name;
+          }                
+        //}
 
         childDepth1(qroot); 
         count1 = childCount1(0, qroot); 
         count2 = childCount2(0, qroot);  // DFS id of nodes are also set in this function
         scaleCircleQ =1;
-        setupTreeQ(qroot, queryH,queryH);
+        setupTreeQ(qroot, queryH,queryW);
         scaleCircleQ = scaleRateQ;
-        setupTreeQ(qroot, queryH,queryH);
+        setupTreeQ(qroot, queryH,queryW);
         qlinkTree = d3.layout.tree().links(qnodes);
 
         var a =  random()%nodes.length;
@@ -121,37 +243,36 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
         }
 
         if (hasSubtree){
-        if (!nodes[a].children)
-          nodes[a].children = [];
+          if (!nodes[a].children)
+            nodes[a].children = [];
           var temList = [];
           var node2 = copyNode(qroot,nodes[a].depth, "query tree");
           nodes[a].children.push(node2);
-
-          function copyNode(n1, depth, subname){
-            var n2 = {};
-            n2.name = subname+n1.name;
-            n2.depth = depth+1;
-            if (n1.children){
-              n2.children =[];
-              for (var i=0;i<n1.children.length;i++){
-                var child1 = n1.children[i];
-                var child2 = copyNode(child1, depth+1,subname);
-                n2.children.push(child2);
-              }
-            }
-            temList.push(n2);
-
-            return n2;
-          } 
           var ccc = 0;
           temList.forEach(function(d){
             nodes.splice(a+ccc,0,d);
             ccc++;
           });
         }
+        // Copy one branch
+        function copyNode(n1, depth, subname){
+          var n2 = {};
+          n2.name = subname+n1.name;
+          n2.depth = depth+1;
+          if (n1.children){
+            n2.children =[];
+            for (var i=0;i<n1.children.length;i++){
+              var child1 = n1.children[i];
+              var child2 = copyNode(child1, depth+1,subname);
+              n2.children.push(child2);
+            }
+          }
+          temList.push(n2);
 
-         
-    
+          return n2;
+        } 
+        
+        
 
 
         // Testing the existence of another tree generated by radomization
@@ -194,14 +315,23 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
             }
           }  
         });  
-        draw_qTree();
+        
+        draw_qTree();   // draw the query tree or the 
+        
 
-
-        main();
+        if (treeOnly)   // draw the search (big tree) for the first study
+          main();
+        else{
+          svg.selectAll("path.link").remove();
+          relationship_selection 
+            .data(bundle(qlinks))
+            .enter().append("path")
+            .attr("class", "link")
+            .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+            .attr("d", lineBundle);   
+        }
      });
    } 
-   else
-      main();
   
 
   // Define the layout ********************************************
@@ -279,7 +409,7 @@ function setupTreeQ(rootTree, h, w) {
   var minY = 10000;   // used to compute the best scale for the input tree
   treeLayout(rootTree).map(function(d,i) {
     if (d.depth==0){
-       d.treeX = w/2-10; 
+       d.treeX = queryW/2; 
        d.treeY = height-getRadiusQ(rootTree)-10;
        d.treeR = getRadiusQ(rootTree);
        d.alpha = -Math.PI/2; 
@@ -307,14 +437,13 @@ function setupTreeQ(rootTree, h, w) {
       
         
         // find scales
-        if (child.treeY-rC<minY) {
-          minY = child.treeY-rC;
+        if (child.treeY<minY) {
+          minY = child.treeY;
         };
         begin +=additional;
       });
     }
-    scaleRateQ = 0.5*height/(height-minY);
-    console.log("scaleRateQ="+scaleRateQ);
+    scaleRateQ = queryH/(height-minY);
     return d;
   });
 }  
@@ -329,6 +458,8 @@ return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapse
 function getRadiusQ(d) {    
 return d._children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircleQ*Math.pow(d.childCount1, scaleRadius) // expanded package
+      : (d.name.indexOf("ddd ") >-1)? 2*scaleCircleQ
+      : (d.name.indexOf("eee ") >-1)? 2*scaleCircleQ
       : scaleCircleQ;
 }
 
@@ -402,54 +533,29 @@ function draw_qTree() {
     .attr("cy", function(d) { return d.treeY; })
     .style("fill" , colorQ)
     .style("stroke", function(d) { 
-                return "#fff";
+      if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+         return "#000"; 
+      else  
+        return "#fff";
       })        
       .style("stroke-width", function(d) { 
+        if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
+         return 1.2; 
+        else  
                 return 0.3;        
     }); 
 
-   nodeEnterQ.on('mouseover', mouseovered)
-      .on("mouseout", mouseouted);
+  // nodeEnterQ.on('mouseover', mouseovered)
+  //    .on("mouseout", mouseouted);
 
+
+  qnodes.forEach(function(d){
+    d.x = d.treeX;
+    d.y = d.treeY;
+  });    
+
+     
 }
-
-/*
-function update() {
-    d3.selectAll(".node1").each(function(d) {
-        d.x = (d.treeX ); //*event.alpha;
-        d.y = d.treeY ; })
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .attr("r", getRadius)
-      .style("fill", color);
-
-      d3.selectAll(".nodeText")
-      .attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y; })
-      .text(function(d) {   
-          return d.name; 
-      });
-    linkTree_selection.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return Math.round(d.source.y); })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return Math.round(d.target.y); });
-
-  // Draw relationship links *******************************************************
-  
-    
-    
-  
-
- // Update Undirected links of relationships
-  svg.selectAll("path.link").remove();
-  relationship_selection 
-      .data(bundle(links))
-    .enter().append("path")
-      .attr("class", "link")
-      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      .attr("d", lineBundle);
-  
-}*/
 
 
 

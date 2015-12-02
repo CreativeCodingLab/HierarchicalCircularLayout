@@ -147,7 +147,6 @@ function radial(file, container) {
     var numLevelFromLeaf = nodes[0].fromLeaf;
     var gap = radius*0.6/(numLevelFromLeaf);
 
-
     nodes.forEach(function(d) { 
       d.r2 = radius*0.6+d.fromLeaf*gap*0.6;
       if (d.children)
@@ -209,12 +208,9 @@ function radial(file, container) {
           .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
           .attr("class", "link")
           .attr("d", line);
-
-        
-
+       
     var arcMin = radius*0.6;
         
-
     var drawArc = d3.svg.arc()
         .innerRadius(function(d, i) {
           return d.r2 ;
@@ -259,61 +255,7 @@ function radial(file, container) {
           .style("fill-opacity", 1)
          // .attr("d", linkArc)
           .attr("d", drawArc) ; 
-        
 
-  /*
-      svg.append("text")
-          .attr("class", "nodeLegend3")
-          .attr("x", 0)
-          .attr("y", diameter/2)
-          .text("Radial Layout")
-          .attr("dy", ".21em")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "20px")
-          .style("text-anchor", "middle")
-          .style("fill", "#000")
-          .style("font-weight", "bold");
+  });
 
-        var filename2 = file.split("/");
-        svg.append("text")
-          .attr("class", "nodeLegend3")
-          .attr("x", 0)
-          .attr("y", diameter/2+25)
-          .text("Data: "+filename2[filename2.length-1])
-          .attr("dy", ".21em")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "18px")
-          .style("text-anchor", "middle")
-          .style("fill", "#000");
-          //.style("font-weight", "bold");  
-          
-  */
-
-  });//close d3.json()
-/*
-  mouseovered = function(d) {
-    node
-        .each(function(n) { n.target = n.source = false; });
-
-    link
-        .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
-        .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
-        .filter(function(l) { return l.target === d || l.source === d; })
-        .each(function() { this.parentNode.appendChild(this); });
-
-    node
-        .classed("node--target", function(n) { return n.target; })
-        .classed("node--source", function(n) { return n.source; });
-  };
-
-  mouseouted = function(d) {
-    link
-        .classed("link--target", false)
-        .classed("link--source", false);
-
-    node
-        .classed("node--target", false)
-        .classed("node--source", false);
-  };
-  */
 }
