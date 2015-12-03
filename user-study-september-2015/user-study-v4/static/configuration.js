@@ -272,7 +272,6 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
 });
 
 d3.shuffle(part_1);
-
 // pages = pages.concat(part_1);
 
 pages.push({
@@ -300,7 +299,7 @@ pages.push({
     addVis(
       main, 
       'classical', 
-      "data/3_NGF Pathway.json", 
+      "data/0_RAF_Dot.json", 
       4562, 4, 4, false, true, false
     );
     d3.select('.frame').style({ border: null });
@@ -308,33 +307,77 @@ pages.push({
   }
 });
 
+pages.push({
+  name: 'part_2_intro_2',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('You will need to determine <b>if the two highlighted nodes are connected</b> by the <span style="color: red; font-weight: 700">red lines</span>.');
+     instruct.append('p')
+      .html('Here, the two nodes <b>are connected</b>.');
+    addVis(
+      main, 
+      'classical', 
+      "data/0_RAF_Dot.json", 
+      4562, 4, 4, false, true, false
+    );
+    d3.select('.frame').style({ border: null });
+    return addContinue(main);
+  }
+});
+
+pages.push({
+  name: 'part_2_intro_3',
+  func: function(opts) {
+    var main = opts.main;
+    var instruct = main.append('div').classed('row instructions', true)
+      .style('margin-top', '2rem')
+      .append('div').classed('col-xs-12', true)
+    instruct.append('p')
+      .html('You should try to answer <b>quickly</b> and <b>accurately</b>.');
+    instruct.append('p')
+      .html('When you are ready to begin, click Continue.');
+    return addContinue(main);
+  }
+});
+
 var connectivityDatasets = [
-  "2_ERBB2 Pathway orginal.json",
-  "3_Signaling to GPCR Pathway.json",
-  "flare package.json",
-  "carnivoraWithRelationships.json",
+  "3-Rb-E2FpathwayReactome_Dot.json",
+  "HIV Infection_Dot.json",
+  "2_ERBB2 Pathway2.json", 
+  "flare package2.json",
+  // "2_ERBB2 Pathway orginal.json",
+  // "3_Signaling to GPCR Pathway.json",
+  // "flare package.json",
+  // "carnivoraWithRelationships.json",
 ].map(function(d) {
     return "" + dataPath + d;
   });
 
-var part_2_nested = connectivityDatasets.map(function(data, di) {
-  return layouts.map(function(layout, li) {
-      var r = Math.sin(i++) * 1e4;
-      var rand = r - Math.floor(r);
-      var hasSubtree = ((di+li) % 2) === 0 ? true : false;
-      var answer = hasSubtree ? "Yes" : "No";
-      var pageOptions;
-      var pageName = "part_2_layout_" + li + "_data_" + di + "_a";
-      pageOptions = {
-        queryData: data,
-        layout: layout,
-        randomSeed: Math.floor((di + li) * 100), // rand * 100,
-        pageName: pageName,
-        question: "connectivity",
-        correctAnswer: answer,
-        hasSubtree: hasSubtree
-      };
-      return pageOptions;
+var part_2_nested = d3.range(4).map(function(_, randi) {
+  return connectivityDatasets.map(function(data, di) {
+    return layouts.map(function(layout, li) {
+        var r = Math.sin(i++) * 1e4;
+        var rand = r - Math.floor(r);
+        var hasSubtree = ((di+li) % 2) === 0 ? true : false;
+        var answer = hasSubtree ? "Yes" : "No";
+        var pageOptions;
+        var pageName = "part_2_layout_" + li + "_data_" + di + "_a";
+        pageOptions = {
+          queryData: data,
+          layout: layout,
+          // randomSeed: Math.floor((di + li) * 100), // rand * 100,
+          randomSeed: randi * 100,
+          pageName: pageName,
+          question: "connectivity",
+          correctAnswer: answer,
+          hasSubtree: hasSubtree
+        };
+        return pageOptions;
+    });
   });
 });
 
@@ -430,6 +473,8 @@ var part_2 = _.flatten(part_2_nested).map(function(pageOptions, i) {
     pageOptions: pageOptions
   };
 });
+
+d3.shuffle(part_2);
 
 pages = pages.concat(part_2);
 

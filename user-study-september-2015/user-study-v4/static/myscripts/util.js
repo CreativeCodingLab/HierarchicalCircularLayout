@@ -166,7 +166,8 @@ function colorQ(d) {
   }
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#77f"; // leaf node
+    // : "#66b"; // leaf node
+    : "#8383BB";
 }
 
 function colorFaded(d) {
