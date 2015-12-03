@@ -17,7 +17,7 @@ userId = window.location.hash.substring(1) || baseHash
 body = d3.select("html").selectAll("body").data([1])
 body.enter().append("body")
 
-main = body.append("div").classed("container", true)
+main = body.append("div").classed("container-fluid", true)
   .append("div").classed("row", true)
   .append("main").classed("col-xs-12", true)
 
