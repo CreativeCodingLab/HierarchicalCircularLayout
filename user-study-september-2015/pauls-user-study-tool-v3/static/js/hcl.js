@@ -395,8 +395,8 @@ function draw_qTree() {
                 return 0.3;        
     }); 
 
-  // nodeEnterQ.on('mouseover', mouseovered)
-  //    .on("mouseout", mouseouted);
+   nodeEnterQ.on('mouseover', mouseovered)
+      .on("mouseout", mouseouted);
 
 
   qnodes.forEach(function(d){

@@ -64,10 +64,12 @@ module.exports = ->
     "3-Rb-E2FpathwayReactome_Dot.json",
     "HIV Infection_Dot.json",
     "2_ERBB2 Pathway orginal.json", 
-    "flare package.json",
+    "flare package2.json",
     
+
+    coi them
     #"3_NGF Pathway.json",   #nodes are too small on ballon layout
-    ##"3_Signaling to GPCR Pathway.json", #nodes are too small
+    #"3_Signaling to GPCR Pathway.json", #nodes are too small
     
 
     #"carnivoraWithRelationships.json",
@@ -80,7 +82,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [1021,1321,222,322,121,131,522,342];
+  randomList = [1021,1321,222,322];
   
   addText = (main, text) ->
     main.append('div').classed 'row', true
@@ -99,7 +101,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[11], randomSeed, 6, 8, false, true, false
+              addVis main, layout, queryDatasets[16], randomSeed, 6, 8, false, false, false
               return addContinue main
           }
         ]
