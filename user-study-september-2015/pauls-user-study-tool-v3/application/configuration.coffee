@@ -61,13 +61,13 @@ module.exports = ->
     
     
     "0_RAF_Dot.json", #intro
+    
     "3-Rb-E2FpathwayReactome_Dot.json",
     "HIV Infection_Dot.json",
-    "2_ERBB2 Pathway orginal.json", 
+    "2_ERBB2 Pathway2.json", 
     "flare package2.json",
     
 
-    coi them
     #"3_NGF Pathway.json",   #nodes are too small on ballon layout
     #"3_Signaling to GPCR Pathway.json", #nodes are too small
     
@@ -101,7 +101,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[16], randomSeed, 6, 8, false, false, false
+              addVis main, layout, queryDatasets[14], randomSeed, 6, 8, false, false, false
               return addContinue main
           }
         ]

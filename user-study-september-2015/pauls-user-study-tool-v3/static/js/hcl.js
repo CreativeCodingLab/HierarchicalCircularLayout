@@ -96,21 +96,29 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
         }); 
         qnodes = cluster.nodes(qroot);
  
-        qnodes.forEach(function(child) { 
-          if (child.depth>qmaxDepth){
-              qmaxDepth = child.depth;
-          }
-        });    
-
+        
          
         
          if (!treeOnly){  //randommize the tree
           // Edge bundling links  
           qlinks = packageImports(qnodes);
-
            // swapBranches for study2
           swapBranches(hasSubtree);
         }
+        qnodes.forEach(function(child) { 
+          var childDepth = computeDepth(child);
+          if (childDepth>qmaxDepth){
+              qmaxDepth = childDepth;
+          }
+        });
+           
+        function computeDepth(n1){
+          if (!n1.parent)
+            return 0;
+          else
+            return computeDepth(n1.parent)+1;
+        } 
+
 
         childDepth1(qroot); 
         count1 = childCount1(0, qroot); 
@@ -168,6 +176,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           }  
         });  
         
+         
         draw_qTree();   // draw the query tree or the 
         
 
@@ -392,7 +401,7 @@ function draw_qTree() {
         if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
          return 1; 
         else  
-                return 0.3;        
+                return 0.5;        
     }); 
 
    nodeEnterQ.on('mouseover', mouseovered)
