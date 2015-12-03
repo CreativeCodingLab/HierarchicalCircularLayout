@@ -96,136 +96,29 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
         }); 
         qnodes = cluster.nodes(qroot);
  
-        qnodes.forEach(function(child) { 
-          if (child.depth>qmaxDepth){
-              qmaxDepth = child.depth;
-          }
-        });    
-
+        
          
-        if (!treeOnly){  //randommize the tree
+        
+         if (!treeOnly){  //randommize the tree
           // Edge bundling links  
           qlinks = packageImports(qnodes);
-          qnodes.forEach(function(d) {
-          //  d.name = "";
-          //  d.key = "";
-          }); 
-
-          var b =  random()%nodes.length;
-          while (qnodes[b].depth>=3 || qnodes[b].depth<1 || !qnodes[b].children){
-            b =  random()%qnodes.length;
+           // swapBranches for study2
+          swapBranches(hasSubtree);
+        }
+        qnodes.forEach(function(child) { 
+          var childDepth = computeDepth(child);
+          if (childDepth>qmaxDepth){
+              qmaxDepth = childDepth;
           }
+        });
+           
+        function computeDepth(n1){
+          if (!n1.parent)
+            return 0;
+          else
+            return computeDepth(n1.parent)+1;
+        } 
 
-
-          var c =  random()%nodes.length;   
-          while (qnodes[c].depth>=3 || qnodes[c].depth<1 || !qnodes[c].children || 
-            getFirstLevelParent(qnodes[b])==getFirstLevelParent(qnodes[c])
-            || qnodes[b].parent== qnodes[c].parent){
-            c =  random()%qnodes.length;
-            console.log("c="+c);
-          
-          }
-
-          
-
-          function getFirstLevelParent(n1){
-            if (n1.depth==0){
-              return undefined;
-            }
-            else if (n1.depth==1){
-              return n1;
-            }
-            else {
-              return getFirstLevelParent(n1.parent);
-            }  
-          }
-
-          function getChildIndex(n1){
-            var index =-1;
-            for (var i=0; i<n1.parent.children.length;i++){
-              if (n1.parent.children[i]==n1)
-                index = i;
-            }
-            return index;
-          }
-
-
-          
-          var parentB = qnodes[b].parent;
-          var parentC = qnodes[c].parent;
-          var indexB = getChildIndex(qnodes[b]);
-          var indexC = getChildIndex(qnodes[c]);
-          
-          //console.log("b="+b+" c="+c+ " parentB"+parentB+ " parentC"+parentC);
-          //console.log("indexC="+indexB +" indexC="+indexC);
-          parentB.children.splice(indexB,1);
-          parentC.children.push(qnodes[b]);
-          
-          parentC.children.splice(indexC,1);
-          parentB.children.push(qnodes[c]);  
-
-          var leafNodes = qnodes.filter(function(d){
-            if (!d.children)
-              return d
-          });
-          
-         // if (showSubtree){  // if show subtree or connectivity
-            console.log("AAA");
-            var d =  random()%leafNodes.length;
-            var e =  -1;
-            if (hasSubtree){
-              var connectedNames = {};
-              while (!leafNodes[d].imports || leafNodes[d].imports.length<1){
-                d =  random()%leafNodes.length;
-              }
-              for (var i=0; i<leafNodes[d].imports.length;i++){
-                  connectedNames[leafNodes[d].imports[i]] = 1;   
-              }
-
-              for (var i=0; i<leafNodes.length;i++){
-                if (connectedNames[leafNodes[i].name]){
-                  e = i;
-                  break;
-                }   
-              }
-            }
-            else{
-              d = random()%leafNodes.length;
-              e = random()%leafNodes.length;
-              
-              var connectedNames = {};
-              console.log("BBB");
-              while (d==e || isConnected(d,e) || leafNodes[d].imports.length<1){// || leafNodes[e].imports.length<1){
-                  
-                 d = random()%leafNodes.length;
-                 e = random()%leafNodes.length;
-              }
-              function isConnected(n1, n2){
-                var connectedNames = {};
-                for (var i=0; i<leafNodes[n1].imports.length;i++){
-                  connectedNames[leafNodes[n1].imports[i]] = 1;   
-                }
-                if (connectedNames[leafNodes[i].name])
-                    return true;
-
-                connectedNames = {};
-                for (var i=0; i<leafNodes[n2].imports.length;i++){
-                  connectedNames[leafNodes[n2].imports[i]] = 1;   
-                }
-                if (connectedNames[leafNodes[1].name])
-                    return true;  
-                return false;  
-              }              
-            }
-            console.log("DDD");
-              
-
-            qnodes[b].name = "bbb "+qnodes[b].name;
-            qnodes[c].name = "ccc "+qnodes[c].name;
-            leafNodes[d].name = "ddd "+leafNodes[d].name;
-            leafNodes[e].name = "eee "+leafNodes[e].name;
-          }                
-        //}
 
         childDepth1(qroot); 
         count1 = childCount1(0, qroot); 
@@ -244,49 +137,14 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           a =  random()%nodes.length;
         }
 
-        if (hasSubtree){
-          if (!nodes[a].children)
-            nodes[a].children = [];
-          var temList = [];
-          var node2 = copyNode(qroot,nodes[a].depth, "query tree");
-          nodes[a].children.push(node2);
-          var ccc = 0;
-          temList.forEach(function(d){
-            nodes.splice(a+ccc,0,d);
-            ccc++;
-          });
-        }
-        // Copy one branch
-        function copyNode(n1, depth, subname){
-          var n2 = {};
-          n2.name = subname+n1.name;
-          n2.depth = depth+1;
-          if (n1.children){
-            n2.children =[];
-            for (var i=0;i<n1.children.length;i++){
-              var child1 = n1.children[i];
-              var child2 = copyNode(child1, depth+1,subname);
-              n2.children.push(child2);
-            }
-          }
-          temList.push(n2);
-
-          return n2;
-        } 
+        /// Make a subttree for Study 1 
+        if (hasSubtree && nodes.length>0)
+          makeSubtree();
         
         
 
 
-        // Testing the existence of another tree generated by radomization
-        /*
-        var a2 =  random()%nodes.length;
-        if (!nodes[a2].children)
-          nodes[a2].children = [];
-        nodes[a2].childCount1++;
-        var node3 = copyNode(qroot,nodes[a2].depth, "test tree");
-        nodes[a2].children.push(node3);*/
-
-
+        
         // Check if there is a subtree in the generated tree
         nodes.forEach(function(child) {
           if (isSimilar(child,qroot)){
@@ -318,6 +176,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           }  
         });  
         
+         
         draw_qTree();   // draw the query tree or the 
         
 
@@ -366,6 +225,8 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
 
 function setupTree(rootTree, h, w) {
   var minY = 10000;   // used to compute the best scale for the input tree
+  var minX = 10000;   // used to compute the best scale for the input tree
+  var maxX = 0;   // used to compute the best scale for the input tree
   treeLayout(rootTree).map(function(d,i) {
     if (d.depth==0){
        d.treeX = w/2+queryH/2.7; 
@@ -399,10 +260,22 @@ function setupTree(rootTree, h, w) {
         if (child.treeY-rC<minY) {
           minY = child.treeY-rC;
         };
+        if (child.treeX<minX) {
+          minX = child.treeX;
+        };
+        if (child.treeX>maxX) {
+          maxX = child.treeX;
+        };
         begin +=additional;
       });
     }
-    scaleRate = h/(h-minY);
+    var mid = queryH+(width-queryH)/2;
+    var disX1 = maxX-mid;
+    var disX2 = mid -minX;
+    var disX = Math.max(disX1, disX2);
+    var scaleX = ((width-queryH)*0.7)/disX;
+    var scaleY = h/(h-minY);
+    scaleRate = Math.min(scaleX, scaleY);
     return d;
   });
 }  
@@ -499,23 +372,7 @@ function drawNodeAndLink() {
         if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] )
                 return 1;        
     }); 
-/*
-  nodeEnter.append("text")
-    .attr("class", "nodeText")
-    .attr("x", function(d) { return d.treeX; })
-    .attr("y", function(d) { return d.treeY; })
-    .attr("dy", ".21em")
-    .attr("font-family", "sans-serif")
-    .attr("font-size", "10px")
-    .style("text-anchor", "middle")
-    .text(function(d) {   
-      if (d.key=="0" || d.key=="1")
-            return "";
-      else 
-        return d.key; });*/
 
-   nodeEnter.on('mouseover', mouseovered)
-      .on("mouseout", mouseouted);
 }
 
 function draw_qTree() {
@@ -544,11 +401,11 @@ function draw_qTree() {
         if (d.name.indexOf("ddd ")>-1 || d.name.indexOf("eee ")>-1)
          return 1; 
         else  
-                return 0.3;        
+                return 0.5;        
     }); 
 
-  // nodeEnterQ.on('mouseover', mouseovered)
-  //    .on("mouseout", mouseouted);
+   nodeEnterQ.on('mouseover', mouseovered)
+      .on("mouseout", mouseouted);
 
 
   qnodes.forEach(function(d){

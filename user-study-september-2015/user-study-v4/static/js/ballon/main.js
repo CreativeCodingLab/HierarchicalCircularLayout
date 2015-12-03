@@ -53,7 +53,7 @@ function ballon(queryData, randomSeed, heightTree, degreeTree, container, treeOn
           if (d.depth == 0){
             qroot = d;
           } 
-          d.size=1000;
+          d.size=500;
           d.externalImports=[];
           d.externalLinkCount =0;
         });  
