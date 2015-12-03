@@ -348,10 +348,10 @@ function swapBranches(hasSubtree) {
 /// Make a subttree for Study 1
 function makeSubtree() {
   var a =  random()%nodes.length;
-  var dif = maxDepth-qmaxDepth;
-  if (dif<3)
-    dif = 3;
-  while (nodes[a].depth>=dif || nodes[a].depth<1){
+  //var dif = maxDepth-qmaxDepth;
+  //if (dif<2)
+  //  dif = 2;
+  while (nodes[a].depth>=3 || nodes[a].depth<0){
     a =  random()%nodes.length;
   }
   

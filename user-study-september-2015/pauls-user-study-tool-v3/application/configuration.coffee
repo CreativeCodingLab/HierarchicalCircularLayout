@@ -34,12 +34,12 @@ module.exports = ->
   
   layouts = [
   	       #'circlePacking', # not used for the study any longer
-  	'treeMap',
+  	'hcl',
+    'icicle',
+    'treeMap',
     'ballon',
     'classical',
-    'hcl',
     'radialTree',
-    'icicle',
            #'radial', #This is for edge bundling only
   	
   	
@@ -55,11 +55,12 @@ module.exports = ->
     "3-Rb-E2FpathwayReactome_Dot.json",
     "54_DAG Pathway.json",
     "flare subtree1.json"
-    "flare subtree2.json"
+      #"flare subtree2.json"
     "carnivoraWithRelationships subtree.json",
     "carnivoraWithRelationships subtree2.json",
     
     
+    "0_RAF_Dot.json", #intro
     "3-Rb-E2FpathwayReactome_Dot.json",
     "HIV Infection_Dot.json",
     "2_ERBB2 Pathway orginal.json", 
@@ -79,7 +80,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [1021,1311,2522,3422];
+  randomList = [1021,1321,222,322,121,131,522,342];
   
   addText = (main, text) ->
     main.append('div').classed 'row', true
@@ -98,7 +99,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[13], randomSeed, 6, 6, true, true, true
+              addVis main, layout, queryDatasets[11], randomSeed, 6, 8, false, true, false
               return addContinue main
           }
         ]
