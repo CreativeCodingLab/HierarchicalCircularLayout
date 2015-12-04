@@ -226,11 +226,6 @@ function generateRandomTree(treeHeight,degree) {
   }
 
 function swapBranches(hasSubtree) {
-  qnodes.forEach(function(d) {
-  //  d.name = "";
-  //  d.key = "";
-  }); 
-
   var b =  random()%qnodes.length;
   while (qnodes[b].depth>=3 || qnodes[b].depth<1 || !qnodes[b].children){
     b =  random()%qnodes.length;
@@ -243,8 +238,6 @@ function swapBranches(hasSubtree) {
     || qnodes[b].parent== qnodes[c].parent){
     c =  random()%qnodes.length;
   }
-
-  
 
   function getFirstLevelParent(n1){
     if (n1.depth==0){
@@ -266,8 +259,6 @@ function swapBranches(hasSubtree) {
     }
     return index;
   }
-
-
   
   var parentB = qnodes[b].parent;
   var parentC = qnodes[c].parent;
@@ -300,6 +291,8 @@ function swapBranches(hasSubtree) {
         connectedNames[leafNodes[d].imports[i]] = 1;   
     }
 
+    var farDis = 0;
+    var farId = -1;
     for (var i=0; i<leafNodes.length;i++){
       if (connectedNames[leafNodes[i].name]){
         e = i;
@@ -353,7 +346,7 @@ function swapBranches(hasSubtree) {
     return ancestors;
   }
 
-  function d3_layout_bundleLeastCommonAncestor(a, b) {
+  function d3_layout_numberOfHops(a, b) {
     if (a === b) return a;
     var aNodes = d3_layout_bundleAncestors(a),
         bNodes = d3_layout_bundleAncestors(b),
@@ -366,9 +359,10 @@ function swapBranches(hasSubtree) {
       bNode = bNodes.pop();
     }
     //return sharedNode;
-    return aNodes.length+bNodes.length;
+    return aNodes.length+bNodes.length+1;
   }
-  var numberOfHops = (d3_layout_bundleLeastCommonAncestor(leafNodes[d], leafNodes[e])+1);  
+
+  var numberOfHops = d3_layout_numberOfHops(leafNodes[d], leafNodes[e]);  
   window.numberOfHops = numberOfHops;
   return numberOfHops;
 }

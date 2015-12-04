@@ -215,6 +215,7 @@ layouts = [
 dataPath = 'data/';
 
 queryDatasets = [
+/*
   "0_RAF_Dot.json",
   	"1_Activation of Pro-caspase 8 Pathway.json",
     "2_ERBB2 Pathway.json",
@@ -225,7 +226,7 @@ queryDatasets = [
     "flare subtree1.json",
     // "flare subtree2.json",
     "carnivoraWithRelationships subtree.json",
-    "carnivoraWithRelationships subtree2.json"
+    "carnivoraWithRelationships subtree2.json"*/
 ].map(function(d) {
     return "" + dataPath + d;
   });
