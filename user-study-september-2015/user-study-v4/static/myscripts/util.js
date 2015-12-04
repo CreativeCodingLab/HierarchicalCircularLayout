@@ -159,7 +159,7 @@ function colorQ(d) {
    return "#f00"; 
   }
   else if (d.name.indexOf("ddd ")>-1){
-   return "#0f0"; 
+   return "#ff0"; 
   }
   else if (d.name.indexOf("eee ")>-1){
    return "#0f0"; 
@@ -228,11 +228,6 @@ function generateRandomTree(treeHeight,degree) {
   }
 
 function swapBranches(hasSubtree) {
-  qnodes.forEach(function(d) {
-  //  d.name = "";
-  //  d.key = "";
-  }); 
-
   var b =  random()%qnodes.length;
   while (qnodes[b].depth>=3 || qnodes[b].depth<1 || !qnodes[b].children){
     b =  random()%qnodes.length;
@@ -245,8 +240,6 @@ function swapBranches(hasSubtree) {
     || qnodes[b].parent== qnodes[c].parent){
     c =  random()%qnodes.length;
   }
-
-  
 
   function getFirstLevelParent(n1){
     if (n1.depth==0){
@@ -268,8 +261,6 @@ function swapBranches(hasSubtree) {
     }
     return index;
   }
-
-
   
   var parentB = qnodes[b].parent;
   var parentC = qnodes[c].parent;
@@ -294,18 +285,55 @@ function swapBranches(hasSubtree) {
   var d =  random()%leafNodes.length;
   var e =  -1;
   if (hasSubtree){
-    var connectedNames = {};
-    while (!leafNodes[d].imports || leafNodes[d].imports.length<=1 ){
-      d =  random()%leafNodes.length;
-    }
-    for (var i=0; i<leafNodes[d].imports.length;i++){
-        connectedNames[leafNodes[d].imports[i]] = 1;   
+    var maxConnected = 0;
+    for (var i=0; i<leafNodes.length;i++){
+      var connectedNames = getConnectedList(i);
+      if (connectedNames.count>maxConnected){
+        maxConnected = connectedNames.count;
+      }   
     }
 
+    var minConnect;
+    if (maxConnected<3)
+      minConnect = maxConnected;
+    else
+      minConnect =3;
+
+    console.log(maxConnected+" "+minConnect);
+    while (getConnectedList(d).count<minConnect){
+      d =  random()%leafNodes.length;
+    }
+    var connectedList = getConnectedList(d);
+    function getConnectedList(n1){
+      var list = {};
+      list.count = 0;
+      for (var i=0; i<leafNodes[n1].imports.length;i++){
+        list[leafNodes[n1].imports[i]] = 1;   
+        list.count++;
+      }
+      for (var i=0; i<leafNodes.length;i++){
+        for (var j=0; j<leafNodes[i].imports.length;j++){
+          if (leafNodes[i].imports[j] == leafNodes[n1].name && !list[leafNodes[i].name]){
+            list.count++;
+            list[leafNodes[i].name] = 1;   
+          }
+            
+        }
+      }
+      return list;
+    }  
+
+   
+    var farDis = 0;
+    var farId = -1;
     for (var i=0; i<leafNodes.length;i++){
-      if (connectedNames[leafNodes[i].name]){
-        e = i;
-        break;
+      if (connectedList[leafNodes[i].name]){
+        var numHops = d3_layout_numberOfHops(leafNodes[d], leafNodes[i])
+        if (numHops>farDis){
+          farDis = numHops;
+          farId = i;
+        }
+        e = farId;
       }   
     }
   }
@@ -313,7 +341,6 @@ function swapBranches(hasSubtree) {
     d = random()%leafNodes.length;
     e = random()%leafNodes.length;
     
-    var connectedNames = {};
     while (d==e || isConnected(d,e) || leafNodes[d].imports.length<1 || leafNodes[e].imports.length<1
       || leafNodes[d].imports.length>3 || leafNodes[e].imports.length>3){   
        d = random()%leafNodes.length;
@@ -355,7 +382,7 @@ function swapBranches(hasSubtree) {
     return ancestors;
   }
 
-  function d3_layout_bundleLeastCommonAncestor(a, b) {
+  function d3_layout_numberOfHops(a, b) {
     if (a === b) return a;
     var aNodes = d3_layout_bundleAncestors(a),
         bNodes = d3_layout_bundleAncestors(b),
@@ -368,9 +395,10 @@ function swapBranches(hasSubtree) {
       bNode = bNodes.pop();
     }
     //return sharedNode;
-    return aNodes.length+bNodes.length;
+    return aNodes.length+bNodes.length+1;
   }
-  var numberOfHops = (d3_layout_bundleLeastCommonAncestor(leafNodes[d], leafNodes[e])+1);  
+
+  var numberOfHops = d3_layout_numberOfHops(leafNodes[d], leafNodes[e]);  
   window.numberOfHops = numberOfHops;
   return numberOfHops;
 }
