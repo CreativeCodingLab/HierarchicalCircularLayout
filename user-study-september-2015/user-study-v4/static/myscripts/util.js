@@ -303,7 +303,7 @@ function swapBranches(hasSubtree) {
       d =  random()%leafNodes.length;
     }
 
-    console.log(maxConnected+" "+minConnect+" getConnectedList(d).count="+getConnectedList(d).count);
+   // console.log(maxConnected+" "+minConnect+" getConnectedList(d).count="+getConnectedList(d).count);
     var connectedList = getConnectedList(d);
     function getConnectedList(n1){
       var list = {};
