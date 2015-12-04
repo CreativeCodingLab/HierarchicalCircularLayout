@@ -1,3 +1,4 @@
 static/output/*.txt
+static/output*
 *.log
 node_modules
