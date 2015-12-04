@@ -42,7 +42,7 @@ app.use '/postData', bodyParser.json(), (request, response) ->
   writeData request.body
   response.end()
 
-app.get '/application', browserify('./application/main.coffee')
+app.get '/applicationOld', browserify('./applicationOld/main.coffee')
 
 port = process.argv[2] || process.env.PORT || 8080
 ip = process.env.IP || '0.0.0.0'

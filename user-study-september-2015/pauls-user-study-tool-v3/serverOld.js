@@ -65,7 +65,7 @@
     return response.end();
   });
 
-  app.get('/application', browserify('./application/main.coffee'));
+  app.get('/application', browserify('./applicationOld/main.coffee'));
 
   port = process.argv[2] || process.env.PORT || 8080;
 

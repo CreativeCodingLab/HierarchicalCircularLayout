@@ -150,7 +150,6 @@ function color(d) {
 }
 
 function colorQ(d) {
-  console.log("qmaxDepth="+qmaxDepth);
   var step = (maxSat-minSat)/qmaxDepth;
   var sat = Math.round(maxSat-d.depth*step);
   
@@ -294,7 +293,7 @@ function swapBranches(hasSubtree) {
   var e =  -1;
   if (hasSubtree){
     var connectedNames = {};
-    while (!leafNodes[d].imports || leafNodes[d].imports.length<1 ){
+    while (!leafNodes[d].imports || leafNodes[d].imports.length<=1 ){
       d =  random()%leafNodes.length;
     }
     for (var i=0; i<leafNodes[d].imports.length;i++){
@@ -318,8 +317,7 @@ function swapBranches(hasSubtree) {
        d = random()%leafNodes.length;
        e = random()%leafNodes.length;
     }
-    console.log(d+" "+e+ " "+ isConnected(d,e));
-
+    
     function isConnected(n1, n2){
       var connectedNames = {};
       for (var i=0; i<leafNodes[n1].imports.length;i++){
@@ -342,6 +340,37 @@ function swapBranches(hasSubtree) {
   qnodes[c].name = "ccc "+qnodes[c].name;
   leafNodes[d].name = "ddd "+leafNodes[d].name;
   leafNodes[e].name = "eee "+leafNodes[e].name;
+
+  function d3_layout_bundleAncestors(node) {
+    var ancestors = [],
+        parent = node.parent;
+    while (parent != null) {
+      ancestors.push(node);
+      node = parent;
+      parent = parent.parent;
+    }
+    ancestors.push(node);
+    return ancestors;
+  }
+
+  function d3_layout_bundleLeastCommonAncestor(a, b) {
+    if (a === b) return a;
+    var aNodes = d3_layout_bundleAncestors(a),
+        bNodes = d3_layout_bundleAncestors(b),
+        aNode = aNodes.pop(),
+        bNode = bNodes.pop(),
+        sharedNode = null;
+    while (aNode === bNode) {
+      sharedNode = aNode;
+      aNode = aNodes.pop();
+      bNode = bNodes.pop();
+    }
+    //return sharedNode;
+    return aNodes.length+bNodes.length;
+  }
+  var numberOfHops = (d3_layout_bundleLeastCommonAncestor(leafNodes[d], leafNodes[e])+1);  
+  window.numberOfHops = numberOfHops;
+  return numberOfHops;
 }
 
 
