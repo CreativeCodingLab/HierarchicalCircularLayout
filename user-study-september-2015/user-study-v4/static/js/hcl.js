@@ -19,6 +19,7 @@ var nodes, links, linkTree, root;
 
 
 function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubtree, showSubtree_) { //showSubtree==true --> Color the query tree in hcl
+  var numberOfHops = -1;
   showSubtree = showSubtree_;
   seed1 = randomSeed;
   nodes = [];
@@ -60,7 +61,6 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
     queryH = height;
     queryW = width;
   }
-  console.log("queryH="+queryH+"  width="+width+"  height="+height);  
   var svg = container.append("svg")
       .attr("width", width)
       .attr("height", height);
@@ -80,7 +80,14 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
   var diagonal;
     
   if (queryData){
+    // Paul stuff
+    var myPromise = new Promise(function(resolve) {
       d3.json(queryData, function(error, classes) {
+    //    resolve(classes);
+    //  })
+    //})
+
+      // d3.json(queryData, function(error, classes) {
         var cluster = d3.layout.cluster()
           .size([360, innerRadius])
           .sort(null)
@@ -103,7 +110,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           // Edge bundling links  
           qlinks = packageImports(qnodes);
            // swapBranches for study2
-          swapBranches(hasSubtree);
+          numberOfHops = swapBranches(hasSubtree);
         }
         qnodes.forEach(function(child) { 
           var childDepth = computeDepth(child);
@@ -176,9 +183,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
           }  
         });  
         
-         
         draw_qTree();   // draw the query tree or the 
-        
 
         if (treeOnly)   // draw the search (big tree) for the first study
           main();
@@ -191,13 +196,20 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
             .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
             .attr("d", lineBundle);   
         }
+        resolve("Saaaaaa!");
+     
      });
-   } 
-  
+    });
+
+    myPromise.then(function(classes) {
+        console.log("classes ="+classes);
+        console.log("numberOfHops2   ="+numberOfHops);
+        return numberOfHops;
+    });      
+  } 
 
   // Define the layout ********************************************
   function main(){   
-
     //Assign id to each node, root id = 0
     nodes.forEach(function(d,i) {
       d.id =i;
@@ -218,6 +230,7 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
     
     drawNodeAndLink();
     //update();
+
 
     
  }// End of main() ********************************************************************************
