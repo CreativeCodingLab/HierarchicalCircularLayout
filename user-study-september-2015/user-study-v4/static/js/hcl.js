@@ -17,6 +17,10 @@ var nodes, links, linkTree, root;
 
 
 
+//*****************************************
+// Change height, degree = 6, 8
+// Update data list of study 1
+
 
 function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubtree, showSubtree_) { //showSubtree==true --> Color the query tree in hcl
   var numberOfHops = -1;
@@ -417,8 +421,8 @@ function draw_qTree() {
                 return 0.5;        
     }); 
 
-  // nodeEnterQ.on('mouseover', mouseovered)
-  //     .on("mouseout", mouseouted);
+   nodeEnterQ.on('mouseover', mouseovered)
+       .on("mouseout", mouseouted);
 
 
   qnodes.forEach(function(d){

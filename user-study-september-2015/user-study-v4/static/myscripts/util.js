@@ -299,17 +299,20 @@ function swapBranches(hasSubtree) {
     else
       minConnect =3;
 
-    console.log(maxConnected+" "+minConnect);
     while (getConnectedList(d).count<minConnect){
       d =  random()%leafNodes.length;
     }
+
+    console.log(maxConnected+" "+minConnect+" getConnectedList(d).count="+getConnectedList(d).count);
     var connectedList = getConnectedList(d);
     function getConnectedList(n1){
       var list = {};
       list.count = 0;
       for (var i=0; i<leafNodes[n1].imports.length;i++){
-        list[leafNodes[n1].imports[i]] = 1;   
-        list.count++;
+        if (!list[leafNodes[n1].imports[i]]){
+          list[leafNodes[n1].imports[i]] = 1;   
+          list.count++;
+        }
       }
       for (var i=0; i<leafNodes.length;i++){
         for (var j=0; j<leafNodes[i].imports.length;j++){

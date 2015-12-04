@@ -25,7 +25,7 @@ function treeMap(queryData, randomSeed, heightTree, degreeTree, container, treeO
     queryH = height;
 
   treemap = d3.layout.treemap()
-      .padding(6)
+      .padding(8)
       .size([width-queryH*1.2, height])
       .value(function(d) { return 1; });
 
@@ -127,7 +127,7 @@ function treeMap(queryData, randomSeed, heightTree, degreeTree, container, treeO
         
         // Draw query tree nodes ************************************************************* 
         var qtreemap = d3.layout.treemap()
-        .padding(6)
+        .padding(8)
         .size([queryH, queryH])
         .value(function(d) { return 1; });
 

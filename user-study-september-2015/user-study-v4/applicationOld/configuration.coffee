@@ -81,7 +81,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [1114,77241,2782,312,8747];
+  randomList = [61111,62222,63333,64444,65555];
   
   addText = (main, text) ->
     main.append('div').classed 'row', true
