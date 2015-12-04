@@ -272,7 +272,7 @@ part_1 = _.flatten(part_1_nested).map(function(pageOptions, i) {
 });
 
 d3.shuffle(part_1);
-// pages = pages.concat(part_1);
+pages = pages.concat(part_1);
 
 pages.push({
   name: 'part_1_outro',
@@ -454,7 +454,9 @@ var connectivityQuestion = function(pageOptions) {
           return d3.select(this).classed("active");
         }).datum();
         // console.info("Response: %o", response);
+        console.log("numHops", window.numberOfHops);
         data = Object.assign({}, pageOptions, {
+          numberOfHops: window.numberOfHops,
           response: response,
           timeTaken: timeTaken
         });
@@ -475,7 +477,6 @@ var part_2 = _.flatten(part_2_nested).map(function(pageOptions, i) {
 });
 
 d3.shuffle(part_2);
-
 pages = pages.concat(part_2);
 
 pages.push({
