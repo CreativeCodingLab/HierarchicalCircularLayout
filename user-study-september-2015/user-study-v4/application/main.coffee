@@ -27,7 +27,7 @@ updatePage = (page) ->
     console.group "Page: %o", page.name
     opts = { main, userId, userStartTime }
     page.func(opts)
-      .then resolve
+      .then (d) -> resolve(d)
 
 pages.reduce (previous, current) ->
   previous.then ->
