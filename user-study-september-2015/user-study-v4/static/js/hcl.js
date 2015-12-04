@@ -196,14 +196,14 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
             .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
             .attr("d", lineBundle);   
         }
-        resolve("Saaaaaa!");
+      //  resolve("Saaaaaa!");
      
      });
     });
 
     myPromise.then(function(classes) {
-        console.log("classes ="+classes);
-        console.log("numberOfHops2   ="+numberOfHops);
+      //  console.log("classes ="+classes);
+      //  console.log("numberOfHops2   ="+numberOfHops);
         return numberOfHops;
     });      
   } 
