@@ -132,11 +132,11 @@ function color(d) {
   
   if (showSubtree && d.name.indexOf("query tree")>-1){
    return d.children ? "rgb("+sat+", "+maxSat+", "+sat+")" // expanded package
-    : "#77f"; 
+    : "#8383BB"; 
   }
   else if (d.name.indexOf("found subtree by scanning")>-1){
     return d.children ? "rgb("+maxSat+", "+0+", "+0+")" // expanded package
-    : "#77f"; 
+    : "#8383BB"; 
   }    
   else if (listSelected1[d.name])
     return "#77ff77";
@@ -146,7 +146,8 @@ function color(d) {
     return "#ffaaff";
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#77f"; // leaf node
+    // : "#77f"; // leaf node
+    : "#8383BB";
 }
 
 function colorQ(d) {
