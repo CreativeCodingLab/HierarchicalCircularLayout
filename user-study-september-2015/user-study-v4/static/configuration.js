@@ -220,7 +220,7 @@ queryDatasets = [
     "2_ERBB2 Pathway.json",
     "3_Signaling to GPCR Subtree.json",
     "3_Signaling to GPCR Subtree2.json",
-    "3_NGF Pathway.json",
+    "3-Rb-E2FpathwayReactome_Dot.json",
     "54_DAG Pathway.json",
     "flare subtree1.json",
     // "flare subtree2.json",
@@ -300,7 +300,7 @@ pages.push({
     addVis(
       main, 
       'classical', 
-      "data/3_NGF Pathway.json", 
+      "data/0_RAF_Dot.json", 
       4562, 4, 4, false, true, false
     );
     d3.select('.frame').style({ border: null });
@@ -309,10 +309,11 @@ pages.push({
 });
 
 var connectivityDatasets = [
-  "2_ERBB2 Pathway orginal.json",
-  "3_Signaling to GPCR Pathway.json",
-  "flare package.json",
-  "carnivoraWithRelationships.json",
+    "3-Rb-E2FpathwayReactome_Dot.json",
+    "HIV Infection2.json",
+    "2_ERBB2 Pathway2.json", 
+    "flare package2.json",
+
 ].map(function(d) {
     return "" + dataPath + d;
   });
