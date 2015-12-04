@@ -318,24 +318,48 @@ var connectivityDatasets = [
     return "" + dataPath + d;
   });
 
-var part_2_nested = connectivityDatasets.map(function(data, di) {
-  return layouts.map(function(layout, li) {
-      var r = Math.sin(i++) * 1e4;
-      var rand = r - Math.floor(r);
-      var hasSubtree = ((di+li) % 2) === 0 ? true : false;
-      var answer = hasSubtree ? "Yes" : "No";
-      var pageOptions;
-      var pageName = "part_2_layout_" + li + "_data_" + di + "_a";
-      pageOptions = {
-        queryData: data,
-        layout: layout,
-        randomSeed: Math.floor((di + li) * 100), // rand * 100,
-        pageName: pageName,
-        question: "connectivity",
-        correctAnswer: answer,
-        hasSubtree: hasSubtree
-      };
-      return pageOptions;
+// var part_2_nested = connectivityDatasets.map(function(data, di) {
+//   return layouts.map(function(layout, li) {
+//       var r = Math.sin(i++) * 1e4;
+//       var rand = r - Math.floor(r);
+//       var hasSubtree = ((di+li) % 2) === 0 ? true : false;
+//       var answer = hasSubtree ? "Yes" : "No";
+//       var pageOptions;
+//       var pageName = "part_2_layout_" + li + "_data_" + di + "_a";
+//       pageOptions = {
+//         queryData: data,
+//         layout: layout,
+//         randomSeed: Math.floor((di + li) * 100), // rand * 100,
+//         pageName: pageName,
+//         question: "connectivity",
+//         correctAnswer: answer,
+//         hasSubtree: hasSubtree
+//       };
+//       return pageOptions;
+//   });
+// });
+
+var part_2_nested = d3.range(4).map(function(_, randi) {
+  return connectivityDatasets.map(function(data, di) {
+    return layouts.map(function(layout, li) {
+        var r = Math.sin(i++) * 1e4;
+        var rand = r - Math.floor(r);
+        var hasSubtree = ((di+li) % 2) === 0 ? true : false;
+        var answer = hasSubtree ? "Yes" : "No";
+        var pageOptions;
+        var pageName = "part_2_layout_" + li + "_data_" + di + "_a";
+        pageOptions = {
+          queryData: data,
+          layout: layout,
+          // randomSeed: Math.floor((di + li) * 100), // rand * 100,
+          randomSeed: randi * 100,
+          pageName: pageName,
+          question: "connectivity",
+          correctAnswer: answer,
+          hasSubtree: hasSubtree
+        };
+        return pageOptions;
+    });
   });
 });
 
