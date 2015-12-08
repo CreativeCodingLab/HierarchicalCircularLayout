@@ -224,7 +224,9 @@ function generateRandomTree(treeHeight,degree) {
       }
        
       return children;
-    }  
+    } 
+    window.numberOfLeafNodes = countLeafnodes(root);
+
   }
 
 function swapBranches(hasSubtree) {
@@ -450,20 +452,21 @@ function makeSubtree() {
 
   // count leaf nodes of randomized tree
 
-  function countLeafnodes(n) {
-    if(n.children){
-      var count = 0;
-      n.children.forEach(function(d) {
-        count += countLeafnodes(d);
-      });
-      return count;
-    }
-    else
-      return 1;
-  };
   window.numberOfLeafNodes = countLeafnodes(root);
-  console.log("NumLeafs ="+window.numberOfLeafNodes);
-}  
+} 
+
+function countLeafnodes(n) {
+  if(n.children){
+    var count = 0;
+    n.children.forEach(function(d) {
+      count += countLeafnodes(d);
+    });
+    return count;
+  }
+  else
+    return 1;
+};
+
 
 
            

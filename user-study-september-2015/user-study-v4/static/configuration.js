@@ -179,6 +179,8 @@ subtreeQuestion = function(pageOptions) {
           response: response,
           timeTaken: timeTaken
         });
+        console.info("window.numberOfLeafNodes: %o", window.numberOfLeafNodes);
+        
         // console.info("Data: %o", data);
         main.html('');
         return resolve(data);
@@ -383,7 +385,7 @@ var connectivityQuestion = function(pageOptions) {
     addHtml(main, html);
     // addVis(main, layout, queryData, randomSeed, 6, 6, true, true, true);
     var hasSubtree = pageOptions.hasSubtree;
-    console.log(hasSubtree);
+    console.log("hasSubtree="+hasSubtree);
     
     addVis(main, layout, queryData, randomSeed, 6, 6, false, hasSubtree, false);
     
