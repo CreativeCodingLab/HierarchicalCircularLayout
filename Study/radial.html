@@ -7,7 +7,7 @@
 <script src="../myscripts/util.js"></script>
 <script>
 
-var diameter = 750,
+var diameter = 840,
     radius = diameter / 2,
     innerRadius = radius - 20;
 
@@ -46,12 +46,12 @@ var maxDepth = 0;
 
 //var file = "../data/1_Activation of Pro-caspase 8 Pathway.json";
 //var file = "../data/2_ERBB2 Pathway.json";
-var file = "../data/3_Signaling to GPCR Pathway.json";
+//var file = "../data/3_Signaling to GPCR Pathway.json";
 //var file = "../data/flare package.json";
 //var file = "../data/carnivoraWithRelationships.json";
 //var file = "../data/mammalsWithRelationships.json";
 
-//var file = "../data/3_NGF Pathway.json";
+var file = "../data/3_NGF Pathway.json";
 
 //var file = "../data/HIV Infection_Dot.json";
 
@@ -205,9 +205,9 @@ var nodeEnter = svg.selectAll("g.node").data(nodes)
           return (0)
         else {
           if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
-              return 66/Math.sqrt(nodes.length);
+              return 85/Math.sqrt(nodes.length);
           else 
-             return 38/Math.sqrt(nodes.length);
+             return 45/Math.sqrt(nodes.length);
           }
         })
       .style("stroke", function(d, i) {

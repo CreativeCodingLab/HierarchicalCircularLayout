@@ -447,6 +447,22 @@ function makeSubtree() {
   nodes[a2].childCount1++;
   var node3 = copyNode(qroot,nodes[a2].depth, "test tree");
   nodes[a2].children.push(node3);*/
+
+  // count leaf nodes of randomized tree
+
+  function countLeafnodes(n) {
+    if(n.children){
+      var count = 0;
+      n.children.forEach(function(d) {
+        count += countLeafnodes(d);
+      });
+      return count;
+    }
+    else
+      return 1;
+  };
+  window.numberOfLeafNodes = countLeafnodes(root);
+  console.log("NumLeafs ="+window.numberOfLeafNodes);
 }  
 
 

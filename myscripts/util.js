@@ -25,13 +25,13 @@ var diameter = 1000,
 
 
   // Example for Steve
-  listSelected1["flare.PI3K/AKT activation"] =1;
-  listSelected2["flare.Activation of TRKA receptors"] =1;
+  //listSelected1["flare.PI3K/AKT activation"] =1;
+  //listSelected2["flare.Activation of TRKA receptors"] =1;
+  listSelected1["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.RAF/MAP kinase cascade.ERK activation.ERK1 activation.MEK1 binds ERK-1"] =1;
   listSelected3["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.TRKA recruits RIT and RIN"] =1;
-  listSelected4["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.RAF/MAP kinase cascade.ERK activation.ERK1 activation.MEK1 binds ERK-1"] =1;
-    
-  /*
-// RAF
+  listSelected4["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.RIT/RIN are activated"] =1;  
+  
+  // RAF
   //listSelected1["flare.ERK activation.ERK2 activation"] = 1;
   //listSelected2["flare.MEK activation.RAF phosphorylates MEK"] = 1;
   listSelected3["flare.MEK activation"] = 1;
@@ -45,25 +45,25 @@ var diameter = 1000,
   //ERBB2
   //listSelected1["flare.PI3K events in ERBB2 signaling.PIP3 activates AKT signaling"] = 1;
   //listSelected2["flare.SHC1 events in ERBB2 signaling.RAF/MAP kinase cascade.ERK activation.ERK1 activation"] = 1;
-  listSelected3["flare.GRB2 events in ERBB2 signaling"] = 1;
+  //listSelected3["flare.GRB2 events in ERBB2 signaling"] = 1;
   
   // GPCR
   //listSelected1["Signaling by GPCR.Opioid Signalling.G-protein mediated events.PLC beta mediated events.Ca-dependent events.CaM pathway"] = 1;
   //listSelected2["Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events.Effects of PIP2 hydrolysis"] = 1;
   //listSelected1["flare.Signaling by GPCR.Opioid Signalling.G-protein mediated events.PLC beta mediated events.Ca-dependent events.CaM pathway"] = 1;;
   //listSelected2["flare.Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events.Effects of PIP2 hydrolysis"] = 1;
-  listSelected3["Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events"] = 1;
+  //listSelected3["Signaling by GPCR.GPCR downstream signaling.G alpha (q) signalling events"] = 1;
   
   // Flare
   //listSelected1["flare.query.methods"] = 1;
   //listSelected2["flare.vis.operator.layout"] = 1;
-  listSelected3["flare.vis.operator.layout"] = 1;
+  //listSelected3["flare.vis.operator.layout"] = 1;
   
   
   // Carnivora
   //listSelected1["carnivora.0.0.0.0.0.0.0.0.0.0.0"] = 1;
   //listSelected2["carnivora.0.0.0.1.0.0.0"] = 1;
-  listSelected3["carnivora.0.0.0.0.0.0.1.0.0"] = 1;*/
+  //listSelected3["carnivora.0.0.0.0.0.0.1.0.0"] = 1;
   
 
 function drawColorLegend() {
@@ -136,13 +136,15 @@ function color(d) {
   var sat = Math.round(maxSat-d.depth*step);
   if (listSelected1[d.name] || listSelected2[d.name])
     return "#77ff77";
-  else if (listSelected3[d.name] || listSelected4[d.name])
+  else if (listSelected3[d.name])// || listSelected4[d.name])
     return "#ffff66";
+  else if (listSelected4[d.name])// || listSelected4[d.name])
+    return "#ff88ff";
   
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
-    : "#77f"; // leaf node
+    : "#8383BB"; // leaf node
 }
 
 function colorFaded(d) {
@@ -170,7 +172,7 @@ function getRadius(d) {
  // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*0.75;
+      : scaleCircle*0.85;
      // : 1; // leaf node
 }
 

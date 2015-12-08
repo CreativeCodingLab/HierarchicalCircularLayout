@@ -10,7 +10,7 @@ var lineBundle = d3.svg.line()
       .y(function(d) { return d.y; });
 
 var width = 1400,
-    height = 780,
+    height = 800,
     root;
 
 /*var force = d3.layout.force()
@@ -57,7 +57,7 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/0_RAF_Dot.json";
 
 //var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
-//var file = "data/2_ERBB2 Pathway.json";
+//var file = "data/2_ERBB2 Pathway orginal.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
 //var file = "data/flare package.json";
 //var file = "data/carnivoraWithRelationships.json";
@@ -65,9 +65,9 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 
 //var file = "data/1_RAF-Cascade Pathway.json";
 //var file = "data/54_DAG Pathway.json";
-//var file = "data/3_NGF Pathway.json";
+var file = "data/3_NGF Pathway.json";
 
-var file = "data/HIV Infection_Dot.json";
+//var file = "data/HIV Infection_Dot.json";
 
 //var file = "data/3_Innate Immune System_Dot.json";
 
@@ -223,7 +223,6 @@ function setupTree() {
       });
     }
     scaleRate = height/(height-minY);
-    debugger;
     console.log(" minY = "+minY +"  "+scaleRate);
    // console.log("maxDepth = "+maxDepth);
     return d;
@@ -326,7 +325,7 @@ function update() {
       .attr("r", function(d){ 
       if ((listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
         && !d.children)
-        return 2*getRadius(d);
+        return 1.75*getRadius(d);
       else
          return getRadius(d);
       })

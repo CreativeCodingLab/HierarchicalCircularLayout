@@ -8,7 +8,7 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="../myscripts/util.js"></script>
 <script>
-var diameter = 750,
+var diameter = 870,
     radius = diameter / 2,
     innerRadius = radius - 120;
 
@@ -113,9 +113,7 @@ d3.json(file, function(error, classes) {
         .append("circle")
         .attr({
             r: function(d) { 
-                if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name] )
-                    return diameter*1/numLeaf;
-                return diameter*0.65/numLeaf; },
+                return diameter*0.5/numLeaf; },
             cx: function(d) { return d.x },
             cy: function(d) { return d.y }
         })
@@ -130,7 +128,7 @@ d3.json(file, function(error, classes) {
     })
      .style("stroke-width",  function(d){ 
       if (d.depth<=1) return 2 ;
-         else return 1.5 ; });
+         else return 1 ; });
 
 
      // Draw highlighted nodes to the top og a graph
@@ -160,7 +158,7 @@ d3.json(file, function(error, classes) {
         .append("circle")
         .attr({
             r: function(d) { 
-               return diameter*1/numLeaf; },
+               return diameter*1.1/numLeaf; },
             cx: function(d) { return d.x },
             cy: function(d) { return d.y }
         })
@@ -175,7 +173,7 @@ d3.json(file, function(error, classes) {
     })
      .style("stroke-width",  function(d){ 
       if (d.depth<=1) return 2 ;
-         else return 1.5 ; });
+         else return 1 ; });
 
 
   /*    
