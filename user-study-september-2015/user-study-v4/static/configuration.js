@@ -177,7 +177,8 @@ subtreeQuestion = function(pageOptions) {
         // console.info("Response: %o", response);
         data = Object.assign({}, pageOptions, {
           response: response,
-          timeTaken: timeTaken
+          timeTaken: timeTaken, 
+          numberOfLeafNodes: window.numberOfLeafNodes
         });
         console.info("window.numberOfLeafNodes: %o", window.numberOfLeafNodes);
         
