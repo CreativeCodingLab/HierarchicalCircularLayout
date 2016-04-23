@@ -17,7 +17,7 @@ function ballon(queryData, randomSeed, heightTree, degreeTree, container, treeOn
   // fit visualization to container
   width = parseInt(container.style('width'), 10);
   height = parseInt(container.style('height'), 10);
-  queryH = width*0.3;
+  queryH = width*0.7;
   if (!treeOnly)
     queryH =height;
   radius = Math.min(height/2, (width-queryH) / 2);

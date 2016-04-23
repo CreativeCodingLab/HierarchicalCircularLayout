@@ -131,7 +131,7 @@ function color(d) {
   var sat = Math.round(maxSat-d.depth*step);
   
   if (showSubtree && d.name.indexOf("query tree")>-1){
-   return d.children ? "rgb("+sat+", "+maxSat+", "+sat+")" // expanded package
+   return d.children ? "rgb("+sat+", "+200+", "+sat+")" // expanded package
     : "#8383BB"; 
   }
   else if (d.name.indexOf("found subtree by scanning")>-1){
@@ -225,6 +225,25 @@ function generateRandomTree(treeHeight,degree) {
        
       return children;
     } 
+    console.log("****generateRandomTree");
+    console.log("countLeafnodes = "+countLeafnodes(root));
+    maxDepth = 0;
+    nodes.forEach(function(child) { 
+      if (child.depth>maxDepth){
+          maxDepth = child.depth;
+      }
+    });  
+    console.log("maxDepth= "+maxDepth);
+
+    var maxDegree = 0;
+    nodes.forEach(function(child) { 
+      if (child.children){
+        if (child.children.length>maxDegree){
+            maxDegree = child.children.length;
+        }
+      }
+    });  
+  //  console.log("maxDegree= "+maxDegree);
     window.numberOfLeafNodes = countLeafnodes(root);
 
   }
@@ -269,13 +288,13 @@ function swapBranches(hasSubtree) {
   var indexB = getChildIndex(qnodes[b]);
   var indexC = getChildIndex(qnodes[c]);
   
-  parentB.children.splice(indexB,1);
+  /*parentB.children.splice(indexB,1);
   parentC.children.push(qnodes[b]);
   qnodes[b].parent = parentC;
   
   parentC.children.splice(indexC,1);
   parentB.children.push(qnodes[c]);  
-  qnodes[c].parent = parentB;
+  qnodes[c].parent = parentB;*/
   
 
   var leafNodes = qnodes.filter(function(d){
@@ -451,6 +470,23 @@ function makeSubtree() {
   nodes[a2].children.push(node3);*/
 
   // count leaf nodes of randomized tree
+  console.log("countLeafnodes2= "+countLeafnodes(root));
+  maxDepth = 0;
+  nodes.forEach(function(child) { 
+    if (child.depth>maxDepth){
+        maxDepth = child.depth;
+    }
+  });  
+  console.log("maxDepth2= "+maxDepth);
+  var maxDegree = 0;
+    nodes.forEach(function(child) { 
+      if (child.children){
+        if (child.children.length>maxDegree){
+            maxDegree = child.children.length;
+        }
+      }
+    });  
+   // console.log("maxDegree2= "+maxDegree);
 
   window.numberOfLeafNodes = countLeafnodes(root);
 } 
@@ -465,6 +501,10 @@ function countLeafnodes(n) {
   }
   else
     return 1;
+};
+
+function countDepth(n) {
+   
 };
 
 

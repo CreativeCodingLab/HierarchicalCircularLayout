@@ -37,7 +37,7 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
     .attr("height", height);
 
   partition = d3.layout.partition()
-    .size([(width-queryH)*0.9, height*0.9])
+    .size([(width-queryH)*0.9, height*0.7])
     .value(function(d) { return 1; });
 
 //var nodes, links;    
@@ -137,7 +137,7 @@ function icicle(queryData, randomSeed, heightTree, degreeTree, container, treeOn
 
 
     var partition2 = d3.layout.partition()
-    .size([queryH*0.9, queryH*0.9])
+    .size([queryH*0.8, queryH*0.9])
     .value(function(d) { return 1; });
 
     qnodes = partition2.nodes(qroot);

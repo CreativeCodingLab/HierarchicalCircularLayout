@@ -27,14 +27,14 @@ var diameter = 1000,
   // Example for Steve
   //listSelected1["flare.PI3K/AKT activation"] =1;
   //listSelected2["flare.Activation of TRKA receptors"] =1;
-  listSelected1["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.RAF/MAP kinase cascade.ERK activation.ERK1 activation.MEK1 binds ERK-1"] =1;
-  listSelected3["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.TRKA recruits RIT and RIN"] =1;
-  listSelected4["flare.Signalling to ERKs.Signalling to p38 via RIT and RIN.RIT/RIN are activated"] =1;  
+  listSelected1["Signalling to ERKs.Signalling to p38 via RIT and RIN.RAF/MAP kinase cascade.ERK activation.ERK1 activation.MEK1 binds ERK-1"] =1;
+  listSelected3["Signalling to ERKs.Signalling to p38 via RIT and RIN.TRKA recruits RIT and RIN"] =1;
+  listSelected4["Signalling to ERKs.Signalling to p38 via RIT and RIN.RIT/RIN are activated"] =1;  
   
   // RAF
   //listSelected1["flare.ERK activation.ERK2 activation"] = 1;
   //listSelected2["flare.MEK activation.RAF phosphorylates MEK"] = 1;
-  listSelected3["flare.MEK activation"] = 1;
+  //listSelected3["flare.MEK activation"] = 1;
 
 
   // Ativation of Pro-Caspase 8 
@@ -130,16 +130,21 @@ function removeColorLegend() {
 }
 
 function color(d) {
-  var minSat = 0;
-  var maxSat = 230;
+  var minSat = 60;
+  var maxSat = 220;
   var step = (maxSat-minSat)/maxDepth;
   var sat = Math.round(maxSat-d.depth*step);
   if (listSelected1[d.name] || listSelected2[d.name])
+    //return "#77ff77";
     return "#77ff77";
   else if (listSelected3[d.name])// || listSelected4[d.name])
-    return "#ffff66";
+  //  return "#ffff66";
+  return "#ff00ff";
+  
+  //return "#000";
   else if (listSelected4[d.name])// || listSelected4[d.name])
-    return "#ff88ff";
+    return "#ff00ff";
+  //return "#000";
   
   //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
@@ -149,11 +154,11 @@ function color(d) {
 
 function colorFaded(d) {
   var minSat = 0;
-  var maxSat = 230;
-  var step = (maxSat-minSat)/maxDepth;
+  var maxSat = 180;
+  var step = (maxSat-minSat)/(maxDepth);
   var sat = Math.round(maxSat-d.depth*step);
  
-  //console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
+  console.log("maxDepth = "+maxDepth+"  sat="+sat+" d.depth = "+d.depth+" step="+step);
   return d._children ? "rgb("+sat+", "+sat+", "+sat+")"  // collapsed package
     : d.children ? "rgb("+sat+", "+sat+", "+sat+")" // expanded package
     : "#aaaacc"; // leaf node
@@ -172,7 +177,7 @@ function getRadius(d) {
  // console.log("scaleCircle = "+scaleCircle +" scaleRadius="+scaleRadius);
 return d._children ? scaleCircle*Math.pow(d.childCount1, scaleRadius)// collapsed package
       : d.children ? scaleCircle*Math.pow(d.childCount1, scaleRadius) // expanded package
-      : scaleCircle*0.85;
+      : scaleCircle*0.8;
      // : 1; // leaf node
 }
 
@@ -197,7 +202,6 @@ function childDepth1(n) {
       n.maxDepth = 0;
       n.children.forEach(function(d) {
         var childrenDeep = childDepth1(d);
-        console.log(" childrenDeep="+childrenDeep);
         if (childrenDeep>n.maxDepth)
           n.maxDepth = childrenDeep;
       });
@@ -205,6 +209,8 @@ function childDepth1(n) {
     else{
        n.maxDepth = n.depth;
     }
+    //console.log("maxDepth="+n.maxDepth);
+       
     return n.maxDepth;
 };
 

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<body>
 <meta charset="utf-8">
 
 <link rel="stylesheet" type="text/css" href="../main.css"></link>
@@ -8,7 +7,7 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="../myscripts/util.js"></script>
 <script>
-var diameter = 870,
+var diameter = 750,
     radius = diameter / 2,
     innerRadius = radius - 120;
 
@@ -17,8 +16,13 @@ var cluster = d3.layout.cluster()
     .sort(null)
     .value(function(d) { return d.size; });
 
-    
+var svg = d3.select("#tree-container").append("svg");
+ 
+var g1 = svg.append('g');
+var link = g1.append("g").selectAll(".link"),
+    node = g1.append("g").selectAll(".node");
 var bundle = d3.layout.bundle();
+
 var line;
 
 var nodes;
@@ -39,24 +43,19 @@ var linkTree_selection;
 
 //var file = "../data/1_RAF-Cascade Pathway.json";
 //var file = "../data/54_DAG Pathway.json";
-var file = "../data/3_NGF Pathway.json";
-
-//var file = "../data/HIV Infection_Dot.json";
-
-var svg = d3.select("body").append("svg")
-          .attr("width", diameter*1.2)
-          .attr("height", diameter+300);
-
+//var file = "../data/3_NGF Pathway.json";
+var file = "../data/3_NGF_Dot.json";
 
 var treeOnly = false;
-var tree = d3.layout.tree().size([diameter*1.1,diameter]);
-    
-d3.json(file, function(error, classes) {
-  
-  nodes = tree(packageHierarchy(classes));
-  links = packageImports(nodes);
 
-  linkTree = d3.layout.tree().links(nodes);
+d3.json(file, function(error, classes) {
+svg = d3.select("#tree-container").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter+300).append('g');
+    
+   var tree = d3.layout.tree().size([diameter,diameter]);
+    nodes = tree(packageHierarchy(classes));
+    nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
 
     nodes.forEach(function(d) { 
         if (d.depth>maxDepth)
@@ -67,19 +66,20 @@ d3.json(file, function(error, classes) {
     });
     var sub_y = nodes[1].y;
     nodes.forEach(function(d) { 
-        d.y = d.y-sub_y+20;
+        d.y = d.y-sub_y+160;
     }); 
     
    
    /// Hierarchical links
-    linkTree_selection = svg.selectAll(".linkTreeClassical").data(linkTree).enter(); 
+    linkTree = d3.layout.tree().links(nodes);
+    linkTree_selection = svg.selectAll(".linkTree").data(linkTree).enter(); 
     linkTree_selection.append("line")
-      .attr("class", "linkTreeClassical")
+      .attr("class", "linkTree")
       .attr("stroke", function(d) { 
             if (d.source.name=="")
                 return "#ff0000";
             else
-                return colorFaded(d.source);
+                return color(d.source);
         })
       .attr("stroke-width", function(d) { 
             if (d.source.name=="")
@@ -88,7 +88,7 @@ d3.json(file, function(error, classes) {
                 if (treeOnly)
                   return 1;
                 else
-                  return 1;
+                  return 0.6;
             }    
         })
       .attr("x1", function(d) { return d.source.x; })
@@ -97,48 +97,15 @@ d3.json(file, function(error, classes) {
       .attr("y2", function(d) { return Math.round(d.target.y); });
 
 
-   
-   // debugger
-    
-   var linkBundleClassical = d3.svg.line()
+   links = packageImports(nodes);
+
+
+//*************    
+  var _line = d3.svg.line()
     .interpolate("bundle")
     .tension(0.97)
     .x(function(d) { return d.x })
     .y(function(d) { return d.y })
-
-  
-   
-
-     svg.append("g").selectAll(".node").data(nodes).enter()
-        .append("circle")
-        .attr({
-            r: function(d) { 
-                return diameter*0.5/numLeaf; },
-            cx: function(d) { return d.x },
-            cy: function(d) { return d.y }
-        })
-     .style("fill", function(d) { 
-       if (d.depth==0)
-            return "#fff";// Disable root node
-        return color(d); 
-    })
-     .style("stroke", function(d) { 
-        if (listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || listSelected4[d.name] || d.depth<=1)
-                return "#000";
-    })
-     .style("stroke-width",  function(d){ 
-      if (d.depth<=1) return 2 ;
-         else return 1 ; });
-
-
-     // Draw highlighted nodes to the top og a graph
-      var nodeHiglighted = nodes.filter(function(d) { 
-      return listSelected1[d.name] || listSelected2[d.name]|| listSelected3[d.name] || listSelected4[d.name];
-      });
-
-
-
-
 
   node = svg.append("g").selectAll(".node");
   link = svg.append("g").selectAll(".link");
@@ -149,16 +116,22 @@ d3.json(file, function(error, classes) {
       .enter().append("path")
         .attr("class", "link")
         .attr("d", function(d) {
-          return linkBundleClassical(d)
+          return _line(d)
         })
-  }    
+  }   
 
 
-    svg.append("g").selectAll(".nodeHiglighted").data(nodeHiglighted).enter()
+
+//*************      
+   
+  
+    svg.append("g").selectAll(".node").data(nodes).enter()
         .append("circle")
         .attr({
             r: function(d) { 
-               return diameter*1.1/numLeaf; },
+                if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name] )
+                    return diameter*0.5/numLeaf;
+                return diameter*0.4/numLeaf; },
             cx: function(d) { return d.x },
             cy: function(d) { return d.y }
         })
@@ -172,24 +145,26 @@ d3.json(file, function(error, classes) {
                 return "#000";
     })
      .style("stroke-width",  function(d){ 
-      if (d.depth<=1) return 2 ;
-         else return 1 ; });
+      if (d.depth<=1) return 0 ;
+          return 1.5 ; 
+    });
+  
 
 
-  /*    
+      
       svg.append("text")
         .attr("class", "nodeLegend")
         .attr("x", diameter/2)
         .attr("y", diameter-50)
-        .text("Reingold–Tilford Tree")
+        .text("Classical")
         .attr("dy", ".21em")
         .attr("font-family", "sans-serif")
-        .attr("font-size", "20px")
+        .attr("font-size", "30px")
         .style("text-anchor", "middle")
         .style("fill", "#000")
         .style("font-weight", "bold");
 
-      var filename2 = file.split("/");
+  /*    var filename2 = file.split("/");
       svg.append("text")
         .attr("class", "nodeLegend")
         .attr("x", diameter/2)
@@ -249,6 +224,7 @@ function packageImports(nodes) {
   return imports;
 }
 </script>
-
+<body>
+    <div id="tree-container"></div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 <script src="../myscripts/util.js"></script>
 <script>
 
-var diameter = 840,
+var diameter = 750,
     radius = diameter / 2,
     innerRadius = radius - 20;
 
@@ -28,10 +28,10 @@ var line = d3.svg.line()
 
 
 var svg = d3.select("body").append("svg")
-    .attr("width", diameter)
+    .attr("width", diameter+500)
     .attr("height", diameter+100)
   .append("g")
-    .attr("transform", "translate(" + radius + "," + radius + ")");
+    .attr("transform", "translate(" + (radius+250) + "," + radius + ")");
 
 var g1 = svg.append('g');
 
@@ -47,17 +47,15 @@ var maxDepth = 0;
 //var file = "../data/1_Activation of Pro-caspase 8 Pathway.json";
 //var file = "../data/2_ERBB2 Pathway.json";
 //var file = "../data/3_Signaling to GPCR Pathway.json";
-//var file = "../data/flare package.json";
+var file = "../data/flare package.json";
 //var file = "../data/carnivoraWithRelationships.json";
 //var file = "../data/mammalsWithRelationships.json";
 
-var file = "../data/3_NGF Pathway.json";
-
-//var file = "../data/HIV Infection_Dot.json";
+//var file = "../data/3_NGF_Dot.json";
 
 d3.json(file, function(error, classes) {
  nodes = cluster.nodes(packageHierarchy(classes));
-
+  
   var a = [];
   nodes.forEach(function(d) {
     if (!d.children)
@@ -196,6 +194,13 @@ var nodeEnter = svg.selectAll("g.node").data(nodes)
       .attr("class",  function(d) { return d.children ? "node" : "leaf node"; })
       .attr("cx", function(d) { return d.x2})
       .attr("cy", function(d) { return d.y2})
+      .style("stroke-width", function(d) { 
+        if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
+          return 1.5;
+        else
+          return 0;
+      })
+      .style("stroke", "#000")
       .style("fill", function(d) { 
         if (d.depth==0)
           return "#fff"
@@ -203,18 +208,10 @@ var nodeEnter = svg.selectAll("g.node").data(nodes)
       .attr("r", function(d) { 
         if (d.children)
           return (0)
-        else {
-          if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
-              return 85/Math.sqrt(nodes.length);
-          else 
-             return 45/Math.sqrt(nodes.length);
-          }
-        })
-      .style("stroke", function(d, i) {
-           if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
-                return "#000";
-        })
-      .style("stroke-width", 1)  
+        else if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
+          return 62/Math.sqrt(nodes.length);
+        else 
+          return 45/Math.sqrt(nodes.length);})
       //.attr("transform", function(d) { return "rotate(" + (d.x-90) + ")translate(" + (d.y) + ")"; })
       ;
 
@@ -264,7 +261,7 @@ var arcMin = radius*0.6;
            return color(d);
         })
         .style("stroke", function(d, i) {
-           if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
+           if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name])
                 return "#000";
             return "#eeeeee";
         
@@ -276,19 +273,20 @@ var arcMin = radius*0.6;
         .attr("d", drawArc) ; 
       
 
-/*
+
     svg.append("text")
         .attr("class", "nodeLegend3")
         .attr("x", 0)
         .attr("y", diameter/2)
-        .text("Radial Layout")
+        .text("Flare package references")
         .attr("dy", ".21em")
         .attr("font-family", "sans-serif")
-        .attr("font-size", "20px")
+        .attr("font-size", "30px")
         .style("text-anchor", "middle")
         .style("fill", "#000")
         .style("font-weight", "bold");
 
+/*
       var filename2 = file.split("/");
       svg.append("text")
         .attr("class", "nodeLegend3")

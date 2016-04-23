@@ -123,7 +123,25 @@ function hcl(queryData, randomSeed, height, degree, container, treeOnly, hasSubt
               qmaxDepth = childDepth;
           }
         });
-           
+          
+        console.log("-----qtree");
+        console.log("countLeafnodes= "+countLeafnodes(qroot));
+        console.log("qmaxDepth= "+qmaxDepth);
+        var maxDegree = 0;
+          qnodes.forEach(function(child) { 
+            if (child.children){
+              if (child.children.length>maxDegree){
+                  maxDegree = child.children.length;
+              }
+            }
+          });  
+        console.log("maxDegree= "+maxDegree);
+        console.log("qlinks= "+qlinks.length);
+        
+        console.log("-----");
+        
+
+
         function computeDepth(n1){
           if (!n1.parent)
             return 0;

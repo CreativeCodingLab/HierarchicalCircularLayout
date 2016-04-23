@@ -36,7 +36,7 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
     radius = height/2;
   
   cluster = d3.layout.cluster()
-      .size([360, radius*0.8])
+      .size([360, radius*0.92])
       .sort(null)
       .value(function(d) { return d.size; });
 
@@ -157,7 +157,7 @@ function radialTree(queryData, randomSeed, heightTree, degreeTree, container, tr
           .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
 
         node5.append("circle")
-          .attr("r", 4)
+          .attr("r", 6)
           .style("stroke",  function(d) { if (d.depth<=0) return "#000" ; })
           .style("stroke-width",  4)
           .style("fill", function(d) { return colorQ(d);}); 

@@ -24,7 +24,7 @@ new Promise(function(resolve) { d3.json(file, resolve); })
     nodes = cluster.nodes(tree);
     
     // remove the first element (which is created by the reading process)
-    nodes.splice(0, 1);  
+   // nodes.splice(0, 1);  
     
     links = getLinksFromNodes(nodes);
     
@@ -34,7 +34,7 @@ new Promise(function(resolve) { d3.json(file, resolve); })
     
     
     nodes.forEach(function(d) {
-      if (d.depth == 1){
+      if (d.depth == 0){
         root = d;
       } 
     });

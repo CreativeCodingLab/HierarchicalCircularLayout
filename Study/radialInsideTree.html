@@ -6,7 +6,6 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="../myscripts/util.js"></script>
 <script>
-
 var diameter = 900,
     radius = diameter / 2,
     innerRadius = radius - 120;
@@ -45,8 +44,8 @@ var link = g1.append("g").selectAll(".linkTree"),
 //var file = "../data/mammalsWithRelationships.json";
 
 //var file = "../data/1_RAF-Cascade Pathway.json";
-//var file = "../data/54_DAG Pathway.json";
-var file = "../data/3_NGF Pathway.json";
+var file = "../data/54_DAG Pathway.json";
+//var file = "../data/3_NGF Pathway.json";
 
 var maxDepth = 0;
 
@@ -144,6 +143,7 @@ function mouseouted(d) {
 }
 
 d3.select(self.frameElement).style("height", diameter + "px");
+
 
 // Lazily construct the package hierarchy from class names.
 function packageHierarchy(classes) {

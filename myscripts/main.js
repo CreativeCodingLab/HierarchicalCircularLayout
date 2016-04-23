@@ -10,7 +10,7 @@ var lineBundle = d3.svg.line()
       .y(function(d) { return d.y; });
 
 var width = 1400,
-    height = 800,
+    height = 750,
     root;
 
 /*var force = d3.layout.force()
@@ -46,7 +46,7 @@ var diagonal;
 var treeLayout = d3.layout.tree().size([ width, height ]);
 var scaleCircle = 1;  // The scale to update node size, defined by sliderScale.js
 var scaleRate=1;
-var scaleRadius = 0.7;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
+var scaleRadius = 0.71;  // The scale betweeb parent and children nodes, defined by sliderRadius.js
  
 var maxDepth=1;
 var setIntervalFunction;
@@ -57,7 +57,7 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/0_RAF_Dot.json";
 
 //var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
-//var file = "data/2_ERBB2 Pathway orginal.json";
+var file = "data/2_ERBB2 Pathway orginal.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
 //var file = "data/flare package.json";
 //var file = "data/carnivoraWithRelationships.json";
@@ -65,7 +65,8 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 
 //var file = "data/1_RAF-Cascade Pathway.json";
 //var file = "data/54_DAG Pathway.json";
-var file = "data/3_NGF Pathway.json";
+//var file = "data/3_NGF Pathway teaser.json";
+//var file = "data/3_NGF_Dot.json";
 
 //var file = "data/HIV Infection_Dot.json";
 
@@ -85,10 +86,16 @@ d3.json(file, function(error, classes) {
     .value(function(d) { return d.size; });
 
   nodes = cluster.nodes(packageHierarchy(classes));
+
+  //nodes = nodes.filter(function(d) {
+  //  return (d.depth<4);
+  //});
+
   nodes.splice(0, 1);  // remove the first element (which is created by the reading process)
   links = packageImports(nodes);
   linkTree = d3.layout.tree().links(nodes);
   
+  debugger;
 
 /*
   var node0 = {};
@@ -124,8 +131,7 @@ d3.json(file, function(error, classes) {
       root = d;
     } 
   });
-  debugger;
-
+ 
 /* force
     .nodes(nodes)
     .links(linkTree)
@@ -156,19 +162,21 @@ d3.json(file, function(error, classes) {
   setupSliderScale(svg);
   setupSliderRadius(svg);
 
-/*
+
   svg.append("text")
         .attr("class", "nodeLegend3")
-        .attr("x", width/2-86)
-        .attr("y", height-50)
-        .text("HCL")
+        .attr("x", width/2-80)
+        .attr("y", height-120)
+        .text("CactusTree")
+        //.text("Prey-predator relationships")
         .attr("dy", ".21em")
         .attr("font-family", "sans-serif")
-        .attr("font-size", "20px")
+        .attr("font-size", "30px")
         .style("text-anchor", "middle")
-        .style("fill", "#f00")
+        .style("fill", "#000")
         .style("font-weight", "bold");
 
+/*
       var filename2 = file.split("/");
       svg.append("text")
         .attr("class", "nodeLegend3")
@@ -189,7 +197,7 @@ function setupTree() {
   var minY = height*100;   // used to compute the best scale for the input tree
   newNodes = treeLayout(root).map(function(d,i) {
     if (d.depth==0){
-       d.treeX = 700; 
+       d.treeX = 610; 
        d.treeY = height-getRadius(root)/1;
        d.alpha = -Math.PI/2; 
     }
@@ -223,10 +231,11 @@ function setupTree() {
       });
     }
     scaleRate = height/(height-minY);
-    console.log(" minY = "+minY +"  "+scaleRate);
-   // console.log("maxDepth = "+maxDepth);
+    //console.log(" minY = "+minY +"  "+scaleRate);
     return d;
   });
+    console.log("maxDepth = "+maxDepth);
+  
   /// Restart the force layout.
   //  force.nodes(newNodes);
   //  force.links(linkTree);
@@ -268,7 +277,7 @@ function drawNodeAndLink() {
       })        
       .style("stroke-width", function(d) { 
         if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
-                return 1;        
+                return 1.5;        
     }); 
 
  nodeEnter.append("image")
@@ -281,7 +290,7 @@ function drawNodeAndLink() {
     .attr("xlink:href", function(d) { 
     var nodeName = d.key;
     
-    /*  // LOAD image from google
+      // LOAD image from google
     var url = "https://www.google.com/search?q="+nodeName+"&es_sm=91&source=lnms&tbm=isch&sa=X&ved=0CAcQ_AUoAWoVChMIjdeehPSAxwIVgigeCh3dNQJ3&biw=1432&bih=761";
     if (nodeName!="0" && nodeName!="1"){
       resolver.resolve(url, function( result ){
@@ -292,7 +301,7 @@ function drawNodeAndLink() {
             d.image = "http://www.fnordware.com/superpng/pngtest8rgba.png";  
           }
       });
-    }  */
+    }  
   });
   
 
@@ -325,7 +334,7 @@ function update() {
       .attr("r", function(d){ 
       if ((listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
         && !d.children)
-        return 1.75*getRadius(d);
+        return 1.4*getRadius(d);
       else
          return getRadius(d);
       })
@@ -443,13 +452,16 @@ function update() {
     }
   }
   else {  // Update Undirected links of relationships
-    svg.selectAll("path.link").remove();
-    relationship_selection 
-        .data(bundle(displayLinks))
-      .enter().append("path")
-        .attr("class", "link")
-        .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-        .attr("d", lineBundle);
+
+    if (!treeOnly){
+      svg.selectAll("path.link").remove();
+      relationship_selection 
+          .data(bundle(displayLinks))
+        .enter().append("path")
+          .attr("class", "link")
+          .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+          .attr("d", lineBundle);
+     }   
   }
 }
 
@@ -614,7 +626,7 @@ function mouseovered(d) {
             else if (n.source)
               return 1;
             else
-              return 0.15;
+              return 0.1;
         }  
           
       });

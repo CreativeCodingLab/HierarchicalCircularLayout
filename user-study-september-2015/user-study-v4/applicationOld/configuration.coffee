@@ -34,12 +34,13 @@ module.exports = ->
   
   layouts = [
   	       #'circlePacking', # not used for the study any longer
-  	'hcl',
+  	'treeMap',
+    #'radialTree',
     'icicle',
-    'treeMap',
-    'ballon',
     'classical',
-    'radialTree',
+    #'treeMap',
+    'hcl',
+    #'ballon',
            #'radial', #This is for edge bundling only
   	
   	
@@ -81,7 +82,7 @@ module.exports = ->
   ].map (d) -> "#{dataPath}#{d}"
   
   seed = 1000;
-  randomList = [61111,62222,63333,64444,65555];
+  randomList = [1111];
   
   addText = (main, text) ->
     main.append('div').classed 'row', true
@@ -100,7 +101,7 @@ module.exports = ->
             func: (main) ->
               text = "Can you find the subtree (left) in the tree (right)?"
               addText main, text
-              addVis main, layout, queryDatasets[14], randomSeed, 6, 8, false, true, false
+              addVis main, layout, queryDatasets[10], randomSeed, 6, 8, true, true, true
               return addContinue main
           }
         ]
