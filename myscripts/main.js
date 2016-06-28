@@ -57,9 +57,10 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/0_RAF_Dot.json";
 
 //var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
-var file = "data/2_ERBB2 Pathway orginal.json";
+//var file = "data/2_ERBB2 Pathway orginal.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
 //var file = "data/flare package.json";
+
 //var file = "data/carnivoraWithRelationships.json";
 //var file = "data/mammalsWithRelationships.json";
 
@@ -73,6 +74,7 @@ var file = "data/2_ERBB2 Pathway orginal.json";
 //var file = "data/3_Innate Immune System_Dot.json";
 
 
+var file = "data2016/flare figure2.json";
 
 
 var treeOnly = false;
@@ -95,39 +97,11 @@ d3.json(file, function(error, classes) {
   links = packageImports(nodes);
   linkTree = d3.layout.tree().links(nodes);
   
-  debugger;
 
-/*
-  var node0 = {};
-  node0.name = "Tuan";
-  node0.depth = 1;
-
-  var node1 = {};
-  node1.name = "Tuan1";
-  var node2 = {};
-  node2.name = "Tuan2";
-    
-
-  node0.children = [];
-  node0.children.push(node1);
-  node0.children.push(node2);
-
-  nodes = [];
-  nodes.push(node0);
-  nodes.push(node1);
-  nodes.push(node2);
-  link1 = {};
-  link1.source = node1;
-  link1.target = node2;
-  links = [];
-  links.push(link1);
-  linkTree = d3.layout.tree().links(nodes);*/
-
-
-//  node1.depth = 1;
 
   nodes.forEach(function(d) {
     if (d.depth == 1){
+    //if (d.name == "flare.vis.data"){
       root = d;
     } 
   });
@@ -166,7 +140,7 @@ d3.json(file, function(error, classes) {
   svg.append("text")
         .attr("class", "nodeLegend3")
         .attr("x", width/2-80)
-        .attr("y", height-120)
+        .attr("y", height+30)
         .text("CactusTree")
         //.text("Prey-predator relationships")
         .attr("dy", ".21em")
@@ -234,14 +208,6 @@ function setupTree() {
     //console.log(" minY = "+minY +"  "+scaleRate);
     return d;
   });
-    console.log("maxDepth = "+maxDepth);
-  
-  /// Restart the force layout.
-  //  force.nodes(newNodes);
-  //  force.links(linkTree);
-  //  force.start();
-
-    
 }  
 
 

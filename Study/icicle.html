@@ -9,8 +9,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script>
 
-var width = 750,
-    height = 750;
+var width = 420,
+    height = 790;
 
 var svg = d3.select("body").append("svg")
     .attr("width", width+300)
@@ -38,7 +38,10 @@ var maxDepth=0, numLeaf=0;
 //var file = "../data/54_DAG Pathway.json";
 
 //var file = "../data/3_NGF Pathway.json";
-var file = "../data/3_NGF_Dot.json";
+//var file = "../data/3_NGF_Dot.json";
+
+
+var file = "../data2016/flare figure2.json";
 
 var treeOnly = false;
 
@@ -51,6 +54,7 @@ d3.json(file, function(error, classes) {
   nodes.forEach(function(d) {
     d.x = 50+d.x+d.dx/2;
     d.y = -d.dy+d.y;
+
   });
 
  nodes.forEach(function(d) { 

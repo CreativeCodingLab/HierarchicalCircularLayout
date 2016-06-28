@@ -130,6 +130,11 @@ function removeColorLegend() {
 }
 
 function color(d) {
+  if (d.name=="animate")
+    return "#ccc";
+  if (d.name=="animate.interpolate")
+    return "#aaa";
+
   var minSat = 60;
   var maxSat = 220;
   var step = (maxSat-minSat)/maxDepth;
