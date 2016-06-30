@@ -20,14 +20,8 @@ var width = 1400,
     .size([width, height])
     .on("tick", tick);*/
      
-var svg = d3.select("body").append("svg")
-    .attr("id", "SVGmain")
-    .attr("width", width)
-    .attr("height", height+100);
 
-var relationship_selection = svg.selectAll(".link");
-var linkTree_selection = svg.selectAll(".link"),
-    node_selection = svg.selectAll(".node1"); // Empty selection at first
+
   
 var nodeEnter;
 var nodes
@@ -59,7 +53,7 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
 //var file = "data/2_ERBB2 Pathway orginal.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
-//var file = "data/flare package.json";
+var file = "data/flare package.json";
 
 //var file = "data/carnivoraWithRelationships.json";
 //var file = "data/mammalsWithRelationships.json";
@@ -74,11 +68,81 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/3_Innate Immune System_Dot.json";
 
 
-var file = "data2016/flare figure2.json";
+//var file = "data2016/flare figure2.json";
 
 
 var treeOnly = false;
 
+var zoom = d3.behavior.zoom().scaleExtent([0.5, 8]).on("zoom", zoomed);
+ svg = d3.select("#container").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .call(zoom)
+  .append("g");
+
+var svg = d3.select("body").append("svg")
+    .attr("id", "SVGmain")
+    .attr("width", width)
+    .attr("height", height+100)
+    .append("g")
+    .call(zoom)
+    .append("g");
+
+var relationship_selection = svg.selectAll(".link");
+var linkTree_selection = svg.selectAll(".link"),
+    node_selection = svg.selectAll(".node1"); // Empty selection at first
+
+
+function zoomed() {
+  console.log("zoom="+zoom);
+    svg.attr("transform",
+        "translate(" + zoom.translate() + ")" +
+        "scale(" + zoom.scale() + ")"
+    );
+}
+
+function interpolateZoom (translate, scale) {
+    var self = this;
+    return d3.transition().duration(350).tween("zoom", function () {
+        var iTranslate = d3.interpolate(zoom.translate(), translate),
+            iScale = d3.interpolate(zoom.scale(), scale);
+        return function (t) {
+            zoom
+                .scale(iScale(t))
+                .translate(iTranslate(t));
+            zoomed();
+        };
+    });
+}
+
+function zoomClick() {
+    var clicked = d3.event.target,
+        direction = 1,
+        factor = 0.2,
+        target_zoom = 1,
+        center = [width / 2, height / 2],
+        extent = zoom.scaleExtent(),
+        translate = zoom.translate(),
+        translate0 = [],
+        l = [],
+        view = {x: translate[0], y: translate[1], k: zoom.scale()};
+
+    d3.event.preventDefault();
+    direction = (this.id === 'zoom_in') ? 1 : -1;
+    target_zoom = zoom.scale() * (1 + factor * direction);
+
+    if (target_zoom < extent[0] || target_zoom > extent[1]) { return false; }
+
+    translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
+    view.k = target_zoom;
+    l = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y];
+
+    view.x += center[0] - l[0];
+    view.y += center[1] - l[1];
+
+    interpolateZoom([view.x, view.y], view.k);
+}
 
 
 d3.json(file, function(error, classes) {
@@ -133,6 +197,7 @@ d3.json(file, function(error, classes) {
   drawNodeAndLink();
   update();
   //addSearchBox();
+
   setupSliderScale(svg);
   setupSliderRadius(svg);
 
@@ -148,23 +213,25 @@ d3.json(file, function(error, classes) {
         .attr("font-size", "30px")
         .style("text-anchor", "middle")
         .style("fill", "#000")
-        .style("font-weight", "bold");
+        .style("font-weight", "bold");       
+});
 
-/*
-      var filename2 = file.split("/");
-      svg.append("text")
-        .attr("class", "nodeLegend3")
-        .attr("x", width/2-86)
-        .attr("y", height-25)
-        .text("Data: "+filename2[filename2.length-1])
-        .attr("dy", ".21em")
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "18px")
-        .style("text-anchor", "middle")
-        .style("fill", "#000");
-        //.style("font-weight", "bold");  */
-        
-});  
+
+function getLeaves(d) {
+  var list = [];
+  d.children.forEach(function(child,i2) {
+    if (child.children){
+      var list2 = getLeaves(child);
+      list2.forEach(function(d) {
+        list.push(d);
+      });  
+    }
+    else{
+      list.push(child);
+    }
+  });
+  return list;   
+}  
 
 function setupTree() {
   var disFactor = 2;
@@ -184,24 +251,67 @@ function setupTree() {
       });  
 
       var begin=d.alpha-totalAngle/2;
-      d.children.forEach(function(child,i2) {
-        xC =  d.treeX;
-        yC =  d.treeY;
-        rC = getRadius(d)+getRadius(child)/disFactor;
-        child.treeRC = rC;
 
-        var additional = totalAngle*getBranchingAngle1(getRadius(child), numChild)/totalRadius;
-        child.alpha = begin+additional/2;
-        child.treeX = xC+rC*Math.cos(child.alpha); 
-        child.treeY = yC+rC*Math.sin(child.alpha); 
-        
-        if (child.treeY-rC<minY) {
-          minY = child.treeY-rC;
-        };
-        if (child.depth>maxDepth){
-          maxDepth = child.depth;
+
+      if (d.closed){
+        list=getLeaves(d);
+        list.forEach(function(d2) {
+
+          totalRadius = 0;
+          var numChild =  list.length;
+          list.forEach(function(child) {
+            totalRadius+=getBranchingAngle1(getRadius(child), numChild);
+          }); 
+
+          xC =  d.treeX;
+          yC =  d.treeY;
+          rC = getRadius(d)+getRadius(d2)/disFactor;
+          d2.treeRC = rC;
+
+          var additional = totalAngle*getBranchingAngle1(getRadius(d2), numChild)/totalRadius;
+          d2.alpha = begin+additional/2;
+          d2.treeX = xC+rC*Math.cos(d2.alpha); 
+          d2.treeY = yC+rC*Math.sin(d2.alpha); 
+          
+          begin +=additional;
+        });
+      }  
+
+      d.children.forEach(function(child,i2) {
+        var parent = child.parent;
+        var closedAncester;
+        while (parent){
+          if (parent.closed){
+            closedAncester = parent;
+          }
+          parent = parent.parent;
         }
-        begin +=additional;
+        if (closedAncester){
+          if (child.children){
+            child.alpha = closedAncester.alpha;
+            child.treeX = closedAncester.treeX; 
+            child.treeY = closedAncester.treeY; 
+          }
+        }
+        else{
+          xC =  d.treeX;
+          yC =  d.treeY;
+          rC = getRadius(d)+getRadius(child)/disFactor;
+          child.treeRC = rC;
+
+          var additional = totalAngle*getBranchingAngle1(getRadius(child), numChild)/totalRadius;
+          child.alpha = begin+additional/2;
+          child.treeX = xC+rC*Math.cos(child.alpha); 
+          child.treeY = yC+rC*Math.sin(child.alpha); 
+          
+          if (child.treeY-rC<minY) {
+            minY = child.treeY-rC;
+          };
+          if (child.depth>maxDepth){
+            maxDepth = child.depth;
+          }
+          begin +=additional;
+        }
       });
     }
     scaleRate = height/(height-minY);
@@ -213,6 +323,17 @@ function setupTree() {
 
 
 
+
+function clickNode(d) {
+  if (d.closed==undefined)
+    d.closed = true;
+  else
+    d.closed = !d.closed;
+  console.log("Click on: "+ d.name);
+  setupTree();
+  updateNodeAndLink();
+  //update();
+}  
 
 
 function drawNodeAndLink() {
@@ -244,7 +365,8 @@ function drawNodeAndLink() {
       .style("stroke-width", function(d) { 
         if (listSelected1[d.name] || listSelected2[d.name] || listSelected3[d.name] || listSelected4[d.name])
                 return 1.5;        
-    }); 
+    })
+    .on("click", clickNode); 
 
  nodeEnter.append("image")
     .attr("class", "nodeImage3")
@@ -288,6 +410,32 @@ function drawNodeAndLink() {
    nodeEnter.on('mouseover', mouseovered)
       .on("mouseout", mouseouted);
 
+}
+
+function updateNodeAndLink() {
+  var durationTime = 2000;
+
+  d3.selectAll(".node1").each(function(d) {
+      d.x = (d.treeX ); //*event.alpha;
+      d.y = d.treeY ; })
+    .transition().duration(durationTime)
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; });
+
+  d3.selectAll(".nodeText").transition().duration(durationTime)
+    .attr("x", function(d) { return d.x; })
+    .attr("y", function(d) { return d.y; });
+
+      
+  linkTree_selection.transition().duration(durationTime)
+    .attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return Math.round(d.source.y); })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return Math.round(d.target.y); });
+  
+  svg.selectAll("path.link").transition().duration(durationTime)
+    .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+    .attr("d", lineBundle);
 }
 
 
