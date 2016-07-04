@@ -86,8 +86,7 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height+100)
     .append("g")
-    .call(zoom)
-    .append("g");
+    .call(zoom);
 
 var relationship_selection = svg.selectAll(".link");
 var linkTree_selection = svg.selectAll(".link"),
