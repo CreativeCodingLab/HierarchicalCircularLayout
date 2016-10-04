@@ -53,9 +53,9 @@ var nodeDFSCount = 0;  // this global variable is used to set the DFS ids for no
 //var file = "data/1_Activation of Pro-caspase 8 Pathway.json";
 //var file = "data/2_ERBB2 Pathway orginal.json";
 //var file = "data/3_Signaling to GPCR Pathway.json";
-var file = "data/flare package.json";
+//var file = "data/flare package.json";
 
-//var file = "data/carnivoraWithRelationships.json";
+var file = "data/carnivoraWithRelationships.json";
 //var file = "data/mammalsWithRelationships.json";
 
 //var file = "data/1_RAF-Cascade Pathway.json";
@@ -74,18 +74,11 @@ var file = "data/flare package.json";
 var treeOnly = false;
 
 var zoom = d3.behavior.zoom().scaleExtent([0.5, 8]).on("zoom", zoomed);
- svg = d3.select("#container").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-  .append("g")
-    .call(zoom)
-  .append("g");
-
+ 
 var svg = d3.select("body").append("svg")
     .attr("id", "SVGmain")
     .attr("width", width)
     .attr("height", height+100)
-    .append("g")
     .call(zoom)
     .append("g");
 
@@ -95,13 +88,13 @@ var linkTree_selection = svg.selectAll(".link"),
 
 
 function zoomed() {
-  console.log("zoom="+zoom);
     svg.attr("transform",
         "translate(" + zoom.translate() + ")" +
         "scale(" + zoom.scale() + ")"
     );
 }
 
+/*
 function interpolateZoom (translate, scale) {
     var self = this;
     return d3.transition().duration(350).tween("zoom", function () {
@@ -143,6 +136,7 @@ function zoomClick() {
 
     interpolateZoom([view.x, view.y], view.k);
 }
+*/
 
 
 d3.json(file, function(error, classes) {
@@ -452,10 +446,10 @@ function update() {
       else
          return getRadius(d);
       })
-      .style("fill", function(d) { 
+      .style("fill", function(d,i) { 
         var defs = svg.append("defs").attr("id", "imgdefs")
         var catpattern = defs.append("pattern")
-                                .attr("id", "catpattern"+d.key)
+                                .attr("id", "catpattern"+i)
                                 .attr("height", 1)
                                 .attr("width", 1)
                                 .attr("x", "0")
@@ -469,10 +463,11 @@ function update() {
              .attr("width", getRadius(d)*2.5)
              .attr("xlink:href", d.image )
 
+             console.log(d.image);
          if (d.key=="0" || d.key=="1" || d.depth<1 || !document.getElementById("checkbox12").checked)
             return color(d);
          else{
-             return "url(#catpattern"+d.key+")"; 
+             return "url(#catpattern"+i+")"; 
          }
    });
 
@@ -485,14 +480,6 @@ function update() {
         else 
           return d.key; 
       });
-/*
-    d3.selectAll(".nodeImage3").each(function(d) {
-         })
-     .attr("x", function(d) { return d.x; })
-     .attr("y", function(d) { return d.y; })
-     .attr("height", getRadius)
-     .attr("width", getRadius)
-     .attr("xlink:href", function(d) { return d.image; });*/
       
     linkTree_selection.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return Math.round(d.source.y); })
@@ -772,11 +759,11 @@ function mouseouted(d) {
       .classed("link--source", false);
 
   d3.selectAll(".node1")
-      .style("fill" , function(n) {   
+      .style("fill" , function(n,i) {   
           if (n.key=="0" || n.key=="1" || n.depth<1  || !document.getElementById("checkbox12").checked)
             return color(n);
           else
-            return "url(#catpattern"+n.key+")"; 
+            return "url(#catpattern"+i+")"; 
        })
       .style("fill-opacity", 1);
 
